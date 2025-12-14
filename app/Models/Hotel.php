@@ -23,4 +23,9 @@ class Hotel extends Model
     protected $casts = [
         'images' => 'array',
     ];
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class);
+    }
 }
