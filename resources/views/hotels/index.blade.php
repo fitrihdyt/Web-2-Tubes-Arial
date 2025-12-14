@@ -4,10 +4,12 @@
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold">Daftar Hotel</h1>
 
-    <a href="{{ route('hotels.create') }}"
-       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-        + Tambah Hotel
-    </a>
+    @if(auth()->check() && auth()->user()->role === 'admin')
+        <a href="{{ route('hotels.create') }}"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+            + Tambah Hotel
+        </a>
+    @endif
 </div>
 
 @if($hotels->isEmpty())
@@ -41,20 +43,24 @@
             </div>
 
             <div class="flex justify-between items-center px-4 py-3 border-t">
-                <a href="{{ route('hotels.edit', $hotel) }}"
-                   class="text-yellow-600 hover:underline">
-                    Edit
-                </a>
+                @if(auth()->check() && auth()->user()->role === 'admin')
+                    <a href="{{ route('hotels.edit', $hotel) }}"
+                    class="text-yellow-600 hover:underline">
+                        Edit
+                    </a>
+                @endif
 
-                <form action="{{ route('hotels.destroy', $hotel) }}"
-                      method="POST"
-                      onsubmit="return confirm('Yakin hapus hotel ini?')">
-                    @csrf
-                    @method('DELETE')
-                    <button class="text-red-600 hover:underline">
-                        Hapus
-                    </button>
-                </form>
+                @if(auth()->check() && auth()->user()->role === 'admin')
+                    <form action="{{ route('hotels.destroy', $hotel) }}"
+                        method="POST"
+                        onsubmit="return confirm('Yakin hapus hotel ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button class="text-red-600 hover:underline">
+                            Hapus
+                        </button>
+                    </form>
+                @endif
             </div>
         </div>
         @endforeach

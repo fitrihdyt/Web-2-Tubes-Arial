@@ -3,10 +3,12 @@
 @section('content')
 <h1 class="text-2xl font-bold mb-6">Daftar Room</h1>
 
-<a href="{{ route('rooms.create') }}"
-   class="bg-blue-600 text-white px-4 py-2 rounded-lg mb-4 inline-block">
-    + Tambah Room
-</a>
+@if(auth()->check() && auth()->user()->role === 'admin')
+    <a href="{{ route('rooms.create') }}"
+    class="bg-blue-600 text-white px-4 py-2 rounded-lg mb-4 inline-block">
+        + Tambah Room
+    </a>
+@endif
 
 <div class="bg-white rounded-xl shadow overflow-x-auto">
     <table class="w-full text-left">
@@ -39,14 +41,18 @@
                 <td class="p-3">{{ $room->stock }}</td>
                 <td class="p-3 flex gap-2">
                     <a href="{{ route('rooms.show', $room) }}" class="text-blue-600">Detail</a>
-                    <a href="{{ route('rooms.edit', $room) }}" class="text-yellow-600">Edit</a>
-                    <form action="{{ route('rooms.destroy', $room) }}"
-                          method="POST"
-                          onsubmit="return confirm('Hapus room ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="text-red-600">Hapus</button>
-                    </form>
+                    @if(auth()->check() && auth()->user()->role === 'admin')
+                        <a href="{{ route('rooms.edit', $room) }}" class="text-yellow-600">Edit</a>
+                    @endif
+                    @if(auth()->check() && auth()->user()->role === 'admin')
+                        <form action="{{ route('rooms.destroy', $room) }}"
+                            method="POST"
+                            onsubmit="return confirm('Hapus room ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button class="text-red-600">Hapus</button>
+                        </form>
+                    @endif
                 </td>
             </tr>
             @endforeach
