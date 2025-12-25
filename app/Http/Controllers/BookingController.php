@@ -25,6 +25,10 @@ class BookingController extends Controller
     public function create(Room $room)
     {
         //
+        if ($room->stock < 1) {
+            abort(404);
+        }
+
         return view('bookings.create', compact('room'));
     }
 
@@ -42,7 +46,12 @@ class BookingController extends Controller
 
         $room = Room::findOrFail($validated['room_id']);
 
-        $days = Carbon::parse($validated['check_in'])->diffInDays(Carbon::parse($validated['check_out']));
+        if ($room->stock < 1) {
+            return back()->withErrors('Stok kamar habis');
+        }
+
+        $days = Carbon::parse($validated['check_in'])
+            ->diffInDays(Carbon::parse($validated['check_out']));
 
         if ($days < 1) {
             return back()->withErrors('Tanggal tidak valid');
@@ -74,6 +83,28 @@ class BookingController extends Controller
         return view('bookings.show', compact('booking'));
     }
 
+    // PAYMENT (DUMMY)
+    public function pay(Booking $booking)
+    {
+        abort_if($booking->user_id !== auth()->id(), 403);
+
+        if ($booking->status !== 'pending') {
+            return back()->withErrors('Booking tidak valid');
+        }
+
+        DB::transaction(function () use ($booking) {
+            $booking->update([
+                'status' => 'paid'
+            ]);
+
+            $booking->room->decrement('stock');
+        });
+
+        return redirect()
+            ->route('bookings.show', $booking)
+            ->with('success', 'Pembayaran berhasil');
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -99,7 +130,7 @@ class BookingController extends Controller
         abort_if($booking->user_id !== auth()->id(), 403);
 
         if ($booking->status === 'paid') {
-            return back()->withErrors('Booking yang sudah dibayar tidak bisa dibatalkan');
+            return back()->withErrors('Booking sudah dibayar');
         }
 
         $booking->update([

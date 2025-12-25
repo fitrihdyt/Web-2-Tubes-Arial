@@ -50,6 +50,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+
+    // PAYMENT DUMMY
+    Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay'])
+        ->name('bookings.pay');
 });
 
 require __DIR__.'/auth.php';
