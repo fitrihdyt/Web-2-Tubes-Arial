@@ -9,24 +9,21 @@
     <p><strong>Hotel:</strong> {{ $room->hotel->name }}</p>
     <p><strong>Harga / malam:</strong> Rp {{ number_format($room->price) }}</p>
 
-    <form action="{{ route('bookings.store') }}" method="POST" class="space-y-4">
+    <form action="{{ route('bookings.store') }}" method="POST">
         @csrf
-
         <input type="hidden" name="room_id" value="{{ $room->id }}">
 
         <div>
-            <label class="block font-medium mb-1">Check-in</label>
-            <input type="date" name="check_in"
-                   class="w-full border rounded p-2" required>
+            <label>Check-in</label>
+            <input type="date" name="check_in" class="w-full border p-2" required>
         </div>
 
         <div>
-            <label class="block font-medium mb-1">Check-out</label>
-            <input type="date" name="check_out"
-                   class="w-full border rounded p-2" required>
+            <label>Check-out</label>
+            <input type="date" name="check_out" class="w-full border p-2" required>
         </div>
 
-        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+        <button class="bg-blue-600 text-white px-4 py-2 rounded">
             Konfirmasi Booking
         </button>
     </form>
