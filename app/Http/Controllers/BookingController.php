@@ -40,33 +40,40 @@ class BookingController extends Controller
     {
         //
         $validated = $request->validate([
-            'room_id'   => 'required|exists:rooms,id',
-            'check_in'  => 'required|date|after_or_equal:today',
-            'check_out' => 'required|date|after:check_in',
+        'room_id'   => 'required|exists:rooms,id',
+        'check_in'  => 'required|date|after_or_equal:today',
+        'check_out' => 'required|date|after:check_in',
         ]);
 
         $room = Room::findOrFail($validated['room_id']);
 
-        if ($room->stock < 1) {
-            return back()->withErrors('Stok kamar habis');
+        $overlapCount = Booking::where('room_id', $room->id)
+            ->whereIn('status', ['pending', 'paid'])
+            ->where(function ($q) use ($validated) {
+                $q->whereBetween('check_in', [$validated['check_in'], $validated['check_out']])
+                ->orWhereBetween('check_out', [$validated['check_in'], $validated['check_out']])
+                ->orWhere(function ($q) use ($validated) {
+                    $q->where('check_in', '<=', $validated['check_in'])
+                        ->where('check_out', '>=', $validated['check_out']);
+                });
+            })
+            ->count();
+
+        if ($overlapCount >= $room->stock) {
+            return back()->withErrors('Room tidak tersedia di tanggal tersebut');
         }
 
-        $days = Carbon::parse($validated['check_in'])
-            ->diffInDays(Carbon::parse($validated['check_out']));
+        $days = \Carbon\Carbon::parse($validated['check_in'])->diffInDays(\Carbon\Carbon::parse($validated['check_out']));
 
-        if ($days < 1) {
-            return back()->withErrors('Tanggal tidak valid');
-        }
-
-        $totalPrice = $days * $room->price;
+        $total = $days * $room->price;
 
         $booking = Booking::create([
-            'user_id'     => auth()->id(),
-            'room_id'     => $room->id,
-            'check_in'    => $validated['check_in'],
-            'check_out'   => $validated['check_out'],
-            'total_price' => $totalPrice,
-            'status'      => 'pending',
+            'user_id' => auth()->id(),
+            'room_id' => $room->id,
+            'check_in' => $validated['check_in'],
+            'check_out' => $validated['check_out'],
+            'total_price' => $total,
+            'status' => 'pending',
         ]);
 
         return redirect()->route('bookings.show', $booking)->with('success', 'Booking berhasil dibuat');
@@ -94,16 +101,11 @@ class BookingController extends Controller
         }
 
         DB::transaction(function () use ($booking) {
-            $booking->update([
-                'status' => 'paid'
-            ]);
-
+            $booking->update(['status' => 'paid']);
             $booking->room->decrement('stock');
         });
 
-        return redirect()
-            ->route('bookings.show', $booking)
-            ->with('success', 'Pembayaran berhasil');
+        return redirect()->route('bookings.show', $booking)->with('success', 'Pembayaran berhasil');
     }
 
     /**
