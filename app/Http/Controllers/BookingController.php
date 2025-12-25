@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB; 
 
 class BookingController extends Controller
 {
