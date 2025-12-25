@@ -6,7 +6,7 @@
 
     @if(auth()->check() && auth()->user()->role === 'admin')
         <a href="{{ route('hotels.create') }}"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
             + Tambah Hotel
         </a>
     @endif
@@ -17,9 +17,12 @@
         Belum ada data hotel
     </div>
 @else
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        @foreach($hotels as $hotel)
-        <div class="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+@foreach($hotels as $hotel)
+    <div class="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
+
+        <!-- CLICKABLE AREA -->
+        <a href="{{ route('hotels.show', $hotel) }}" class="block hover:bg-gray-50">
 
             <!-- Thumbnail -->
             <div class="h-44 bg-gray-100">
@@ -33,37 +36,52 @@
                 @endif
             </div>
 
+            <!-- Content -->
             <div class="p-4">
                 <h2 class="text-xl font-semibold">{{ $hotel->name }}</h2>
-                <p class="text-gray-500">{{ $hotel->city }}</p>
+
+                <!-- ⭐ STAR -->
+                <div class="flex items-center gap-1 text-yellow-500 text-sm mt-1">
+                    @for ($i = 1; $i <= 5; $i++)
+                        @if ($i <= $hotel->star)
+                            ★
+                        @else
+                            <span class="text-gray-300">★</span>
+                        @endif
+                    @endfor
+                    <span class="text-gray-400 ml-1">({{ $hotel->star }})</span>
+                </div>
+
+                <p class="text-gray-500 mt-1">{{ $hotel->city }}</p>
 
                 <p class="text-sm text-gray-600 mt-2">
                     {{ \Illuminate\Support\Str::limit($hotel->description, 80) }}
                 </p>
             </div>
+        </a>
 
-            <div class="flex justify-between items-center px-4 py-3 border-t">
-                @if(auth()->check() && auth()->user()->role === 'admin')
-                    <a href="{{ route('hotels.edit', $hotel) }}"
-                    class="text-yellow-600 hover:underline">
-                        Edit
-                    </a>
-                @endif
+        <!-- FOOTER (ADMIN ONLY) -->
+        @if(auth()->check() && auth()->user()->role === 'admin')
+        <div class="flex justify-between items-center px-4 py-3 border-t bg-white">
+            <a href="{{ route('hotels.edit', $hotel) }}"
+               class="text-yellow-600 hover:underline">
+                Edit
+            </a>
 
-                @if(auth()->check() && auth()->user()->role === 'admin')
-                    <form action="{{ route('hotels.destroy', $hotel) }}"
-                        method="POST"
-                        onsubmit="return confirm('Yakin hapus hotel ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="text-red-600 hover:underline">
-                            Hapus
-                        </button>
-                    </form>
-                @endif
-            </div>
+            <form action="{{ route('hotels.destroy', $hotel) }}"
+                  method="POST"
+                  onsubmit="return confirm('Yakin hapus hotel ini?')">
+                @csrf
+                @method('DELETE')
+                <button class="text-red-600 hover:underline">
+                    Hapus
+                </button>
+            </form>
         </div>
-        @endforeach
+        @endif
+
     </div>
+@endforeach
+</div>
 @endif
 @endsection

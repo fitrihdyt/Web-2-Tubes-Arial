@@ -31,6 +31,16 @@
     <input type="text" name="city" placeholder="Kota"
            class="w-full border rounded p-2" required>
 
+    <div>
+        <label class="block font-medium mb-1">Bintang Hotel</label>
+        <select name="star" class="w-full border rounded p-2" required>
+            <option value="">Pilih Bintang</option>
+            @for ($i = 1; $i <= 5; $i++)
+                <option value="{{ $i }}">{{ $i }} Bintang</option>
+            @endfor
+        </select>
+    </div>
+
     <!-- MAP -->
     <div>
         <label class="block font-medium mb-2">Lokasi Hotel</label>

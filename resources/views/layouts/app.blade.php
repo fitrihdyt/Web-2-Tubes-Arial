@@ -18,8 +18,9 @@
         <span class="font-bold text-lg">BookMe</span>
 
         <div class="flex items-center gap-4 text-sm">
-            <a href="{{ route('hotels.index') }}" class="hover:text-blue-600">Hotels</a>
+            <a href="{{ route('hotels.index') }}" class="hover:text-blue-600">Hotel</a>
             <a href="{{ route('rooms.index') }}" class="hover:text-blue-600">Rooms</a>
+            <a href="{{ route('bookings.index') }}" class="hover:text-blue-600">Booking</a>
 
             <span class="text-gray-400">|</span>
 

@@ -29,46 +29,45 @@ class HotelController extends Controller
      * Simpan hotel baru
      */
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'address' => 'nullable|string',
-        'city' => 'required|string|max:100',
-        'latitude' => 'nullable|numeric',
-        'longitude' => 'nullable|numeric',
-        'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'address' => 'required|string',
+            'city' => 'required|string|max:100',
+            'star' => 'required|integer|min:1|max:5',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
 
-    // Upload thumbnail
-    if ($request->hasFile('thumbnail')) {
-        $validated['thumbnail'] = $request->file('thumbnail')
-            ->store('hotels/thumbnails', 'public');
-    }
-
-    // Upload multiple images
-    if ($request->hasFile('images')) {
-        $images = [];
-        foreach ($request->file('images') as $image) {
-            $images[] = $image->store('hotels/images', 'public');
+        // Upload thumbnail
+        if ($request->hasFile('thumbnail')) {
+            $validated['thumbnail'] = $request->file('thumbnail')
+                ->store('hotels/thumbnails', 'public');
         }
-        $validated['images'] = $images;
+
+        // Upload multiple images
+        if ($request->hasFile('images')) {
+            $images = [];
+            foreach ($request->file('images') as $image) {
+                $images[] = $image->store('hotels/images', 'public');
+            }
+            $validated['images'] = $images;
+        }
+
+        Hotel::create($validated);
+
+        return redirect()->route('hotels.index')->with('success', 'Hotel berhasil ditambahkan');
     }
-
-    Hotel::create($validated);
-
-    return redirect()
-        ->route('hotels.index')
-        ->with('success', 'Hotel berhasil ditambahkan');
-}
-
 
     /**
      * Detail hotel
      */
     public function show(Hotel $hotel)
     {
+        $hotel->load('rooms');
         return view('hotels.show', compact('hotel'));
     }
 
@@ -84,45 +83,46 @@ class HotelController extends Controller
      * Update hotel
      */
     public function update(Request $request, Hotel $hotel)
-{
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'address' => 'nullable|string',
-        'city' => 'required|string|max:100',
-        'latitude' => 'nullable|numeric',
-        'longitude' => 'nullable|numeric',
-        'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-    ]);
+    {
+        $validated = $request->validate([
+            'name'          => 'required|string|max:255',
+            'description'   => 'nullable|string',
+            'address'       => 'required|string',
+            'city'          => 'required|string|max:100',
+            'star'          => 'required|integer|min:1|max:5',
+            'latitude'      => 'nullable|numeric',
+            'longitude'     => 'nullable|numeric',
+            'thumbnail'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'images.*'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
 
-    // Update thumbnail jika ada
-    if ($request->hasFile('thumbnail')) {
-        $validated['thumbnail'] = $request->file('thumbnail')
-            ->store('hotels/thumbnails', 'public');
-    } else {
-        $validated['thumbnail'] = $hotel->thumbnail;
-    }
-
-    // Gabungkan images lama + baru
-    if ($request->hasFile('images')) {
-        $images = $hotel->images ?? [];
-
-        foreach ($request->file('images') as $image) {
-            $images[] = $image->store('hotels/images', 'public');
+        // Update thumbnail jika ada
+        if ($request->hasFile('thumbnail')) {
+            $validated['thumbnail'] = $request->file('thumbnail')
+                ->store('hotels/thumbnails', 'public');
+        } else {
+            $validated['thumbnail'] = $hotel->thumbnail;
         }
 
-        $validated['images'] = $images;
-    } else {
-        $validated['images'] = $hotel->images;
+        // Gabungkan images lama + baru
+        if ($request->hasFile('images')) {
+            $images = $hotel->images ?? [];
+
+            foreach ($request->file('images') as $image) {
+                $images[] = $image->store('hotels/images', 'public');
+            }
+
+            $validated['images'] = $images;
+        } else {
+            $validated['images'] = $hotel->images;
+        }
+
+        $hotel->update($validated);
+
+        return redirect()
+            ->route('hotels.index')
+            ->with('success', 'Hotel berhasil diperbarui');
     }
-
-    $hotel->update($validated);
-
-    return redirect()
-        ->route('hotels.index')
-        ->with('success', 'Hotel berhasil diperbarui');
-}
 
 
     /**

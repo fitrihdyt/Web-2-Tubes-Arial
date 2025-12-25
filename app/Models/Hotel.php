@@ -14,6 +14,7 @@ class Hotel extends Model
         'description',
         'address',
         'city',
+        'star',
         'latitude',
         'longitude',
         'thumbnail',

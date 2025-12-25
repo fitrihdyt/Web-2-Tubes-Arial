@@ -25,6 +25,15 @@
            value="{{ $hotel->city }}"
            class="w-full border rounded p-2" required>
 
+    <select name="star" class="w-full border rounded p-2" required>
+        @for ($i = 1; $i <= 5; $i++)
+            <option value="{{ $i }}"
+                {{ $hotel->star == $i ? 'selected' : '' }}>
+                {{ $i }} Bintang
+            </option>
+        @endfor
+    </select>
+
     <!-- MAP -->
     <div>
         <label class="block font-medium mb-2">Lokasi Hotel</label>
