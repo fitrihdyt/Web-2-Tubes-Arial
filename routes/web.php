@@ -5,6 +5,7 @@ use App\Http\Controllers\HotelController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -52,4 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 });
 
+Route::post('/bookings/{booking}/pay', [PaymentController::class, 'pay'])
+    ->name('bookings.pay');
+
+Route::post('/payment/midtrans-callback', [PaymentController::class, 'midtransCallback']);
 require __DIR__.'/auth.php';
