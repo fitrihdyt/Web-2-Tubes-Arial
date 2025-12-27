@@ -19,7 +19,7 @@ class PaymentController extends Controller
                 ->with('error', 'Booking sudah diproses.');
         }
 
-        // Midtrans config
+     
         Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production');
         Config::$isSanitized = true;
@@ -41,7 +41,6 @@ class PaymentController extends Controller
             ],
         ];
 
-        // Simpan / ambil payment
         $payment = Payment::firstOrCreate(
             ['booking_id' => $booking->id],
             [
@@ -70,11 +69,11 @@ class PaymentController extends Controller
 
         $notif = new Notification();
 
-        $orderId = $notif->order_id; // BOOKING-12
+        $orderId = $notif->order_id; 
         $transaction = $notif->transaction_status;
         $fraud = $notif->fraud_status ?? null;
 
-        // Ambil ID booking
+       
         $bookingId = str_replace('BOOKING-', '', $orderId);
         $booking = Booking::find($bookingId);
 
