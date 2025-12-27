@@ -1,40 +1,73 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-4">{{ $room->name }}</h1>
-
-<div class="bg-white p-6 rounded-xl shadow space-y-4">
-    <p><strong>Hotel:</strong> {{ $room->hotel->name }}</p>
-    <p><strong>Harga:</strong> Rp {{ number_format($room->price) }}</p>
-    <p><strong>Kapasitas:</strong> {{ $room->capacity }} orang</p>
-    <p><strong>Stok:</strong> {{ $room->stock }}</p>
-    <p><strong>Deskripsi:</strong> {{ $room->description }}</p>
-
-    {{-- Thumbnail --}}
-    @if ($room->thumbnail)
-        <div>
-            <h3 class="font-semibold mb-2">Thumbnail</h3>
-            <img src="{{ asset('storage/' . $room->thumbnail) }}"
-                 class="w-64 rounded-lg">
+<div class="bg-white rounded-xl shadow p-6">
+    <div class="flex gap-6 mb-6">
+        <div class="w-64 h-40 bg-gray-100 rounded-lg overflow-hidden">
+            @if($room->thumbnail)
+                <img src="{{ asset('storage/' . $room->thumbnail) }}"
+                     class="w-full h-full object-cover">
+            @else
+                <div class="w-full h-full flex items-center justify-center text-gray-400">
+                    No Image
+                </div>
+            @endif
         </div>
-    @endif
 
-    {{-- Gallery --}}
-    @if ($room->images)
-        <div>
-            <h3 class="font-semibold mb-2">Galeri</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                @foreach ($room->images as $img)
-                    <img src="{{ asset('storage/' . $img) }}"
-                         class="w-full h-40 object-cover rounded-lg">
-                @endforeach
-            </div>
+        <div class="flex-1">
+            <h1 class="text-3xl font-bold">{{ $room->name }}</h1>
+
+            <p class="text-gray-500 mt-1">
+                Hotel:
+                <a href="{{ route('hotels.show', $room->hotel) }}"
+                   class="text-blue-600 hover:underline">
+                    {{ $room->hotel->name }}
+                </a>
+            </p>
+
+            <p class="text-xl font-semibold text-blue-600 mt-3">
+                Rp {{ number_format($room->price) }} / malam
+            </p>
+
+            <p class="text-gray-700 mt-2">
+                Kapasitas: {{ $room->capacity }} orang
+            </p>
+
+            <p class="text-gray-700">
+                Stok tersedia: {{ $room->stock }}
+            </p>
         </div>
-    @endif
+    </div>
 
-    <a href="{{ route('rooms.index') }}"
-       class="inline-block mt-4 px-4 py-2 rounded-lg border">
-        Kembali
-    </a>
+    <div class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">Deskripsi Room</h2>
+        <p class="text-gray-700">
+            {{ $room->description ?? 'Tidak ada deskripsi.' }}
+        </p>
+    </div>
+
+    <div class="flex gap-4">
+        @auth
+            @if(auth()->user()->role === 'user')
+                <a href="{{ route('bookings.create', $room) }}"
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg">
+                    Book Sekarang
+                </a>
+            @endif
+
+            @if(auth()->user()->role === 'admin')
+                <a href="{{ route('rooms.edit', $room) }}"
+                   class="bg-yellow-500 text-white px-6 py-3 rounded-lg">
+                    Edit Room
+                </a>
+            @endif
+        @else
+            <a href="{{ route('login') }}"
+               class="bg-blue-600 text-white px-6 py-3 rounded-lg">
+                Login untuk Booking
+            </a>
+        @endauth
+    </div>
+
 </div>
 @endsection

@@ -69,6 +69,7 @@ class RoomController extends Controller
     public function show(Room $room)
     {
         //
+        $room->load('hotel');
         return view('rooms.show', compact('room'));
     }
 

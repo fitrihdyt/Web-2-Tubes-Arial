@@ -11,9 +11,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [HotelController::class, 'dashboard'])->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -21,7 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
+Route::get('/hotels', [HotelController::class, 'index'])->middleware(['auth', 'isAdmin'])->name('hotels.index');
 
 Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/hotels/create', [HotelController::class, 'create'])->name('hotels.create');
@@ -51,6 +49,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+
+    // PAYMENT DUMMY
+    Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay'])
+        ->name('bookings.pay');
 });
 
 Route::post('/bookings/{booking}/pay', [PaymentController::class, 'pay'])

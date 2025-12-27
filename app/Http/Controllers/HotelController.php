@@ -11,10 +11,54 @@ class HotelController extends Controller
     /**
      * List hotel
      */
-    public function index()
+    public function index(Request $request)
     {
         $hotels = Hotel::latest()->get();
         return view('hotels.index', compact('hotels'));
+    }
+
+    // Dashboard
+    public function dashboard(Request $request)
+    {
+        $query = Hotel::query()
+            ->withMin('rooms', 'price');
+
+        // SEARCH
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('city', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // STAR
+        if ($request->filled('star')) {
+            $query->whereIn('star', $request->star);
+        }
+
+        // PRICE
+        if ($request->filled('price')) {
+            match ($request->price) {
+                '0-500' => $query->having('rooms_min_price', '<=', 500000),
+                '500-1000' => $query->havingBetween('rooms_min_price', [500000, 1000000]),
+                '1000+' => $query->having('rooms_min_price', '>=', 1000000),
+                default => null,
+            };
+        }
+
+        // SORT
+        if ($request->filled('sort')) {
+            match ($request->sort) {
+                'price_asc' => $query->orderBy('rooms_min_price'),
+                'price_desc' => $query->orderByDesc('rooms_min_price'),
+                'star_desc' => $query->orderByDesc('star'),
+                default => null,
+            };
+        }
+
+        $hotels = $query->get();
+
+        return view('dashboard', compact('hotels'));
     }
 
     /**
