@@ -92,21 +92,21 @@ class BookingController extends Controller
     }
 
     // PAYMENT (DUMMY)
-    public function pay(Booking $booking)
-    {
-        abort_if($booking->user_id !== auth()->id(), 403);
+    // public function pay(Booking $booking)
+    // {
+    //     abort_if($booking->user_id !== auth()->id(), 403);
 
-        if ($booking->status !== 'pending') {
-            return back()->withErrors('Booking tidak valid');
-        }
+    //     if ($booking->status !== 'pending') {
+    //         return back()->withErrors('Booking tidak valid');
+    //     }
 
-        DB::transaction(function () use ($booking) {
-            $booking->update(['status' => 'paid']);
-            $booking->room->decrement('stock');
-        });
+    //     DB::transaction(function () use ($booking) {
+    //         $booking->update(['status' => 'paid']);
+    //         $booking->room->decrement('stock');
+    //     });
 
-        return redirect()->route('bookings.show', $booking)->with('success', 'Pembayaran berhasil');
-    }
+    //     return redirect()->route('bookings.show', $booking)->with('success', 'Pembayaran berhasil');
+    // }
 
     /**
      * Show the form for editing the specified resource.

@@ -7,51 +7,105 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Midtrans\Notification;
 use Midtrans\Config;
+use Midtrans\Snap;
 
 class PaymentController extends Controller
 {
+    public function pay(Booking $booking)
+    {
+        if ($booking->status !== 'pending') {
+            return redirect()
+                ->route('bookings.show', $booking->id)
+                ->with('error', 'Booking sudah diproses.');
+        }
+
+        // Midtrans config
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
+        $orderId = 'BOOKING-' . $booking->id;
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderId,
+                'gross_amount' => (int) $booking->total_price,
+            ],
+            'customer_details' => [
+                'first_name' => $booking->user->name,
+                'email' => $booking->user->email,
+            ],
+            'callbacks' => [
+                'finish' => route('bookings.show', $booking->id),
+            ],
+        ];
+
+        // Simpan / ambil payment
+        $payment = Payment::firstOrCreate(
+            ['booking_id' => $booking->id],
+            [
+                'order_id' => $orderId,
+                'status' => 'pending'
+            ]
+        );
+
+        if (!$payment->snap_token) {
+            $payment->update([
+                'snap_token' => Snap::getSnapToken($params)
+            ]);
+        }
+
+        return view('bookings.payment', [
+            'booking' => $booking,
+            'snapToken' => $payment->snap_token
+        ]);
+    }
+
     public function midtransCallback()
     {
+        
         Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production');
 
         $notif = new Notification();
 
+        $orderId = $notif->order_id; // BOOKING-12
         $transaction = $notif->transaction_status;
-        $fraud = $notif->fraud_status;
-        $orderId = $notif->order_id; 
+        $fraud = $notif->fraud_status ?? null;
 
+        // Ambil ID booking
         $bookingId = str_replace('BOOKING-', '', $orderId);
-
         $booking = Booking::find($bookingId);
 
         if (!$booking) {
-            return response()->json(['error' => 'Booking not found'], 404);
+            return response()->json(['message' => 'Booking not found'], 404);
         }
 
-        if ($transaction === 'capture') {
-            if ($fraud === 'accept') {
-                $this->updateBookingStatus($booking, 'paid', $notif);
-            }
-        } elseif ($transaction === 'settlement') {
-            $this->updateBookingStatus($booking, 'paid', $notif);
+        if (
+            $transaction === 'capture' && $fraud === 'accept'
+            || $transaction === 'settlement'
+        ) {
+            $status = 'paid';
         } elseif ($transaction === 'pending') {
-            $this->updateBookingStatus($booking, 'pending', $notif);
+            $status = 'pending';
         } else {
-            $this->updateBookingStatus($booking, 'cancelled', $notif);
+            $status = 'cancelled';
         }
 
-        return response()->json(['message' => 'Callback processed'], 200);
+        $this->updateBookingStatus($booking, $status, $notif);
+
+        return response()->json(['message' => 'OK'], 200);
     }
 
     protected function updateBookingStatus(Booking $booking, string $status, $notif)
     {
-        $booking->update(['status' => $status]);
+        $booking->update([
+            'status' => $status
+        ]);
 
         Payment::updateOrCreate(
-            [
-                'booking_id' => $booking->id,
-            ],
+            ['booking_id' => $booking->id],
             [
                 'order_id' => $notif->order_id,
                 'status' => $status,

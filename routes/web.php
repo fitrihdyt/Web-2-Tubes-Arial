@@ -51,12 +51,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 
     // PAYMENT DUMMY
-    Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay'])
+    // Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay'])
+    //     ->name('bookings.pay');
+    Route::post('/bookings/{booking}/pay', [PaymentController::class, 'pay'])
         ->name('bookings.pay');
 });
 
-Route::post('/bookings/{booking}/pay', [PaymentController::class, 'pay'])
-    ->name('bookings.pay');
-
 Route::post('/payment/midtrans-callback', [PaymentController::class, 'midtransCallback']);
+
 require __DIR__.'/auth.php';
