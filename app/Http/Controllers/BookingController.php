@@ -142,4 +142,26 @@ class BookingController extends Controller
 
         return redirect()->route('bookings.index')->with('success', 'Booking dibatalkan');
     }
+
+    public function myBookings()
+    {
+        $bookings = auth()->user()
+            ->bookings()
+            ->with(['room.hotel'])
+            ->latest()
+            ->get();
+
+        return view('bookings.history', compact('bookings'));
+    }
+
+    public function history()
+    {
+        $bookings = Booking::with(['hotel', 'room', 'rating'])
+            ->where('user_id', auth()->id())
+            ->where('status', 'completed')
+            ->orderByDesc('check_out')
+            ->get();
+
+        return view('bookings.history', compact('bookings'));
+    }
 }

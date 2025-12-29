@@ -20,17 +20,46 @@
         <div class="flex items-center gap-4 text-sm">
             <a href="{{ route('hotels.index') }}" class="hover:text-blue-600">Hotel</a>
             <a href="{{ route('rooms.index') }}" class="hover:text-blue-600">Rooms</a>
-            <a href="{{ route('bookings.index') }}" class="hover:text-blue-600">Booking</a>
+
+            {{-- MENU KHUSUS ADMIN --}}
+            @if(auth()->user()->role === 'admin')
+                <a href="{{ route('bookings.index') }}" class="hover:text-blue-600">
+                    Booking
+                </a>
+            @endif
+
+            {{-- MENU KHUSUS USER --}}
+            @if(auth()->user()->role !== 'admin')
+                <a href="{{ route('bookings.history') }}" class="hover:text-blue-600">
+                    Histori Booking
+                </a>
+            @endif
 
             <span class="text-gray-400">|</span>
 
+            <!-- NAMA USER -->
             <span class="text-gray-600">
                 {{ auth()->user()->name }}
             </span>
 
+            <!-- SETTINGS -->
+            <a href="{{ route('settings.index') }}"
+               class="text-gray-600 hover:text-blue-600">
+                ⚙️ Settings
+            </a>
+
+            <!-- PROFILE -->
+            <a href="{{ route('profile.edit') }}"
+               class="text-gray-600 hover:text-blue-600">
+                👤 Profile
+            </a>
+
+            <!-- LOGOUT -->
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button class="text-red-600 hover:underline">Logout</button>
+                <button class="text-red-600 hover:underline">
+                    Logout
+                </button>
             </form>
         </div>
     </div>

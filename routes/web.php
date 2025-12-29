@@ -6,6 +6,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SettingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,12 +50,23 @@ Route::middleware('auth')->group(function () {
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::get('/my-bookings', [BookingController::class, 'myBookings'])->name('bookings.history')->middleware('notAdmin');
 
     // PAYMENT DUMMY
     // Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay'])
     //     ->name('bookings.pay');
     Route::post('/bookings/{booking}/pay', [PaymentController::class, 'pay'])
         ->name('bookings.pay');
+});
+
+Route::middleware(['auth', 'notAdmin'])->group(function () {
+    Route::get('/my-bookings', [BookingController::class, 'history'])
+        ->name('bookings.history');
+
+    Route::post('/ratings', [RatingController::class, 'store'])
+        ->name('ratings.store');
 });
 
 Route::post('/payment/midtrans-callback', [PaymentController::class, 'midtransCallback']);

@@ -1,0 +1,69 @@
+/* Font */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap');
+
+/* Judul */
+h1.text-3xl {
+    font-family: 'Playfair Display', serif !important;
+    color: #2D5356 !important;
+    letter-spacing: -0.02em;
+}
+
+/* Tombol */
+.bg-blue-600 {
+    background-color: #2D5356 !important;
+    transition: all 0.3s ease;
+}
+.hover\:bg-blue-700:hover,
+.hover\:bg-blue-300:hover {
+    background-color: #1e3a3c !important;
+}
+
+/* Card */
+.rounded-xl.shadow {
+    border-radius: 24px !important;
+    border: 1px solid #f0f0f0 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+.rounded-xl.shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(45, 83, 86, 0.1) !important;
+}
+
+/* Rating */
+.text-yellow-500 {
+    color: #C5A47E !important;
+}
+
+/* Nama hotel */
+h2.text-xl {
+    color: #2D5356 !important;
+    font-weight: 700 !important;
+}
+.text-blue-600 {
+    color: #C5A47E !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em;
+}
+
+/* Container */
+.max-w-7xl {
+    padding-top: 2rem !important;
+    padding-bottom: 4rem !important;
+}
+
+/* Footer */
+.border-t.bg-white {
+    background-color: #fafafa !important;
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
+}
+
+/* Efek gambar */
+.overflow-hidden img {
+    transition: transform 0.5s ease !important;
+}
+.group:hover img,
+.block:hover img {
+    transform: scale(1.08);
+}
