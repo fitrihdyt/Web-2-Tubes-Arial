@@ -1,50 +1,55 @@
 @extends('layouts.app')
 
 @section('content')
-<h2 class="text-2xl font-bold mb-6">Histori Booking</h2>
+<div class="max-w-6xl mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-6">Histori Booking</h1>
 
-@forelse ($bookings as $booking)
-<div class="bg-white p-6 rounded-lg shadow mb-4">
-    <h3 class="font-semibold text-lg">
-        {{ $booking->hotel->name }} - {{ $booking->room->name }}
-    </h3>
+    @forelse($bookings as $booking)
+        <div class="bg-white rounded-lg shadow p-5 mb-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-semibold">{{ $booking->hotel->name }}</h2>
+                    <p class="text-sm text-gray-600">
+                        {{ $booking->check_in }} - {{ $booking->check_out }}
+                    </p>
+                </div>
+                <span class="text-green-600 font-semibold">Selesai</span>
+            </div>
 
-    <p class="text-sm text-gray-600">
-        {{ $booking->check_in }} → {{ $booking->check_out }}
-    </p>
+            <div class="mt-4">
+                @if($booking->rating)
+                    <p class="text-yellow-500">
+                        @for($i = 1; $i <= 5; $i++)
+                            {{ $i <= $booking->rating ? '★' : '☆' }}
+                        @endfor
+                    </p>
+                    <p class="text-sm text-gray-600 mt-1">{{ $booking->review }}</p>
+                @else
+                    <form action="{{ route('booking.rating', $booking->id) }}" method="POST">
+                        @csrf
+                        <div class="flex items-center gap-2">
+                            <select name="rating" class="border rounded px-2 py-1" required>
+                                <option value="">Rating</option>
+                                <option value="5">★★★★★</option>
+                                <option value="4">★★★★</option>
+                                <option value="3">★★★</option>
+                                <option value="2">★★</option>
+                                <option value="1">★</option>
+                            </select>
 
-    {{-- JIKA BELUM DIRATING --}}
-    @if (!$booking->rating)
-        <form action="{{ route('ratings.store') }}" method="POST" class="mt-4 space-y-2">
-            @csrf
-            <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                            <input type="text" name="review" placeholder="Tulis ulasan (opsional)"
+                                   class="border rounded px-3 py-1 w-full">
 
-            <select name="rating" class="border rounded px-3 py-2 w-full">
-                <option value="">Pilih Rating</option>
-                @for ($i = 1; $i <= 5; $i++)
-                    <option value="{{ $i }}">{{ $i }} ⭐</option>
-                @endfor
-            </select>
-
-            <textarea name="review"
-                placeholder="Tulis ulasan (opsional)"
-                class="border rounded px-3 py-2 w-full"></textarea>
-
-            <button class="bg-blue-600 text-white px-4 py-2 rounded">
-                Kirim Rating
-            </button>
-        </form>
-    @else
-        {{-- SUDAH DIRATING --}}
-        <p class="mt-3 text-green-600">
-            Rating: {{ $booking->rating->rating }} ⭐
-        </p>
-        <p class="text-sm text-gray-700">
-            "{{ $booking->rating->review }}"
-        </p>
-    @endif
+                            <button class="bg-green-600 text-white px-4 py-1 rounded">
+                                Kirim
+                            </button>
+                        </div>
+                    </form>
+                @endif
+            </div>
+        </div>
+    @empty
+        <p class="text-gray-500">Belum ada histori booking.</p>
+    @endforelse
 </div>
-@empty
-<p class="text-gray-500">Belum ada histori booking.</p>
-@endforelse
 @endsection

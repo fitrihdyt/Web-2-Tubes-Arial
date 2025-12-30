@@ -24,20 +24,36 @@
             </a>
 
             <div class="hidden md:flex gap-8 text-sm font-medium text-neutral-600">
-                <a href="{{ route('dashboard') }}" class="hover:text-neutral-900">
+                <a href="{{ route('dashboard') }}"
+                   class="{{ request()->routeIs('dashboard') ? 'text-neutral-900 font-semibold' : 'hover:text-neutral-900' }}">
                     Home
                 </a>
 
                 @auth
-                    <a href="{{ route('bookings.index') }}" class="hover:text-neutral-900">
+                    <a href="{{ route('bookings.index') }}"
+                       class="{{ request()->routeIs('bookings.index') ? 'text-neutral-900 font-semibold' : 'hover:text-neutral-900' }}">
                         Bookings
                     </a>
 
+                    {{-- HISTORI (USER BIASA SAJA) --}}
+                    @if(auth()->user()->role !== 'admin')
+                        <a href="{{ route('bookings.history') }}"
+                           class="{{ request()->routeIs('bookings.history')
+                               ? 'text-neutral-900 font-semibold'
+                               : 'hover:text-neutral-900' }}">
+                            Histori
+                        </a>
+                    @endif
+
+                    {{-- MENU ADMIN --}}
                     @if(auth()->user()->role === 'admin')
-                        <a href="{{ route('hotels.index') }}" class="hover:text-neutral-900">
+                        <a href="{{ route('hotels.index') }}"
+                           class="{{ request()->routeIs('hotels.*') ? 'text-neutral-900 font-semibold' : 'hover:text-neutral-900' }}">
                             Hotels
                         </a>
-                        <a href="{{ route('rooms.index') }}" class="hover:text-neutral-900">
+
+                        <a href="{{ route('rooms.index') }}"
+                           class="{{ request()->routeIs('rooms.*') ? 'text-neutral-900 font-semibold' : 'hover:text-neutral-900' }}">
                             Rooms
                         </a>
                     @endif
@@ -52,21 +68,35 @@
                 <a href="{{ route('login') }}" class="text-neutral-600 hover:text-neutral-900">
                     Login
                 </a>
+
                 <a href="{{ route('register') }}"
-                   class="bg-neutral-900 text-white px-4 py-2 rounded-lg hover:bg-neutral-800">
+                   class="bg-neutral-900 text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition">
                     Register
                 </a>
             @endguest
 
             @auth
-                <span class="text-neutral-600">{{ auth()->user()->name }}</span>
+                <!-- PROFILE BUTTON -->
+                <a href="{{ route('profile.edit') }}"
+                   class="flex items-center gap-3 px-3 py-1.5 rounded-lg hover:bg-neutral-100 transition">
 
-                <a href="{{ route('profile.edit') }}" class="hover:text-neutral-900">
-                    Profile
+                    <!-- AVATAR -->
+                    <img
+                        src="{{ auth()->user()->avatar
+                            ? asset('storage/' . auth()->user()->avatar)
+                            : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name)
+                        }}"
+                        alt="Avatar"
+                        class="w-9 h-9 rounded-full object-cover border"
+                    >
+
+                    <!-- USERNAME -->
+                    <span class="text-neutral-700 font-medium">
+                        {{ auth()->user()->name }}
+                    </span>
                 </a>
 
-                <a href="{{ route('settings.index') }}" class="text-gray-600 hover:text-blue-600"> 
-                    Settings </a>
+                <!-- LOGOUT -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button class="text-red-500 hover:underline">

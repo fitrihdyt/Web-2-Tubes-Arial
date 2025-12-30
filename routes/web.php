@@ -45,18 +45,22 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
 Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/create/{room}', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+
+    Route::get('/bookings/history', [BookingController::class, 'history'])
+        ->name('bookings.history');
+
+    Route::post('/bookings/{booking}/rating', [BookingController::class, 'storeRating'])
+        ->name('bookings.rating');
+
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
-    Route::get('/my-bookings', [BookingController::class, 'myBookings'])->name('bookings.history')->middleware('notAdmin');
 
-    // PAYMENT DUMMY
-    // Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay'])
-    //     ->name('bookings.pay');
     Route::post('/bookings/{booking}/pay', [PaymentController::class, 'pay'])
         ->name('bookings.pay');
 });

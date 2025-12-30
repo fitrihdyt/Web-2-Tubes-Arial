@@ -8,12 +8,20 @@
             Profile
         </h2>
 
-        @if(!auth()->user()->isAdmin)
+        <a href="{{ route('settings.index') }}"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium 
+                    text-white bg-blue-600 rounded-lg 
+                    hover:bg-blue-700 transition">
+                Settings
+        </a>
+
+
+        <!--@if(!auth()->user()->isAdmin)
             <a href="{{ route('bookings.history') }}"
             class="inline-block text-blue-600 hover:underline">
                 Lihat Histori Booking
             </a>
-        @endif
+        @endif-->
 
         <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
             <div class="max-w-xl">

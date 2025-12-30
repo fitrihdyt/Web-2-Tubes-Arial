@@ -143,25 +143,36 @@ class BookingController extends Controller
         return redirect()->route('bookings.index')->with('success', 'Booking dibatalkan');
     }
 
-    public function myBookings()
+    public function history()
     {
-        $bookings = auth()->user()
-            ->bookings()
-            ->with(['room.hotel'])
-            ->latest()
+        $bookings = Booking::with('room.hotel')
+            ->where('user_id', auth()->id())
+            ->where('status', 'paid')
+            ->whereDate('check_out', '<', now()) 
+            ->orderByDesc('check_out')
             ->get();
 
         return view('bookings.history', compact('bookings'));
     }
 
-    public function history()
+    public function storeRating(Request $request, Booking $booking)
     {
-        $bookings = Booking::with(['hotel', 'room', 'rating'])
-            ->where('user_id', auth()->id())
-            ->where('status', 'completed')
-            ->orderByDesc('check_out')
-            ->get();
+        abort_if($booking->user_id !== auth()->id(), 403);
 
-        return view('bookings.history', compact('bookings'));
+        if ($booking->status !== 'paid' || $booking->check_out >= now()) {
+            return back()->withErrors('Booking belum selesai');
+        }
+
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'review' => 'nullable|string|max:255',
+        ]);
+
+        $booking->update([
+            'rating' => $request->rating,
+            'review' => $request->review,
+        ]);
+
+        return back()->with('success', 'Rating berhasil dikirim');
     }
 }

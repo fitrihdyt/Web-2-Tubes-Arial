@@ -23,7 +23,6 @@ class SettingController extends Controller
         $user = auth()->user();
 
         if ($request->hasFile('avatar')) {
-            // hapus avatar lama (kalau ada)
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
