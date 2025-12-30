@@ -25,7 +25,7 @@ class PaymentController extends Controller
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
-        $orderId = 'BOOKING-' . $booking->id;
+        $orderId = 'BOOKING-' . $booking->id . '-' . time();
 
         $params = [
             'transaction_details' => [
