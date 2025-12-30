@@ -3,7 +3,6 @@
         <div class="max-w-[1400px] mx-auto px-6">
             <div class="flex justify-between h-16 items-center">
 
-                <!-- LEFT -->
                 <div class="flex items-center gap-10">
                     <a href="{{ route('dashboard') }}"
                        class="text-xl font-bold text-neutral-900 tracking-tight">
@@ -38,7 +37,6 @@
                     </div>
                 </div>
 
-                <!-- RIGHT -->
                 <div class="hidden md:flex items-center gap-4">
                     <a href="{{ route('settings.index') }}" class="flex items-center gap-3">
                         <img
@@ -62,7 +60,6 @@
                     </form>
                 </div>
 
-                <!-- MOBILE BUTTON -->
                 <button @click="open = !open" class="md:hidden text-neutral-700 text-2xl">
                     ☰
                 </button>
@@ -70,7 +67,6 @@
         </div>
     </div>
 
-    <!-- MOBILE MENU -->
     <div x-show="open" x-transition class="md:hidden bg-white border-t">
         <div class="px-6 py-4 space-y-4 text-sm font-medium">
 
