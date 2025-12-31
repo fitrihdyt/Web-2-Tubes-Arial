@@ -14,9 +14,12 @@ class HotelController extends Controller
      */
     public function index(Request $request)
     {
-        $hotels = Hotel::with('facilities')->latest()->get();
+       $hotels = Hotel::with('facilities')
+        ->withMin('rooms', 'price')   // ⬅️ WAJIB
+        ->latest()
+        ->get();
 
-        return view('hotels.index', compact('hotels'));
+    return view('hotels.index', compact('hotels'));
     }
 
     // Dashboard
@@ -113,7 +116,13 @@ class HotelController extends Controller
         }
 
         // ❗ UBAH JADI VARIABLE (TAMBAHAN)
-        $hotel = Hotel::create($validated);
+        $hotelData = collect($validated)->except([
+            'facilities',
+            'custom_facilities'
+        ])->toArray();
+
+        $hotel = Hotel::create($hotelData);
+
 
         // ✅ TAMBAHAN: SIMPAN FASILITAS
         $facilityData = [];
@@ -195,7 +204,13 @@ class HotelController extends Controller
             $validated['images'] = $hotel->images;
         }
 
-        $hotel->update($validated);
+        $hotelData = collect($validated)->except([
+            'facilities',
+            'custom_facilities'
+        ])->toArray();
+
+        $hotel->update($hotelData);     
+
 
         // ✅ TAMBAHAN: UPDATE FASILITAS
         $facilityData = [];

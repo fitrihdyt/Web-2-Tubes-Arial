@@ -1,52 +1,139 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-6">Tambah Room</h1>
+<div class="max-w-5xl mx-auto px-4 space-y-8">
 
-<form action="{{ route('rooms.store') }}"
-      method="POST"
-      enctype="multipart/form-data"
-      class="bg-white p-6 rounded-xl shadow space-y-4">
-    @csrf
-
-    <select name="hotel_id" class="w-full border rounded p-2" required>
-        <option value="">Pilih Hotel</option>
-        @foreach ($hotels as $hotel)
-            <option value="{{ $hotel->id }}">{{ $hotel->name }}</option>
-        @endforeach
-    </select>
-
-    <input type="text" name="name" placeholder="Nama Room"
-           class="w-full border rounded p-2" required>
-
-    <input type="number" name="price" placeholder="Harga / malam"
-           class="w-full border rounded p-2" required>
-
-    <div class="grid grid-cols-2 gap-4">
-        <input type="number" name="capacity" placeholder="Kapasitas"
-               class="border rounded p-2" required>
-        <input type="number" name="stock" placeholder="Stok"
-               class="border rounded p-2" required>
+    {{-- HEADER --}}
+    <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-gray-800">
+            Tambah Room
+        </h1>
+        <a href="{{ route('rooms.index') }}"
+           class="text-sm text-gray-500 hover:underline">
+            Kembali
+        </a>
     </div>
 
-    <textarea name="description" placeholder="Deskripsi"
-              class="w-full border rounded p-2"></textarea>
+    <form action="{{ route('rooms.store') }}"
+          method="POST"
+          enctype="multipart/form-data"
+          class="bg-white rounded-2xl shadow p-6 space-y-8">
+        @csrf
 
-    <div>
-        <label class="block font-medium mb-1">Thumbnail</label>
-        <input type="file" name="thumbnail"
-               class="w-full border rounded p-2">
-    </div>
+        {{-- ================= BASIC INFO ================= --}}
+        <div class="grid md:grid-cols-2 gap-6">
 
-    <div>
-        <label class="block font-medium mb-1">Galeri Gambar</label>
-        <input type="file" name="images[]" multiple
-               class="w-full border rounded p-2">
-    </div>
+            {{-- HOTEL --}}
+            <div class="md:col-span-2">
+                <label class="text-sm font-medium text-gray-600">
+                    Hotel
+                </label>
+                <select name="hotel_id"
+                        class="mt-1 w-full border rounded-xl px-4 py-2"
+                        required>
+                    <option value="">Pilih Hotel</option>
+                    @foreach ($hotels as $hotel)
+                        <option value="{{ $hotel->id }}">
+                            {{ $hotel->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-    <div class="flex gap-3">
-        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">Simpan</button>
-        <a href="{{ route('rooms.index') }}" class="px-4 py-2 rounded-lg border">Batal</a>
-    </div>
-</form>
+            {{-- ROOM NAME --}}
+            <div>
+                <label class="text-sm font-medium text-gray-600">
+                    Nama Room
+                </label>
+                <input type="text"
+                       name="name"
+                       placeholder="Contoh: Deluxe Room"
+                       class="mt-1 w-full border rounded-xl px-4 py-2"
+                       required>
+            </div>
+
+            {{-- PRICE --}}
+            <div>
+                <label class="text-sm font-medium text-gray-600">
+                    Harga / malam
+                </label>
+                <input type="number"
+                       name="price"
+                       placeholder="500000"
+                       class="mt-1 w-full border rounded-xl px-4 py-2"
+                       required>
+            </div>
+
+            {{-- CAPACITY --}}
+            <div>
+                <label class="text-sm font-medium text-gray-600">
+                    Kapasitas (orang)
+                </label>
+                <input type="number"
+                       name="capacity"
+                       placeholder="2"
+                       class="mt-1 w-full border rounded-xl px-4 py-2"
+                       required>
+            </div>
+
+            {{-- STOCK --}}
+            <div>
+                <label class="text-sm font-medium text-gray-600">
+                    Stok Kamar
+                </label>
+                <input type="number"
+                       name="stock"
+                       placeholder="10"
+                       class="mt-1 w-full border rounded-xl px-4 py-2"
+                       required>
+            </div>
+
+            {{-- DESCRIPTION --}}
+            <div class="md:col-span-2">
+                <label class="text-sm font-medium text-gray-600">
+                    Deskripsi Room
+                </label>
+                <textarea name="description"
+                          rows="4"
+                          placeholder="Deskripsi singkat kamar"
+                          class="mt-1 w-full border rounded-xl px-4 py-2"></textarea>
+            </div>
+        </div>
+
+        {{-- ================= THUMBNAIL ================= --}}
+        <div>
+            <label class="text-sm font-medium text-gray-600 block mb-2">
+                Thumbnail Room
+            </label>
+            <input type="file"
+                   name="thumbnail"
+                   class="w-full border rounded-xl px-4 py-2 text-sm">
+        </div>
+
+        {{-- ================= GALLERY ================= --}}
+        <div>
+            <label class="text-sm font-medium text-gray-600 block mb-2">
+                Galeri Room
+            </label>
+            <input type="file"
+                   name="images[]"
+                   multiple
+                   class="w-full border rounded-xl px-4 py-2 text-sm">
+        </div>
+
+        {{-- ================= ACTION ================= --}}
+        <div class="flex gap-4 pt-4">
+            <button class="bg-[#134662] hover:bg-[#0f3a4e]
+                           text-white px-6 py-3 rounded-xl font-semibold">
+                Simpan Room
+            </button>
+
+            <a href="{{ route('rooms.index') }}"
+               class="px-6 py-3 rounded-xl border text-gray-600">
+                Batal
+            </a>
+        </div>
+
+    </form>
+</div>
 @endsection

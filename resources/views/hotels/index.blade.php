@@ -1,111 +1,152 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">Daftar Hotel</h1>
 
-    @auth
-        @if(in_array(auth()->user()->role, ['hotel_admin']))
-            <a href="{{ route('hotels.create') }}"
-               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-                + Tambah Hotel
-            </a>
-        @endif
-    @endauth
-</div>
+<div class="max-w-7xl mx-auto px-4">
 
-@if($hotels->isEmpty())
-    <div class="bg-white p-6 rounded-lg shadow text-center text-gray-500">
-        Belum ada data hotel
-    </div>
-@else
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-@foreach($hotels as $hotel)
-    <div class="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
+    {{-- HEADER --}}
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-2xl font-bold text-gray-800">
+            Daftar Hotel
+        </h1>
 
-        <!-- CLICKABLE AREA -->
-        <a href="{{ route('hotels.show', $hotel) }}" class="block hover:bg-gray-50">
-
-            <!-- Thumbnail -->
-            <div class="h-44 bg-gray-100">
-                @if($hotel->thumbnail)
-                    <img src="{{ asset('storage/' . $hotel->thumbnail) }}"
-                         class="w-full h-full object-cover">
-                @else
-                    <div class="w-full h-full flex items-center justify-center text-gray-400">
-                        No Image
-                    </div>
-                @endif
-            </div>
-
-            <!-- Content -->
-            <div class="p-4">
-                <h2 class="text-xl font-semibold">{{ $hotel->name }}</h2>
-
-                <!-- ⭐ STAR -->
-                <div class="flex items-center gap-1 text-yellow-500 text-sm mt-1">
-                    @for ($i = 1; $i <= 5; $i++)
-                        @if ($i <= $hotel->star)
-                            ★
-                        @else
-                            <span class="text-gray-300">★</span>
-                        @endif
-                    @endfor
-                    <span class="text-gray-400 ml-1">({{ $hotel->star }})</span>
-                </div>
-
-                <p class="text-gray-500 mt-1">{{ $hotel->city }}</p>
-
-                <p class="text-sm text-gray-600 mt-2">
-                    {{ \Illuminate\Support\Str::limit($hotel->description, 80) }}
-                </p>
-
-                {{-- ======================= --}}
-                {{-- FASILITAS (MAX 2) --}}
-                {{-- ======================= --}}
-                @if($hotel->facilities && $hotel->facilities->count())
-                    <div class="flex flex-wrap gap-2 mt-3">
-                        @foreach($hotel->facilities->take(2) as $facility)
-                            <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
-                                {{ $facility->pivot->custom_name ?? $facility->name }}
-                            </span>
-                        @endforeach
-
-                        @if($hotel->facilities->count() > 2)
-                            <span class="text-xs text-gray-400">
-                                +{{ $hotel->facilities->count() - 2 }} lainnya
-                            </span>
-                        @endif
-                    </div>
-                @endif
-            </div>
-        </a>
-
-        <!-- FOOTER (ADMIN ONLY) -->
         @auth
             @if(auth()->user()->role === 'hotel_admin')
-                <a href="{{ route('hotels.edit', $hotel) }}"
-                   class="block px-4 py-2 text-yellow-600 hover:underline">
-                    Edit
+                <a href="{{ route('hotels.create') }}"
+                   class="bg-[#134662] hover:bg-[#0f3a4e] text-white px-5 py-2.5 rounded-xl shadow">
+                    + Tambah Hotel
                 </a>
             @endif
-
-            @if(in_array(auth()->user()->role, ['super_admin', 'hotel_admin']))
-                <form action="{{ route('hotels.destroy', $hotel) }}"
-                      method="POST"
-                      onsubmit="return confirm('Yakin hapus hotel ini?')"
-                      class="px-4 pb-4">
-                    @csrf
-                    @method('DELETE')
-                    <button class="text-red-600 hover:underline">
-                        Hapus
-                    </button>
-                </form>
-            @endif
         @endauth
-
     </div>
-@endforeach
+
+    {{-- EMPTY --}}
+    @if($hotels->isEmpty())
+        <div class="bg-white rounded-2xl p-16 text-center text-gray-400 shadow">
+            Belum ada data hotel
+        </div>
+    @else
+
+    {{-- LIST --}}
+    <div class="space-y-6">
+    @foreach($hotels as $hotel)
+
+        <div class="bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden flex">
+
+            {{-- IMAGE --}}
+            <a href="{{ route('hotels.show', $hotel) }}"
+               class="w-[260px] h-[200px] shrink-0 relative group overflow-hidden">
+                <img
+                    src="{{ $hotel->thumbnail ? asset('storage/'.$hotel->thumbnail) : 'https://via.placeholder.com/400x300' }}"
+                    class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                >
+            </a>
+
+            {{-- INFO --}}
+            <div class="flex-1 px-6 py-4 flex flex-col justify-between">
+
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        {{ $hotel->name }}
+                    </h2>
+
+                    {{-- STAR --}}
+                    <div class="flex items-center gap-1 text-yellow-500 text-sm mt-1">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= $hotel->star)
+                                ★
+                            @else
+                                <span class="text-gray-300">★</span>
+                            @endif
+                        @endfor
+                        <span class="text-gray-400 ml-2 text-xs">
+                            {{ $hotel->star }}/5
+                        </span>
+                    </div>
+
+                    {{-- LOCATION (SVG) --}}
+                    <div class="flex items-center gap-1.5 text-sm text-gray-500 mt-1">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="w-4 h-4 text-gray-400"
+                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5
+                                     9 6.343 9 8s1.343 3 3 3z"/>
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M19.5 8c0 7-7.5 11-7.5 11S4.5 15 4.5 8
+                                     a7.5 7.5 0 1115 0z"/>
+                        </svg>
+                        <span>{{ $hotel->city }}</span>
+                    </div>
+
+                    {{-- DESCRIPTION --}}
+                    <p class="text-sm text-gray-600 mt-2">
+                        {{ \Illuminate\Support\Str::limit($hotel->description, 80) }}
+                    </p>
+
+                    {{-- FASILITAS --}}
+                    @if($hotel->facilities->count())
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            @foreach($hotel->facilities->take(3) as $facility)
+                                <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1 rounded-full">
+                                    {{ $facility->pivot->custom_name ?? $facility->name }}
+                                </span>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+                {{-- ADMIN --}}
+                @auth
+                    @if(in_array(auth()->user()->role, ['hotel_admin','super_admin']))
+                        <div class="flex gap-4 text-xs mt-3">
+                            <a href="{{ route('hotels.edit', $hotel) }}"
+                               class="text-yellow-600 hover:underline">
+                                Edit
+                            </a>
+
+                            <form action="{{ route('hotels.destroy', $hotel) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Yakin hapus hotel ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="text-red-600 hover:underline">
+                                    Hapus
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+                @endauth
+            </div>
+
+            {{-- PRICE --}}
+            <div class="w-[220px] bg-gray-50 px-6 py-4 flex flex-col justify-center items-end border-l">
+
+                <div class="text-right">
+                    <p class="text-xl font-bold text-[#ff5a1f]">
+                        Rp {{ number_format($hotel->rooms_min_price ?? 0, 0, ',', '.') }}
+                    </p>
+                    <p class="text-xs text-gray-400">
+                        / malam
+                    </p>
+                </div>
+
+                <a href="{{ route('hotels.show', $hotel) }}"
+                   class="mt-4 bg-[#ff5a1f] hover:bg-[#e64a19]
+                          text-white px-5 py-2 rounded-lg text-sm font-semibold">
+                    Pilih Kamar
+                </a>
+            </div>
+
+        </div>
+
+    @endforeach
+    </div>
+    @endif
+
 </div>
-@endif
 @endsection

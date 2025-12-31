@@ -1,71 +1,155 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-6">Edit Room</h1>
+<div class="max-w-5xl mx-auto px-4 space-y-8">
 
-<form action="{{ route('rooms.update', $room) }}"
-      method="POST"
-      enctype="multipart/form-data"
-      class="bg-white p-6 rounded-xl shadow space-y-4">
-    @csrf
-    @method('PUT')
-
-    <select name="hotel_id" class="w-full border rounded p-2" required>
-        @foreach ($hotels as $hotel)
-            <option value="{{ $hotel->id }}"
-                {{ $room->hotel_id == $hotel->id ? 'selected' : '' }}>
-                {{ $hotel->name }}
-            </option>
-        @endforeach
-    </select>
-
-    <input type="text" name="name" value="{{ $room->name }}"
-           class="w-full border rounded p-2" required>
-
-    <input type="number" name="price" value="{{ $room->price }}"
-           class="w-full border rounded p-2" required>
-
-    <div class="grid grid-cols-2 gap-4">
-        <input type="number" name="capacity" value="{{ $room->capacity }}"
-               class="border rounded p-2" required>
-        <input type="number" name="stock" value="{{ $room->stock }}"
-               class="border rounded p-2" required>
+    {{-- HEADER --}}
+    <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-gray-800">
+            Edit Room
+        </h1>
+        <a href="{{ route('rooms.index') }}"
+           class="text-sm text-gray-500 hover:underline">
+            Kembali
+        </a>
     </div>
 
-    <textarea name="description"
-              class="w-full border rounded p-2">{{ $room->description }}</textarea>
+    <form action="{{ route('rooms.update', $room) }}"
+          method="POST"
+          enctype="multipart/form-data"
+          class="bg-white rounded-2xl shadow p-6 space-y-8">
+        @csrf
+        @method('PUT')
 
-    {{-- Thumbnail lama --}}
-    @if ($room->thumbnail)
-        <img src="{{ asset('storage/' . $room->thumbnail) }}"
-             class="w-32 rounded-lg mb-2">
-    @endif
+        {{-- ================= BASIC INFO ================= --}}
+        <div class="grid md:grid-cols-2 gap-6">
 
-    <div>
-        <label class="block font-medium mb-1">Ganti Thumbnail</label>
-        <input type="file" name="thumbnail"
-               class="w-full border rounded p-2">
-    </div>
+            {{-- HOTEL --}}
+            <div class="md:col-span-2">
+                <label class="text-sm font-medium text-gray-600">
+                    Hotel
+                </label>
+                <select name="hotel_id"
+                        class="mt-1 w-full border rounded-xl px-4 py-2"
+                        required>
+                    @foreach ($hotels as $hotel)
+                        <option value="{{ $hotel->id }}"
+                            {{ $room->hotel_id == $hotel->id ? 'selected' : '' }}>
+                            {{ $hotel->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-    {{-- Gallery lama --}}
-    @if ($room->images)
-        <div class="grid grid-cols-4 gap-3 mt-2">
-            @foreach ($room->images as $img)
-                <img src="{{ asset('storage/' . $img) }}"
-                     class="h-24 object-cover rounded-lg">
-            @endforeach
+            {{-- ROOM NAME --}}
+            <div>
+                <label class="text-sm font-medium text-gray-600">
+                    Nama Room
+                </label>
+                <input type="text"
+                       name="name"
+                       value="{{ old('name', $room->name) }}"
+                       class="mt-1 w-full border rounded-xl px-4 py-2"
+                       required>
+            </div>
+
+            {{-- PRICE --}}
+            <div>
+                <label class="text-sm font-medium text-gray-600">
+                    Harga / malam
+                </label>
+                <input type="number"
+                       name="price"
+                       value="{{ old('price', $room->price) }}"
+                       class="mt-1 w-full border rounded-xl px-4 py-2"
+                       required>
+            </div>
+
+            {{-- CAPACITY --}}
+            <div>
+                <label class="text-sm font-medium text-gray-600">
+                    Kapasitas (orang)
+                </label>
+                <input type="number"
+                       name="capacity"
+                       value="{{ old('capacity', $room->capacity) }}"
+                       class="mt-1 w-full border rounded-xl px-4 py-2"
+                       required>
+            </div>
+
+            {{-- STOCK --}}
+            <div>
+                <label class="text-sm font-medium text-gray-600">
+                    Stok Kamar
+                </label>
+                <input type="number"
+                       name="stock"
+                       value="{{ old('stock', $room->stock) }}"
+                       class="mt-1 w-full border rounded-xl px-4 py-2"
+                       required>
+            </div>
+
+            {{-- DESCRIPTION --}}
+            <div class="md:col-span-2">
+                <label class="text-sm font-medium text-gray-600">
+                    Deskripsi Room
+                </label>
+                <textarea name="description"
+                          rows="4"
+                          class="mt-1 w-full border rounded-xl px-4 py-2">{{ old('description', $room->description) }}</textarea>
+            </div>
         </div>
-    @endif
 
-    <div class="mt-3">
-        <label class="block font-medium mb-1">Tambah Gambar Baru</label>
-        <input type="file" name="images[]" multiple
-               class="w-full border rounded p-2">
-    </div>
+        {{-- ================= THUMBNAIL ================= --}}
+        <div>
+            <label class="text-sm font-medium text-gray-600 block mb-2">
+                Thumbnail Room
+            </label>
 
-    <div class="flex gap-3">
-        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">Update</button>
-        <a href="{{ route('rooms.index') }}" class="px-4 py-2 rounded-lg border">Batal</a>
-    </div>
-</form>
+            @if ($room->thumbnail)
+                <img src="{{ asset('storage/' . $room->thumbnail) }}"
+                     class="w-40 h-28 object-cover rounded-xl mb-3">
+            @endif
+
+            <input type="file"
+                   name="thumbnail"
+                   class="w-full border rounded-xl px-4 py-2 text-sm">
+        </div>
+
+        {{-- ================= GALLERY ================= --}}
+        <div>
+            <label class="text-sm font-medium text-gray-600 block mb-2">
+                Galeri Room
+            </label>
+
+            @if ($room->images)
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                    @foreach ($room->images as $img)
+                        <img src="{{ asset('storage/' . $img) }}"
+                             class="h-24 w-full object-cover rounded-xl">
+                    @endforeach
+                </div>
+            @endif
+
+            <input type="file"
+                   name="images[]"
+                   multiple
+                   class="w-full border rounded-xl px-4 py-2 text-sm">
+        </div>
+
+        {{-- ================= ACTION ================= --}}
+        <div class="flex gap-4 pt-4">
+            <button class="bg-[#134662] hover:bg-[#0f3a4e]
+                           text-white px-6 py-3 rounded-xl font-semibold">
+                Update Room
+            </button>
+
+            <a href="{{ route('rooms.index') }}"
+               class="px-6 py-3 rounded-xl border text-gray-600">
+                Batal
+            </a>
+        </div>
+
+    </form>
+</div>
 @endsection

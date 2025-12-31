@@ -3,7 +3,7 @@
 @section('content')
 <div class="bg-[#eef6f8] min-h-screen pt-24">
 
-    <!-- HERO (TIDAK FULL LAYAR) -->
+    {{-- HERO --}}
     <section class="max-w-7xl mx-auto px-6">
         <div class="relative h-[420px] rounded-[2.5rem] overflow-hidden shadow-2xl">
 
@@ -22,30 +22,48 @@
                     Pengalaman booking hotel yang nyaman, cepat, dan terpercaya.
                 </p>
 
-                <!-- SEARCH -->
-                <form method="GET" action="{{ route('dashboard') }}"
-                    class="mt-10 bg-white/95 backdrop-blur rounded-2xl shadow-xl p-6 grid grid-cols-1 md:grid-cols-6 gap-4 max-w-6xl">
+                {{-- SEARCH --}}
+                <form method="GET"
+                      action="{{ route('dashboard') }}"
+                      class="mt-10 bg-white/95 backdrop-blur rounded-2xl shadow-xl p-6
+                             grid grid-cols-1 md:grid-cols-6 gap-4 max-w-6xl">
 
                     <input
                         type="text"
                         name="search"
                         value="{{ request('search') }}"
                         placeholder="Kota atau nama hotel"
-                        class="md:col-span-3 px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#134662]"
+                        class="md:col-span-3 px-5 py-4 rounded-xl border border-gray-200
+                               focus:ring-2 focus:ring-[#134662]"
                     >
 
                     <select
                         name="price"
-                        class="md:col-span-1 px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#134662]">
+                        class="md:col-span-2 px-5 py-4 rounded-xl border border-gray-200
+                               focus:ring-2 focus:ring-[#134662]">
                         <option value="">Semua Harga</option>
                         <option value="0-500">Under 500k</option>
                         <option value="500-1000">500k – 1jt</option>
                         <option value="1000+">Di atas 1jt</option>
                     </select>
 
+                    {{-- BUTTON SEARCH ICON --}}
                     <button
-                        class="md:col-span-2 bg-[#134662] hover:bg-[#0f3a4e] transition text-white font-semibold rounded-xl py-4">
-                        Cari Hotel
+                        type="submit"
+                        class="flex items-center justify-center bg-[#134662]
+                               hover:bg-[#0f3a4e] transition
+                               text-white rounded-xl">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="w-6 h-6"
+                             fill="none"
+                             viewBox="0 0 24 24"
+                             stroke="currentColor"
+                             stroke-width="2">
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M21 21l-4.35-4.35m1.85-5.65a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
                     </button>
 
                 </form>
@@ -53,7 +71,7 @@
         </div>
     </section>
 
-    <!-- HOTEL LIST -->
+    {{-- HOTEL LIST --}}
     <section class="max-w-7xl mx-auto px-6 py-20">
         <h2 class="text-2xl font-bold text-[#134662] mb-10">
             Rekomendasi Hotel
@@ -67,15 +85,20 @@
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
                 @foreach($hotels as $hotel)
                 <a href="{{ route('hotels.show', $hotel) }}"
-                    class="group bg-white rounded-3xl overflow-hidden shadow hover:shadow-2xl transition">
+                   class="group bg-white rounded-3xl overflow-hidden
+                          shadow hover:shadow-2xl transition">
 
                     <div class="relative h-56">
                         <img
-                            src="{{ $hotel->thumbnail ? asset('storage/'.$hotel->thumbnail) : 'https://via.placeholder.com/400x300' }}"
-                            class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                            src="{{ $hotel->thumbnail
+                                ? asset('storage/'.$hotel->thumbnail)
+                                : 'https://via.placeholder.com/400x300' }}"
+                            class="w-full h-full object-cover
+                                   group-hover:scale-105 transition duration-500"
                         >
 
-                        <span class="absolute top-4 left-4 bg-white px-3 py-1 rounded-full text-sm font-bold text-[#134662]">
+                        <span class="absolute top-4 left-4 bg-white px-3 py-1
+                                     rounded-full text-sm font-bold text-[#134662]">
                             ★ {{ $hotel->star }}
                         </span>
                     </div>
@@ -98,8 +121,23 @@
                                 </p>
                             </div>
 
-                            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#eef6f8] group-hover:bg-[#134662] group-hover:text-white transition">
-                                →
+                            {{-- ARROW ICON --}}
+                            <div class="w-10 h-10 flex items-center justify-center
+                                        rounded-full bg-[#eef6f8]
+                                        group-hover:bg-[#134662]
+                                        group-hover:text-white transition">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="w-5 h-5"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke="currentColor"
+                                     stroke-width="2">
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M9 5l7 7-7 7"/>
+                                </svg>
+
                             </div>
                         </div>
                     </div>
