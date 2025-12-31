@@ -6,7 +6,7 @@
     <!-- HERO -->
     <section class="relative w-full h-[520px]">
         <img
-            src="https://images.unsplash.com/photo-1566073771259-6a8506099945"
+            src="https://i.pinimg.com/1200x/02/5b/3f/025b3fb3bd9ad83b8c0d8a89b1d67794.jpg"
             class="absolute inset-0 w-full h-full object-cover"
         >
         <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20"></div>
