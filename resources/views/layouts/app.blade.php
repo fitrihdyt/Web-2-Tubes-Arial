@@ -35,7 +35,7 @@
                         Bookings
                     </a>
 
-                    <!-- {{-- HISTORI (USER BIASA SAJA) --}}
+                    {{-- HISTORI (USER BIASA SAJA) --}}
                     @if(auth()->user()->role !== 'admin')
                         <a href="{{ route('bookings.history') }}"
                            class="{{ request()->routeIs('bookings.history')
@@ -43,7 +43,7 @@
                                : 'hover:text-neutral-900' }}">
                             Histori
                         </a>
-                    @endif -->
+                    @endif
 
                     {{-- MENU ADMIN --}}
                     @if(auth()->user()->role === 'admin')
