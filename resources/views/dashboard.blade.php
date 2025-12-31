@@ -1,124 +1,166 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="w-full bg-[#f5f7fa] min-h-screen">
+<div class="bg-[#eef6f8] min-h-screen pt-24">
 
-    <!-- HERO -->
-    <section class="relative w-full h-[520px]">
-        <img
-            src="https://i.pinimg.com/1200x/02/5b/3f/025b3fb3bd9ad83b8c0d8a89b1d67794.jpg"
-            class="absolute inset-0 w-full h-full object-cover"
-        >
-        <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20"></div>
+    <!-- HERO (TIDAK FULL LAYAR) -->
+    <section class="max-w-7xl mx-auto px-6">
+        <div class="relative h-[420px] rounded-[2.5rem] overflow-hidden shadow-2xl">
 
-        <div class="relative h-full flex flex-col justify-center px-6 md:px-20">
-            <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight">
-                Booking Hotel & Penginapan Murah
-            </h1>
-            <p class="mt-4 text-white/90 text-lg max-w-2xl">
-                Temukan hotel terbaik di seluruh Indonesia dengan harga promo dan proses cepat.
-            </p>
+            <img
+                src="https://i.pinimg.com/1200x/02/5b/3f/025b3fb3bd9ad83b8c0d8a89b1d67794.jpg"
+                class="absolute inset-0 w-full h-full object-cover scale-105"
+            >
 
-            <!-- SEARCH CARD -->
-            <form method="GET" action="{{ route('dashboard') }}"
-                class="mt-10 bg-white rounded-2xl shadow-2xl p-6 grid grid-cols-1 md:grid-cols-5 gap-4 max-w-5xl">
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0f3a4e]/80 to-[#0f3a4e]/30"></div>
 
-                <input
-                    type="text"
-                    name="search"
-                    value="{{ request('search') }}"
-                    placeholder="Kota, tujuan, atau nama hotel"
-                    class="md:col-span-2 px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-600 focus:outline-none"
-                >
+            <div class="relative h-full flex flex-col justify-center px-10 md:px-16 text-white">
+                <h1 class="text-4xl md:text-5xl font-bold leading-tight">
+                    Temukan Hotel Terbaik
+                </h1>
+                <p class="mt-4 text-white/90 max-w-xl text-lg">
+                    Pengalaman booking hotel yang nyaman, cepat, dan terpercaya.
+                </p>
 
-                <select
-                    name="price"
-                    class="px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-600 focus:outline-none">
-                    <option value="">Semua Harga</option>
-                    <option value="0-500" {{ request('price')=='0-500'?'selected':'' }}>Under 500k</option>
-                    <option value="500-1000" {{ request('price')=='500-1000'?'selected':'' }}>500k – 1jt</option>
-                    <option value="1000+" {{ request('price')=='1000+'?'selected':'' }}>Di atas 1jt</option>
-                </select>
+                <!-- SEARCH -->
+                <form method="GET" action="{{ route('dashboard') }}"
+                    class="mt-10 bg-white/95 backdrop-blur rounded-2xl shadow-xl p-6 grid grid-cols-1 md:grid-cols-6 gap-4 max-w-6xl">
 
-                <button
-                    class="md:col-span-2 bg-blue-600 hover:bg-blue-700 transition text-white font-semibold rounded-xl py-4">
-                    Cari Hotel
-                </button>
-            </form>
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Kota atau nama hotel"
+                        class="md:col-span-3 px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#134662]"
+                    >
+
+                    <select
+                        name="price"
+                        class="md:col-span-1 px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#134662]">
+                        <option value="">Semua Harga</option>
+                        <option value="0-500">Under 500k</option>
+                        <option value="500-1000">500k – 1jt</option>
+                        <option value="1000+">Di atas 1jt</option>
+                    </select>
+
+                    <button
+                        class="md:col-span-2 bg-[#134662] hover:bg-[#0f3a4e] transition text-white font-semibold rounded-xl py-4">
+                        Cari Hotel
+                    </button>
+
+                </form>
+            </div>
         </div>
     </section>
 
-    <!-- CONTENT -->
-    <section class="w-full px-6 md:px-20 py-16">
-        <div class="grid grid-cols-1 xl:grid-cols-4 gap-10">
+    <!-- HOTEL LIST -->
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <h2 class="text-2xl font-bold text-[#134662] mb-10">
+            Rekomendasi Hotel
+        </h2>
 
-            <!-- HOTEL LIST -->
-            <div class="xl:col-span-3">
-                @if($hotels->isEmpty())
-                    <div class="bg-white rounded-2xl p-20 text-center shadow">
-                        <p class="text-gray-400 text-lg">Hotel tidak ditemukan.</p>
+        @if($hotels->isEmpty())
+            <div class="bg-white rounded-3xl p-20 text-center shadow">
+                <p class="text-gray-400 text-lg">Hotel tidak ditemukan.</p>
+            </div>
+        @else
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                @foreach($hotels as $hotel)
+                <a href="{{ route('hotels.show', $hotel) }}"
+                    class="group bg-white rounded-3xl overflow-hidden shadow hover:shadow-2xl transition">
+
+                    <div class="relative h-56">
+                        <img
+                            src="{{ $hotel->thumbnail ? asset('storage/'.$hotel->thumbnail) : 'https://via.placeholder.com/400x300' }}"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                        >
+
+                        <span class="absolute top-4 left-4 bg-white px-3 py-1 rounded-full text-sm font-bold text-[#134662]">
+                            ★ {{ $hotel->star }}
+                        </span>
                     </div>
-                @else
-                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        @foreach($hotels as $hotel)
-                        <a href="{{ route('hotels.show', $hotel) }}"
-                            class="group bg-white rounded-2xl overflow-hidden shadow hover:shadow-xl transition">
 
-                            <div class="relative h-56">
-                                <img
-                                    src="{{ $hotel->thumbnail ? asset('storage/'.$hotel->thumbnail) : 'https://via.placeholder.com/400x300' }}"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                                >
+                    <div class="p-6">
+                        <p class="text-xs uppercase tracking-widest text-gray-400">
+                            {{ $hotel->city }}
+                        </p>
 
-                                <span
-                                    class="absolute top-4 left-4 bg-white px-3 py-1 rounded-full text-sm font-bold text-blue-600">
-                                    ★ {{ $hotel->star }}
-                                </span>
-                            </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mt-1">
+                            {{ $hotel->name }}
+                        </h3>
 
-                            <div class="p-5">
-                                <p class="text-xs uppercase tracking-widest text-gray-400">
-                                    {{ $hotel->city }}
+                        <div class="mt-5 flex justify-between items-end">
+                            <div>
+                                <p class="text-xs text-gray-400">Mulai dari</p>
+                                <p class="text-lg font-bold text-[#134662]">
+                                    Rp {{ number_format($hotel->rooms_min_price ?? 0, 0, ',', '.') }}
+                                    <span class="text-sm font-normal text-gray-500">/malam</span>
                                 </p>
-
-                                <h3 class="text-lg font-semibold text-gray-900 mt-1">
-                                    {{ $hotel->name }}
-                                </h3>
-
-                                <div class="mt-4 flex justify-between items-end">
-                                    <div>
-                                        <p class="text-xs text-gray-400">Mulai dari</p>
-                                        <p class="text-lg font-bold text-blue-600">
-                                            Rp {{ number_format($hotel->rooms_min_price ?? 0, 0, ',', '.') }}
-                                            <span class="text-sm font-normal text-gray-500">/malam</span>
-                                        </p>
-                                    </div>
-
-                                    <div
-                                        class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 group-hover:bg-blue-600 group-hover:text-white transition">
-                                        →
-                                    </div>
-                                </div>
                             </div>
-                        </a>
-                        @endforeach
-                    </div>
-                @endif
-            </div>
 
-            <!-- MAP -->
-            <div class="xl:col-span-1">
-                <div class="sticky top-24 bg-white rounded-2xl shadow overflow-hidden">
-                    <div class="px-5 py-4 border-b">
-                        <h3 class="font-semibold text-gray-900">Cari Berdasarkan Area</h3>
-                        <p class="text-xs text-gray-400 mt-1">Klik peta untuk memilih lokasi</p>
+                            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#eef6f8] group-hover:bg-[#134662] group-hover:text-white transition">
+                                →
+                            </div>
+                        </div>
                     </div>
-                    <div id="map" class="h-[520px]"></div>
-                </div>
+                </a>
+                @endforeach
             </div>
+        @endif
+    </section>
 
+    <!-- MAP SECTION (PINDAH KE BAWAH) -->
+    <section class="max-w-7xl mx-auto px-6 pb-24">
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+            <div class="px-8 py-6 border-b">
+                <h3 class="text-lg font-semibold text-[#134662]">
+                    Cari Berdasarkan Lokasi
+                </h3>
+                <p class="text-sm text-gray-400 mt-1">
+                    Klik peta untuk menentukan area
+                </p>
+            </div>
+            <div id="map" class="h-[420px]"></div>
         </div>
     </section>
+    <footer class="bg-[#0f3a4e] text-white mt-24">
+    <div class="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-4 gap-10">
+
+        <!-- BRAND -->
+        <div>
+            <h3 class="text-2xl font-bold mb-3">BookMe</h3>
+            <p class="text-sm text-white/80 leading-relaxed">
+                Platform booking hotel yang nyaman, cepat, dan terpercaya untuk perjalananmu.
+            </p>
+        </div>
+
+        <!-- MENU -->
+        <div>
+            <h4 class="font-semibold mb-4">Menu</h4>
+            <ul class="space-y-2 text-sm text-white/80">
+                <li><a href="#" class="hover:underline">Dashboard</a></li>
+                <li><a href="#" class="hover:underline">Hotel</a></li>
+                <li><a href="#" class="hover:underline">Rooms</a></li>
+            </ul>
+        </div>
+
+        <!-- SUPPORT -->
+        <div>
+            <h4 class="font-semibold mb-4">Bantuan</h4>
+            <ul class="space-y-2 text-sm text-white/80">
+                <li><a href="#" class="hover:underline">FAQ</a></li>
+                <li><a href="#" class="hover:underline">Kontak</a></li>
+                <li><a href="#" class="hover:underline">Kebijakan Privasi</a></li>
+            </ul>
+        </div>
+
+        <!-- COPYRIGHT -->
+        <div class="flex md:justify-end items-end text-sm text-white/70">
+            © {{ date('Y') }} BookMe. All rights reserved.
+        </div>
+    </div>
+</footer>
+
 </div>
 
 <style>
