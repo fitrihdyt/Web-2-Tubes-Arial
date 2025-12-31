@@ -150,17 +150,51 @@
     </section>
 
     <!-- MAP SECTION (PINDAH KE BAWAH) -->
-    <section class="max-w-7xl mx-auto px-6 pb-24">
-        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+    {{-- MAP + LIST --}}
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden relative">
+
             <div class="px-8 py-6 border-b">
                 <h3 class="text-lg font-semibold text-[#134662]">
                     Cari Berdasarkan Lokasi
                 </h3>
-                <p class="text-sm text-gray-400 mt-1">
-                    Klik peta untuk menentukan area
+                <p class="text-sm text-gray-400">
+                    Klik peta atau gunakan lokasi kamu
                 </p>
             </div>
+
+            {{-- BUTTON LOKASI --}}
+            <button id="myLocation"
+                class="absolute top-24 right-6 z-10 bg-white px-4 py-2 rounded-xl shadow
+                       flex items-center gap-2 text-sm font-semibold text-slate-700
+                       hover:bg-gray-100 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M12 11.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M19.5 11.5c0 7-7.5 10.5-7.5 10.5S4.5 18.5 4.5 11.5
+                             a7.5 7.5 0 1115 0z"/>
+                </svg>
+                Lokasi Saya
+            </button>
+
             <div id="map" class="h-[420px]"></div>
+
+            {{-- LIST HOTEL SEKitar --}}
+            <div class="p-8 border-t">
+                <h4 class="font-semibold text-[#134662] mb-6">
+                    Hotel di Sekitar Lokasi
+                </h4>
+
+                <div id="nearbyHotels"
+                     class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <p class="text-gray-400 col-span-full">
+                        Pilih lokasi untuk melihat hotel terdekat.
+                    </p>
+                </div>
+            </div>
+
         </div>
     </section>
     <footer class="bg-[#0f3a4e] text-white mt-24">
@@ -208,7 +242,8 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
+
     const map = L.map('map', { scrollWheelZoom: false })
         .setView([-6.2, 106.8], 11)
 
@@ -216,11 +251,53 @@ document.addEventListener('DOMContentLoaded', function () {
         attribution: '&copy; OpenStreetMap'
     }).addTo(map)
 
-    let marker
+    let userMarker
+    let hotelMarkers = L.layerGroup().addTo(map)
+
+    // KLIK MAP
     map.on('click', e => {
-        if (marker) marker.setLatLng(e.latlng)
-        else marker = L.marker(e.latlng).addTo(map)
+        const { lat, lng } = e.latlng
+
+        if (userMarker) userMarker.setLatLng(e.latlng)
+        else userMarker = L.marker(e.latlng).addTo(map)
+
+        loadNearbyHotels(lat, lng)
     })
+
+    // BUTTON LOKASI SAYA
+    document.getElementById('myLocation').onclick = () => {
+        navigator.geolocation.getCurrentPosition(pos => {
+            const lat = pos.coords.latitude
+            const lng = pos.coords.longitude
+
+            map.setView([lat, lng], 13)
+
+            if (userMarker) userMarker.setLatLng([lat, lng])
+            else userMarker = L.marker([lat, lng]).addTo(map)
+
+            loadNearbyHotels(lat, lng)
+        }, () => {
+            alert('Gagal mengambil lokasi')
+        })
+    }
+
+    // LOAD HOTEL
+    function loadNearbyHotels(lat, lng) {
+        fetch(`/hotels-nearby?lat=${lat}&lng=${lng}`)
+            .then(res => res.json())
+            .then(hotels => {
+                hotelMarkers.clearLayers()
+
+                hotels.forEach(hotel => {
+                    L.marker([hotel.latitude, hotel.longitude])
+                        .addTo(hotelMarkers)
+                        .bindPopup(`
+                            <strong>${hotel.name}</strong><br>
+                            Rp ${hotel.min_price}
+                        `)
+                })
+            })
+    }
 })
 </script>
 @endsection

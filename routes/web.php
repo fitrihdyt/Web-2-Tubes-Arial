@@ -16,6 +16,8 @@ use App\Http\Middleware\IsUser;
 
 Route::get('/', [HotelController::class, 'dashboard'])
     ->name('dashboard');
+    
+Route::get('/hotels-nearby', [HotelController::class, 'nearby']);
 
 // Route::get('/', function () {
 //     return view('auth.login');

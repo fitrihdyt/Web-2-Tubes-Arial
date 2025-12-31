@@ -249,4 +249,25 @@ class HotelController extends Controller
             ->route('hotels.index')
             ->with('success', 'Hotel berhasil dihapus');
     }
+
+    public function nearby(Request $request)
+    {
+        $lat = $request->lat;
+        $lng = $request->lng;
+
+        return Hotel::selectRaw("
+            *,
+            (6371 * acos(
+                cos(radians(?)) *
+                cos(radians(latitude)) *
+                cos(radians(longitude) - radians(?)) +
+                sin(radians(?)) *
+                sin(radians(latitude))
+            )) AS distance
+        ", [$lat, $lng, $lat])
+        ->having('distance', '<=', 5)
+        ->orderBy('distance')
+        ->get();
+    }
+
 }
