@@ -51,6 +51,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/bookings/create/{room}', [BookingController::class, 'create'])->name('bookings.create');
         Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+        Route::get('/hotels/{hotel}', [HotelController::class, 'show'])->name('hotels.show');
+        Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
         Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
         Route::get('/my-bookings', [BookingController::class, 'history'])->name('bookings.history');
         Route::post('/bookings/{booking}/rating', [RatingController::class, 'store'])->name('ratings.store');
