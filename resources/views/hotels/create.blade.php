@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@push('styles')
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+@endpush
+
 @section('content')
 @if ($errors->any())
     <div class="bg-red-100 text-red-700 p-4 rounded mb-4">
@@ -13,7 +20,7 @@
 
 <h1 class="text-2xl font-bold mb-6">Tambah Hotel</h1>
 
-<form action="{{ route('hotels.store') }}" 
+<form action="{{ route('hotels.store') }}"
       method="POST"
       enctype="multipart/form-data"
       class="bg-white p-6 rounded-xl shadow space-y-4">
@@ -83,7 +90,7 @@
     </div>
 
     {{-- ========================= --}}
-    {{-- FASILITAS HOTEL (LENGKAP) --}}
+    {{-- FASILITAS HOTEL --}}
     {{-- ========================= --}}
     <div>
         <label class="block font-medium mb-2">Fasilitas Hotel</label>
@@ -142,21 +149,25 @@
         </a>
     </div>
 </form>
+@endsection
 
-{{-- ========================= --}}
-{{-- SCRIPT MAP + FASILITAS --}}
-{{-- ========================= --}}
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
     /* ================= MAP ================= */
-    const map = L.map('map').setView([-6.200000, 106.816666], 12);
+    const defaultLat = {{ old('latitude', -6.200000) }};
+    const defaultLng = {{ old('longitude', 106.816666) }};
+
+    const map = L.map('map').setView([defaultLat, defaultLng], 12);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    const marker = L.marker([-6.200000, 106.816666], {
+    const marker = L.marker([defaultLat, defaultLng], {
         draggable: true
     }).addTo(map);
 
@@ -177,11 +188,13 @@ document.addEventListener('DOMContentLoaded', function () {
         cb.addEventListener('change', function () {
             if (this.dataset.other === '1') {
                 const input = this.closest('div').querySelector('.other-input');
-                input.classList.toggle('hidden', !this.checked);
+                if (input) {
+                    input.classList.toggle('hidden', !this.checked);
+                }
             }
         });
     });
 
 });
 </script>
-@endsection
+@endpush
