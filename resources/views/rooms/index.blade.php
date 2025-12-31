@@ -3,7 +3,7 @@
 @section('content')
 <h1 class="text-2xl font-bold mb-6">Daftar Room</h1>
 
-@if(auth()->check() && auth()->user()->role === 'admin')
+@if(auth()->check() && (auth()->user()->role === 'admin_hotel'))
     <a href="{{ route('rooms.create') }}"
     class="bg-blue-600 text-white px-4 py-2 rounded-lg mb-4 inline-block">
         + Tambah Room

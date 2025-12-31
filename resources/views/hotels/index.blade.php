@@ -5,7 +5,7 @@
     <h1 class="text-3xl font-bold">Daftar Hotel</h1>
 
     @auth
-        @if(in_array(auth()->user()->role, ['super_admin', 'hotel_admin']))
+        @if(in_array(auth()->user()->role, ['hotel_admin']))
             <a href="{{ route('hotels.create') }}"
                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
                 + Tambah Hotel
@@ -64,23 +64,22 @@
 
         <!-- FOOTER (ADMIN ONLY) -->
         @auth
-        @if(in_array(auth()->user()->role, ['super_admin', 'hotel_admin']))
-        <div class="flex justify-between items-center px-4 py-3 border-t bg-white">
+        @if(auth()->user()->role === 'hotel_admin')
             <a href="{{ route('hotels.edit', $hotel) }}"
-               class="text-yellow-600 hover:underline">
+            class="text-yellow-600 hover:underline">
                 Edit
             </a>
-
-            <form action="{{ route('hotels.destroy', $hotel) }}"
-                  method="POST"
-                  onsubmit="return confirm('Yakin hapus hotel ini?')">
-                @csrf
-                @method('DELETE')
-                <button class="text-red-600 hover:underline">
-                    Hapus
-                </button>
-            </form>
-        </div>
+        @endif
+        @if(in_array(auth()->user()->role, ['super_admin', 'hotel_admin']))
+        <form action="{{ route('hotels.destroy', $hotel) }}"
+            method="POST"
+            onsubmit="return confirm('Yakin hapus hotel ini?')">
+            @csrf
+            @method('DELETE')
+            <button class="text-red-600 hover:underline">
+                Hapus
+            </button>
+        </form>
         @endif
         @endauth
 
