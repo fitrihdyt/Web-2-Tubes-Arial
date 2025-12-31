@@ -36,7 +36,7 @@
                     </a>
 
                     {{-- HISTORI (USER BIASA SAJA) --}}
-                    @if(auth()->user()->role !== 'admin')
+                    @if(auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'hotel_admin')
                         <a href="{{ route('bookings.history') }}"
                            class="{{ request()->routeIs('bookings.history')
                                ? 'text-neutral-900 font-semibold'
@@ -46,17 +46,26 @@
                     @endif
 
                     {{-- MENU ADMIN --}}
-                    @if(auth()->user()->role === 'admin')
+                    @if(
+                        (auth()->user()->role === 'super_admin' || auth()->user()->role === 'hotel_admin')
+                        && Route::has('hotels.index')
+                    )
                         <a href="{{ route('hotels.index') }}"
-                           class="{{ request()->routeIs('hotels.*') ? 'text-neutral-900 font-semibold' : 'hover:text-neutral-900' }}">
+                        class="{{ request()->routeIs('hotels.*') ? 'text-neutral-900 font-semibold' : 'hover:text-neutral-900' }}">
                             Hotels
                         </a>
+                    @endif
 
+                    @if(
+                        (auth()->user()->role === 'super_admin' || auth()->user()->role === 'hotel_admin')
+                        && Route::has('rooms.index')
+                    )
                         <a href="{{ route('rooms.index') }}"
-                           class="{{ request()->routeIs('rooms.*') ? 'text-neutral-900 font-semibold' : 'hover:text-neutral-900' }}">
+                        class="{{ request()->routeIs('rooms.*') ? 'text-neutral-900 font-semibold' : 'hover:text-neutral-900' }}">
                             Rooms
                         </a>
                     @endif
+
                 @endauth
             </div>
         </div>

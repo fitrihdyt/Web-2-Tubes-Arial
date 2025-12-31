@@ -18,11 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'payment/midtrans-callback',
         ]);
 
-        $middleware->appendToGroup('web', [
-            \App\Http\Middleware\IsHotelAdmin::class,
-            \App\Http\Middleware\IsSuperAdmin::class,
-            \App\Http\Middleware\IsUser::class,
-        ]);
+        // ❌ JANGAN append middleware role ke web
+        // BIARKAN KOSONG
         
     })
     ->withExceptions(function (Exceptions $exceptions): void {
