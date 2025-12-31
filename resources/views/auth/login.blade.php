@@ -4,63 +4,107 @@
     <meta charset="UTF-8">
     <title>Login | BookMe</title>
     @vite(['resources/css/app.css'])
-</head>
-<body class="min-h-screen flex">
 
+    <style>
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatSlow {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex bg-[#eef6f8] overflow-hidden">
+
+    <!-- LEFT IMAGE -->
     <div class="hidden lg:block w-2/3 relative">
         <img
             src="https://i.pinimg.com/1200x/02/5b/3f/025b3fb3bd9ad83b8c0d8a89b1d67794.jpg"
-            class="absolute inset-0 w-full h-full object-cover"
+            class="absolute inset-0 w-full h-full object-cover scale-105"
             alt="Hotel"
         />
         <div class="absolute inset-0 bg-black/40"></div>
 
-        <div class="relative z-10 h-full flex flex-col justify-end p-12 text-white">
-            <h1 class="text-3xl font-bold mb-2">BookMe</h1>
-            <p class="text-sm max-w-md">
-                Booking kamar hotel jadi lebih mudah dan cepat.
-                
+        <div class="relative z-10 h-full flex flex-col justify-end p-14 text-white animate-[fadeSlide_0.9s_ease-out]">
+            <h1 class="text-4xl font-bold mb-3 tracking-wide">BookMe</h1>
+            <p class="text-sm max-w-md leading-relaxed opacity-90">
+                Booking kamar hotel dengan pengalaman yang nyaman, cepat, dan elegan.
             </p>
         </div>
     </div>
 
-   <div class="w-full lg:w-1/2 flex items-center justify-center 
-                bg-gradient-to-br from-[#eef6f8] to-[#dcecef] px-6">
+    <!-- RIGHT LOGIN -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center px-6 relative">
 
-        <div class="w-full max-w-md rounded-3xl 
-                    bg-white/70 backdrop-blur-xl 
-                    shadow-2xl p-10 border border-white/40">
+        <!-- floating blur decoration -->
+        <div class="absolute -top-20 -right-20 w-72 h-72 bg-[#134662]/20 rounded-full blur-3xl animate-[floatSlow_6s_ease-in-out_infinite]"></div>
+        <div class="absolute bottom-10 left-10 w-48 h-48 bg-[#6fb1c8]/30 rounded-full blur-3xl animate-[floatSlow_8s_ease-in-out_infinite]"></div>
 
-            <h2 class="text-2xl font-bold text-[#134662] mb-2">Login</h2>
-            <p class="text-sm text-gray-500 mb-6">
-                Masuk untuk melanjutkan booking
+        <div class="relative z-10 w-full max-w-md rounded-3xl 
+                    bg-white/75 backdrop-blur-xl 
+                    shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)]
+                    p-10 border border-white/40
+                    animate-[fadeSlide_0.8s_ease-out]">
+
+            <h2 class="text-3xl font-bold text-[#134662] mb-1">
+                Welcome Back
+            </h2>
+            <p class="text-sm text-gray-500 mb-8">
+                Login untuk melanjutkan perjalananmu
             </p>
 
-            <form method="POST" action="{{ route('login') }}" class="space-y-5">
+            <form method="POST" action="{{ route('login') }}" class="space-y-6">
                 @csrf
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                <!-- EMAIL -->
+                <div class="group">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                    </label>
                     <input
                         type="email"
                         name="email"
                         required
-                        class="mt-1 w-full rounded-lg border-gray-300 focus:border-[#134662] focus:ring-[#134662]"
+                        class="w-full rounded-xl border-gray-300 
+                               focus:border-[#134662] focus:ring-[#134662]
+                               transition duration-300
+                               group-hover:border-[#134662]/60"
                     >
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Password</label>
+                <!-- PASSWORD -->
+                <div class="group">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Password
+                    </label>
                     <input
                         type="password"
                         name="password"
                         required
-                        class="mt-1 w-full rounded-lg border-gray-300 focus:border-[#134662] focus:ring-[#134662]"
+                        class="w-full rounded-xl border-gray-300 
+                               focus:border-[#134662] focus:ring-[#134662]
+                               transition duration-300
+                               group-hover:border-[#134662]/60"
                     >
                 </div>
 
+                <!-- OPTIONS -->
                 <div class="flex items-center justify-between text-sm">
-                    <label class="flex items-center gap-2">
+                    <label class="flex items-center gap-2 text-gray-600">
                         <input type="checkbox" name="remember" class="rounded">
                         Remember me
                     </label>
@@ -71,20 +115,25 @@
                     </a>
                 </div>
 
+                <!-- BUTTON -->
                 <button
                     type="submit"
-                    class="w-full bg-[#134662] hover:bg-[#0f3a4e] text-white font-semibold py-3 rounded-lg transition">
+                    class="w-full bg-[#134662] text-white font-semibold py-3 rounded-xl
+                           transition-all duration-300
+                           hover:bg-[#0f3a4e]
+                           hover:shadow-lg
+                           active:scale-[0.98]">
                     Login
                 </button>
 
-                <p class="text-sm text-center text-gray-600">
+                <p class="text-sm text-center text-gray-600 pt-2">
                     Belum punya akun?
-                    <a href="{{ route('register') }}" class="text-[#134662] font-medium hover:underline">
+                    <a href="{{ route('register') }}"
+                       class="text-[#134662] font-medium hover:underline">
                         Daftar
                     </a>
                 </p>
             </form>
-
         </div>
     </div>
 
