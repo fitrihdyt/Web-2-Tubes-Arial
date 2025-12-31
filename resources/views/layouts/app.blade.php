@@ -7,6 +7,16 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
+    />
+
 </head>
 
 <body class="bg-neutral-50 min-h-screen">
@@ -187,6 +197,8 @@
         @apply text-neutral-600 hover:text-neutral-900 transition;
     }
 </style>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
 </body>
 </html>
