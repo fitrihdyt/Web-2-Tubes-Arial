@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\IsHotelAdmin;
 use App\Http\Middleware\IsSuperAdmin;
+use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsUser;
 
 use App\Http\Middleware\NotAdmin;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'IsSuperAdmin' => IsSuperAdmin::class,
             'IsUser'       => IsUser::class,
             'notAdmin'     => NotAdmin::class,
+            'IsAdmin'      => IsAdmin::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

@@ -102,24 +102,30 @@
 
                 {{-- ADMIN --}}
                 @auth
-                    @if(in_array(auth()->user()->role, ['hotel_admin','super_admin']))
-                        <div class="flex gap-4 text-xs mt-3">
+                    <div class="flex gap-4 text-xs mt-3">
+
+                        {{-- EDIT: hotel_admin--}}
+                        @if(auth()->user()->role === 'hotel_admin')
                             <a href="{{ route('hotels.edit', $hotel) }}"
-                               class="text-yellow-600 hover:underline">
+                            class="text-slate-600 hover:underline">
                                 Edit
                             </a>
+                        @endif
 
+                        {{-- DELETE: super_admin only --}}
+                        @if(auth()->user()->role === 'super_admin')
                             <form action="{{ route('hotels.destroy', $hotel) }}"
-                                  method="POST"
-                                  onsubmit="return confirm('Yakin hapus hotel ini?')">
+                                method="POST"
+                                onsubmit="return confirm('Yakin hapus hotel ini?')">
                                 @csrf
                                 @method('DELETE')
-                                <button class="text-red-600 hover:underline">
+                                <button class="text-slate-600 hover:underline">
                                     Hapus
                                 </button>
                             </form>
-                        </div>
-                    @endif
+                        @endif
+
+                    </div>
                 @endauth
             </div>
 

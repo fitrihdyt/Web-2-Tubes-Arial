@@ -104,7 +104,7 @@
                     @endif
                 </div>
 
-                <div class="p-6 flex flex-col justify-between h-full">
+                    <div class="p-6 flex flex-col gap-4">
 
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800">

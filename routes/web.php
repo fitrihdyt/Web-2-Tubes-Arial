@@ -24,16 +24,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
 
-Route::get('/hotels', [HotelController::class, 'index'])->middleware(['auth', 'IsHotelAdmin'])->name('hotels.index');
+Route::get('/hotels', [HotelController::class, 'index'])
+    ->middleware('auth')
+    ->name('hotels.index');
+
+Route::middleware(['auth', IsSuperAdmin::class])->group(function () {
+    Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])
+        ->name('hotels.destroy');
+});
+
 
 Route::middleware(['auth', 'IsHotelAdmin'])->group(function () {
     Route::get('/hotels/create', [HotelController::class, 'create'])->name('hotels.create');
     Route::post('/hotels', [HotelController::class, 'store'])->name('hotels.store');
     Route::get('/hotels/{hotel}/edit', [HotelController::class, 'edit'])->name('hotels.edit');
     Route::put('/hotels/{hotel}', [HotelController::class, 'update'])->name('hotels.update');
-    Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])->name('hotels.destroy');
 });
 
 Route::get('/hotels/{hotel}', [HotelController::class, 'show'])->name('hotels.show');
