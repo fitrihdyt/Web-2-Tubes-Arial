@@ -3,12 +3,14 @@
 @section('content')
 <h1 class="text-2xl font-bold mb-6">Daftar Room</h1>
 
-@if(auth()->check() && (auth()->user()->role === 'admin_hotel'))
-    <a href="{{ route('rooms.create') }}"
-    class="bg-blue-600 text-white px-4 py-2 rounded-lg mb-4 inline-block">
-        + Tambah Room
-    </a>
-@endif
+    @auth
+        @if(auth()->user()->role === 'hotel_admin')
+            <a href="{{ route('rooms.create') }}"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                + Tambah Room
+            </a>
+        @endif
+    @endauth
 
 <div class="bg-white rounded-xl shadow overflow-x-auto">
     <table class="w-full text-left">
