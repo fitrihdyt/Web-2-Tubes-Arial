@@ -4,12 +4,14 @@
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold">Daftar Hotel</h1>
 
-    @if(auth()->check() && auth()->user()->role === 'admin')
-        <a href="{{ route('hotels.create') }}"
-           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-            + Tambah Hotel
-        </a>
-    @endif
+    @auth
+        @if(in_array(auth()->user()->role, ['super_admin', 'hotel_admin']))
+            <a href="{{ route('hotels.create') }}"
+               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                + Tambah Hotel
+            </a>
+        @endif
+    @endauth
 </div>
 
 @if($hotels->isEmpty())
@@ -61,7 +63,8 @@
         </a>
 
         <!-- FOOTER (ADMIN ONLY) -->
-        @if(auth()->check() && auth()->user()->role === 'admin')
+        @auth
+        @if(in_array(auth()->user()->role, ['super_admin', 'hotel_admin']))
         <div class="flex justify-between items-center px-4 py-3 border-t bg-white">
             <a href="{{ route('hotels.edit', $hotel) }}"
                class="text-yellow-600 hover:underline">
@@ -79,6 +82,7 @@
             </form>
         </div>
         @endif
+        @endauth
 
     </div>
 @endforeach

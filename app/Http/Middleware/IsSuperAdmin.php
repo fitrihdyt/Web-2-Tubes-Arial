@@ -15,9 +15,14 @@ class IsSuperAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()?->role !== 'super_admin') {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        if (auth()->user()->role !== 'super_admin') {
             abort(403);
         }
+
         return $next($request);
     }
 }

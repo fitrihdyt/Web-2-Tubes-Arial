@@ -1,13 +1,18 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BookingController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\RatingController;
+
+use App\Http\Middleware\IsHotelAdmin;
+use App\Http\Middleware\IsSuperAdmin;
+use App\Http\Middleware\IsUser;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -17,39 +22,27 @@ Route::get('/dashboard', [HotelController::class, 'dashboard'])
     ->middleware('auth')
     ->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', IsHotelAdmin::class])->group(function () {
     Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
+    Route::get('/hotels/create', [HotelController::class, 'create'])->middleware(IsHotelAdmin::class)->name('hotels.create');
+    Route::post('/hotels', [HotelController::class, 'store'])->middleware(IsHotelAdmin::class)->name('hotels.store');
     Route::get('/hotels/{hotel}', [HotelController::class, 'show'])->name('hotels.show');
-});
+    Route::get('/hotels/{hotel}/edit', [HotelController::class, 'edit'])->middleware(IsHotelAdmin::class)->name('hotels.edit');
+    Route::put('/hotels/{hotel}', [HotelController::class, 'update'])->middleware(IsHotelAdmin::class)->name('hotels.update');
+    Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])->middleware(IsHotelAdmin::class)->name('hotels.destroy');
 
-Route::middleware(['auth', 'hotel_admin'])->group(function () {
-    Route::get('/hotels/create', [HotelController::class, 'create'])->name('hotels.create');
-    Route::post('/hotels', [HotelController::class, 'store'])->name('hotels.store');
-    Route::get('/hotels/{hotel}/edit', [HotelController::class, 'edit'])->name('hotels.edit');
-    Route::put('/hotels/{hotel}', [HotelController::class, 'update'])->name('hotels.update');
-    Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])->name('hotels.destroy');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
-    Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
-});
-
-Route::middleware(['auth', 'hotel_admin'])->group(function () {
     Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
     Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
     Route::get('/rooms/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
     Route::put('/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
     Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
+
+    Route::get('/admin/bookings', [BookingController::class, 'adminIndex'])
+        ->name('admin.bookings');
 });
 
-Route::middleware(['auth', 'userOnly'])->group(function () {
+Route::middleware(['auth', IsUser::class])->group(function () {
+
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/create/{room}', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
@@ -66,16 +59,12 @@ Route::middleware(['auth', 'userOnly'])->group(function () {
         ->name('bookings.pay');
 });
 
-Route::middleware(['auth', 'hotel_admin'])->group(function () {
-    Route::get('/admin/bookings', [BookingController::class, 'adminIndex'])
-        ->name('admin.bookings');
-});
+Route::middleware(['auth', IsSuperAdmin::class])->group(function () {
 
-Route::middleware(['auth', 'super_admin'])->group(function () {
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 });
 
 Route::post('/payment/midtrans-callback', [PaymentController::class, 'midtransCallback']);
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

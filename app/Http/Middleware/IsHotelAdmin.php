@@ -15,9 +15,14 @@ class IsHotelAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!in_array(auth()->user()?->role, ['admin_hotel', 'super_admin'])) {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        if (!in_array(auth()->user()->role, ['hotel_admin', 'super_admin'])) {
             abort(403);
         }
+
         return $next($request);
     }
 }

@@ -61,7 +61,7 @@ class User extends Authenticatable
 
     public function isHotelAdmin(): bool
     {
-        return $this->role === 'admin_hotel';
+        return $this->role === 'hotel_admin';
     }
 
     public function isUser(): bool

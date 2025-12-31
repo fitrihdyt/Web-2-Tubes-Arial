@@ -18,13 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'payment/midtrans-callback',
         ]);
 
-        $middleware->alias([
-            'superAdmin' => \App\Http\Middleware\IsSuperAdmin::class,
-            'hotelAdmin' => \App\Http\Middleware\IsHotelAdmin::class,
-            'userOnly'   => \App\Http\Middleware\IsUser::class,
-            'notAdmin' => NotAdmin::class, 
+        $middleware->appendToGroup('web', [
+            \App\Http\Middleware\IsHotelAdmin::class,
+            \App\Http\Middleware\IsSuperAdmin::class,
+            \App\Http\Middleware\IsUser::class,
         ]);
-
+        
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

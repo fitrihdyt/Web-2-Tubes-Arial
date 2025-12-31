@@ -15,9 +15,14 @@ class IsUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()?->role !== 'user') {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        if (auth()->user()->role !== 'user') {
             abort(403);
         }
+
         return $next($request);
     }
 }

@@ -29,7 +29,7 @@ class AdminUserSeeder extends Seeder
             [
                 'name' => 'Hotel Admin',
                 'password' => Hash::make('qwerty1234'),
-                'role' => 'admin_hotel',
+                'role' => 'hotel_admin',
             ]
         );
     }
