@@ -1,6 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+@if ($errors->any())
+    <div class="bg-red-100 text-red-700 p-4 rounded mb-4">
+        <ul class="list-disc list-inside">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <h1 class="text-2xl font-bold mb-6">Edit Hotel</h1>
 
 <form action="{{ route('hotels.update', $hotel) }}"
@@ -10,63 +20,125 @@
     @csrf
     @method('PUT')
 
-    <input type="text" name="name"
-           value="{{ $hotel->name }}"
-           class="w-full border rounded p-2" required>
+    {{-- BASIC INFO --}}
+    <input type="text"
+           name="name"
+           value="{{ old('name', $hotel->name) }}"
+           placeholder="Nama Hotel"
+           class="w-full border rounded p-2"
+           required>
 
     <textarea name="description"
-              class="w-full border rounded p-2">{{ $hotel->description }}</textarea>
+              placeholder="Deskripsi"
+              class="w-full border rounded p-2">{{ old('description', $hotel->description) }}</textarea>
 
-    <input type="text" name="address"
-           value="{{ $hotel->address }}"
+    <input type="text"
+           name="address"
+           value="{{ old('address', $hotel->address) }}"
+           placeholder="Alamat"
            class="w-full border rounded p-2">
 
-    <input type="text" name="city"
-           value="{{ $hotel->city }}"
-           class="w-full border rounded p-2" required>
+    <input type="text"
+           name="city"
+           value="{{ old('city', $hotel->city) }}"
+           placeholder="Kota"
+           class="w-full border rounded p-2"
+           required>
 
-    <select name="star" class="w-full border rounded p-2" required>
-        @for ($i = 1; $i <= 5; $i++)
-            <option value="{{ $i }}"
-                {{ $hotel->star == $i ? 'selected' : '' }}>
-                {{ $i }} Bintang
-            </option>
-        @endfor
-    </select>
+    {{-- STAR --}}
+    <div>
+        <label class="block font-medium mb-1">Bintang Hotel</label>
+        <select name="star" class="w-full border rounded p-2" required>
+            @for ($i = 1; $i <= 5; $i++)
+                <option value="{{ $i }}"
+                    {{ old('star', $hotel->star) == $i ? 'selected' : '' }}>
+                    {{ $i }} Bintang
+                </option>
+            @endfor
+        </select>
+    </div>
 
-    <!-- MAP -->
+    {{-- MAP --}}
     <div>
         <label class="block font-medium mb-2">Lokasi Hotel</label>
         <div id="map" class="w-full h-72 rounded-lg border"></div>
 
         <div class="grid grid-cols-2 gap-4 mt-3">
-            <input type="text" name="latitude" id="latitude"
-                   value="{{ $hotel->latitude }}"
-                   class="border rounded p-2" readonly>
+            <input type="text"
+                   name="latitude"
+                   id="latitude"
+                   value="{{ old('latitude', $hotel->latitude) }}"
+                   class="border rounded p-2"
+                   readonly>
 
-            <input type="text" name="longitude" id="longitude"
-                   value="{{ $hotel->longitude }}"
-                   class="border rounded p-2" readonly>
+            <input type="text"
+                   name="longitude"
+                   id="longitude"
+                   value="{{ old('longitude', $hotel->longitude) }}"
+                   class="border rounded p-2"
+                   readonly>
         </div>
     </div>
 
-    <!-- Thumbnail -->
+    {{-- ========================= --}}
+    {{-- FASILITAS HOTEL --}}
+    {{-- ========================= --}}
     <div>
-        <label class="block mb-1 font-medium">Thumbnail Saat Ini</label>
+        <label class="block font-medium mb-2">Fasilitas Hotel</label>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+            @foreach ($facilities as $facility)
+                @php
+                    $selected = $hotel->facilities->firstWhere('id', $facility->id);
+                @endphp
+
+                <div>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox"
+                               name="facilities[]"
+                               value="{{ $facility->id }}"
+                               class="facility-checkbox"
+                               data-other="{{ $facility->name === 'Other' ? '1' : '0' }}"
+                               {{ in_array($facility->id, old('facilities', $hotel->facilities->pluck('id')->toArray())) ? 'checked' : '' }}>
+                        {{ $facility->name }}
+                    </label>
+
+                    @if ($facility->name === 'Other')
+                        <input type="text"
+                               name="custom_facilities[{{ $facility->id }}]"
+                               value="{{ old(
+                                   'custom_facilities.' . $facility->id,
+                                   $selected?->pivot->custom_name
+                               ) }}"
+                               placeholder="Tulis fasilitas lain"
+                               class="other-input w-full border rounded p-2 mt-2
+                               {{ in_array($facility->id, old('facilities', $hotel->facilities->pluck('id')->toArray())) ? '' : 'hidden' }}">
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    {{-- THUMBNAIL --}}
+    <div>
+        <label class="block font-medium mb-1">Thumbnail Saat Ini</label>
         @if($hotel->thumbnail)
             <img src="{{ asset('storage/' . $hotel->thumbnail) }}"
                  class="w-32 h-20 object-cover rounded mb-2">
         @endif
 
-        <input type="file" name="thumbnail"
+        <input type="file"
+               name="thumbnail"
                class="w-full border rounded p-2">
-        <p class="text-sm text-gray-500">Kosongkan jika tidak diganti</p>
+        <p class="text-sm text-gray-500">
+            Kosongkan jika tidak diganti
+        </p>
     </div>
 
-    <!-- Images -->
+    {{-- IMAGES --}}
     <div>
-        <label class="block mb-1 font-medium">Galeri Saat Ini</label>
-        <div class="flex gap-2 flex-wrap mb-2">
+        <label class="block font-medium mb-1">Galeri Saat Ini</label>
+        <div class="flex flex-wrap gap-2 mb-2">
             @if($hotel->images)
                 @foreach($hotel->images as $img)
                     <img src="{{ asset('storage/' . $img) }}"
@@ -75,13 +147,16 @@
             @endif
         </div>
 
-        <input type="file" name="images[]" multiple
+        <input type="file"
+               name="images[]"
+               multiple
                class="w-full border rounded p-2">
         <p class="text-sm text-gray-500">
             Gambar baru akan ditambahkan ke galeri
         </p>
     </div>
 
+    {{-- ACTION --}}
     <div class="flex gap-3">
         <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">
             Update
@@ -94,11 +169,15 @@
     </div>
 </form>
 
-<<script>
+{{-- ========================= --}}
+{{-- SCRIPT MAP + FASILITAS --}}
+{{-- ========================= --}}
+<script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const lat = @json($hotel->latitude ?? -6.200000);
-    const lng = @json($hotel->longitude ?? 106.816666);
+    /* ================= MAP ================= */
+    const lat = {{ $hotel->latitude ?? -6.200000 }};
+    const lng = {{ $hotel->longitude ?? 106.816666 }};
 
     const map = L.map('map').setView([lat, lng], 13);
 
@@ -106,23 +185,30 @@ document.addEventListener('DOMContentLoaded', function () {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    const marker = L.marker([lat, lng], {
-        draggable: true
-    }).addTo(map);
+    const marker = L.marker([lat, lng], { draggable: true }).addTo(map);
 
-    marker.on('dragend', function () {
-        const pos = marker.getLatLng();
-        document.getElementById('latitude').value = pos.lat.toFixed(7);
-        document.getElementById('longitude').value = pos.lng.toFixed(7);
+    function updateLatLng(latlng) {
+        document.getElementById('latitude').value = latlng.lat.toFixed(7);
+        document.getElementById('longitude').value = latlng.lng.toFixed(7);
+    }
+
+    marker.on('dragend', e => updateLatLng(e.target.getLatLng()));
+
+    map.on('click', e => {
+        marker.setLatLng(e.latlng);
+        updateLatLng(e.latlng);
     });
 
-    map.on('click', function (e) {
-        marker.setLatLng(e.latlng);
-        document.getElementById('latitude').value = e.latlng.lat.toFixed(7);
-        document.getElementById('longitude').value = e.latlng.lng.toFixed(7);
+    /* ================= FASILITAS OTHER ================= */
+    document.querySelectorAll('.facility-checkbox').forEach(cb => {
+        cb.addEventListener('change', function () {
+            if (this.dataset.other === '1') {
+                const input = this.closest('div').querySelector('.other-input');
+                input.classList.toggle('hidden', !this.checked);
+            }
+        });
     });
 
 });
 </script>
-
 @endsection

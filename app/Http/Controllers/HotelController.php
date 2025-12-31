@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
+use App\Models\Facility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,7 +14,8 @@ class HotelController extends Controller
      */
     public function index(Request $request)
     {
-        $hotels = Hotel::latest()->get();
+        $hotels = Hotel::with('facilities')->latest()->get();
+
         return view('hotels.index', compact('hotels'));
     }
 
@@ -21,7 +23,8 @@ class HotelController extends Controller
     public function dashboard(Request $request)
     {
         $query = Hotel::query()
-            ->withMin('rooms', 'price');
+            ->withMin('rooms', 'price')
+            ->with('facilities'); 
 
         // SEARCH
         if ($request->filled('search')) {
@@ -66,7 +69,10 @@ class HotelController extends Controller
      */
     public function create()
     {
-        return view('hotels.create');
+        // ✅ TAMBAHAN
+        $facilities = Facility::all();
+
+        return view('hotels.create', compact('facilities'));
     }
 
     /**
@@ -84,6 +90,11 @@ class HotelController extends Controller
             'longitude' => 'nullable|numeric',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            // ✅ TAMBAHAN (VALIDASI FASILITAS)
+            'facilities' => 'nullable|array',
+            'facilities.*' => 'exists:facilities,id',
+            'custom_facilities.*' => 'nullable|string|max:100',
         ]);
 
         // Upload thumbnail
@@ -101,7 +112,19 @@ class HotelController extends Controller
             $validated['images'] = $images;
         }
 
-        Hotel::create($validated);
+        // ❗ UBAH JADI VARIABLE (TAMBAHAN)
+        $hotel = Hotel::create($validated);
+
+        // ✅ TAMBAHAN: SIMPAN FASILITAS
+        $facilityData = [];
+
+        foreach ($request->facilities ?? [] as $facilityId) {
+            $facilityData[$facilityId] = [
+                'custom_name' => $request->custom_facilities[$facilityId] ?? null
+            ];
+        }
+
+        $hotel->facilities()->sync($facilityData);
 
         return redirect()->route('hotels.index')->with('success', 'Hotel berhasil ditambahkan');
     }
@@ -111,7 +134,9 @@ class HotelController extends Controller
      */
     public function show(Hotel $hotel)
     {
-        $hotel->load('rooms');
+        // ✅ TAMBAHAN
+        $hotel->load('rooms', 'facilities');
+
         return view('hotels.show', compact('hotel'));
     }
 
@@ -120,7 +145,11 @@ class HotelController extends Controller
      */
     public function edit(Hotel $hotel)
     {
-        return view('hotels.edit', compact('hotel'));
+        // ✅ TAMBAHAN
+        $facilities = Facility::all();
+        $hotel->load('facilities');
+
+        return view('hotels.edit', compact('hotel', 'facilities'));
     }
 
     /**
@@ -138,6 +167,11 @@ class HotelController extends Controller
             'longitude'     => 'nullable|numeric',
             'thumbnail'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'images.*'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            // ✅ TAMBAHAN
+            'facilities' => 'nullable|array',
+            'facilities.*' => 'exists:facilities,id',
+            'custom_facilities.*' => 'nullable|string|max:100',
         ]);
 
         // Update thumbnail jika ada
@@ -163,11 +197,21 @@ class HotelController extends Controller
 
         $hotel->update($validated);
 
+        // ✅ TAMBAHAN: UPDATE FASILITAS
+        $facilityData = [];
+
+        foreach ($request->facilities ?? [] as $facilityId) {
+            $facilityData[$facilityId] = [
+                'custom_name' => $request->custom_facilities[$facilityId] ?? null
+            ];
+        }
+
+        $hotel->facilities()->sync($facilityData);
+
         return redirect()
             ->route('hotels.index')
             ->with('success', 'Hotel berhasil diperbarui');
     }
-
 
     /**
      * Hapus hotel

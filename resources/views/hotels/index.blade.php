@@ -59,28 +59,49 @@
                 <p class="text-sm text-gray-600 mt-2">
                     {{ \Illuminate\Support\Str::limit($hotel->description, 80) }}
                 </p>
+
+                {{-- ======================= --}}
+                {{-- FASILITAS (MAX 2) --}}
+                {{-- ======================= --}}
+                @if($hotel->facilities && $hotel->facilities->count())
+                    <div class="flex flex-wrap gap-2 mt-3">
+                        @foreach($hotel->facilities->take(2) as $facility)
+                            <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
+                                {{ $facility->pivot->custom_name ?? $facility->name }}
+                            </span>
+                        @endforeach
+
+                        @if($hotel->facilities->count() > 2)
+                            <span class="text-xs text-gray-400">
+                                +{{ $hotel->facilities->count() - 2 }} lainnya
+                            </span>
+                        @endif
+                    </div>
+                @endif
             </div>
         </a>
 
         <!-- FOOTER (ADMIN ONLY) -->
         @auth
-        @if(auth()->user()->role === 'hotel_admin')
-            <a href="{{ route('hotels.edit', $hotel) }}"
-            class="text-yellow-600 hover:underline">
-                Edit
-            </a>
-        @endif
-        @if(in_array(auth()->user()->role, ['super_admin', 'hotel_admin']))
-        <form action="{{ route('hotels.destroy', $hotel) }}"
-            method="POST"
-            onsubmit="return confirm('Yakin hapus hotel ini?')">
-            @csrf
-            @method('DELETE')
-            <button class="text-red-600 hover:underline">
-                Hapus
-            </button>
-        </form>
-        @endif
+            @if(auth()->user()->role === 'hotel_admin')
+                <a href="{{ route('hotels.edit', $hotel) }}"
+                   class="block px-4 py-2 text-yellow-600 hover:underline">
+                    Edit
+                </a>
+            @endif
+
+            @if(in_array(auth()->user()->role, ['super_admin', 'hotel_admin']))
+                <form action="{{ route('hotels.destroy', $hotel) }}"
+                      method="POST"
+                      onsubmit="return confirm('Yakin hapus hotel ini?')"
+                      class="px-4 pb-4">
+                    @csrf
+                    @method('DELETE')
+                    <button class="text-red-600 hover:underline">
+                        Hapus
+                    </button>
+                </form>
+            @endif
         @endauth
 
     </div>
