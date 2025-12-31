@@ -14,61 +14,16 @@ use App\Http\Middleware\IsHotelAdmin;
 use App\Http\Middleware\IsSuperAdmin;
 use App\Http\Middleware\IsUser;
 
-/*
-|--------------------------------------------------------------------------
-| DEFAULT
-|--------------------------------------------------------------------------
-*/
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-/*
-|--------------------------------------------------------------------------
-| DASHBOARD
-|--------------------------------------------------------------------------
-*/
 Route::get('/dashboard', [HotelController::class, 'dashboard'])
     ->middleware('auth')
     ->name('dashboard');
 
-/*
-|--------------------------------------------------------------------------
-| AUTHENTICATED AREA
-|--------------------------------------------------------------------------
-*/
 Route::middleware('auth')->group(function () {
-
-    /*
-    |--------------------------------------------------------------------------
-    | HOTEL (SEMUA ADMIN)
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/hotels', [HotelController::class, 'index'])
-        ->name('hotels.index');
-
-    Route::get('/hotels/{hotel}', [HotelController::class, 'show'])
-        ->name('hotels.show');
-
-    /*
-    |--------------------------------------------------------------------------
-    | ROOM (SEMUA ADMIN)
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/rooms', [RoomController::class, 'index'])
-        ->name('rooms.index');
-
-    Route::get('/rooms/{room}', [RoomController::class, 'show'])
-        ->name('rooms.show');
-
-    /*
-    |--------------------------------------------------------------------------
-    | HOTEL ADMIN (FULL AKSES)
-    |--------------------------------------------------------------------------
-    */
     Route::middleware(IsHotelAdmin::class)->group(function () {
-
-        // HOTEL
         Route::get('/hotels/create', [HotelController::class, 'create'])
             ->name('hotels.create');
 
@@ -103,6 +58,18 @@ Route::middleware('auth')->group(function () {
         // ADMIN BOOKINGS
         Route::get('/admin/bookings', [BookingController::class, 'adminIndex'])
             ->name('admin.bookings');
+
+        Route::get('/hotels', [HotelController::class, 'index'])
+        ->name('hotels.index');
+
+        Route::get('/hotels/{hotel}', [HotelController::class, 'show'])
+            ->name('hotels.show');
+
+        Route::get('/rooms', [RoomController::class, 'index'])
+            ->name('rooms.index');
+
+        Route::get('/rooms/{room}', [RoomController::class, 'show'])
+            ->name('rooms.show');
     });
 
     /*
@@ -126,7 +93,6 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware(IsUser::class)->group(function () {
-
         Route::get('/bookings', [BookingController::class, 'index'])
             ->name('bookings.index');
 
