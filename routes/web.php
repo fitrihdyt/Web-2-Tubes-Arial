@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/hotels/{hotel}', [HotelController::class, 'show'])->name('hotels.show');
 });
 
-Route::middleware(['auth', 'hotelAdmin'])->group(function () {
+Route::middleware(['auth', 'hotel_admin'])->group(function () {
     Route::get('/hotels/create', [HotelController::class, 'create'])->name('hotels.create');
     Route::post('/hotels', [HotelController::class, 'store'])->name('hotels.store');
     Route::get('/hotels/{hotel}/edit', [HotelController::class, 'edit'])->name('hotels.edit');
@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
 });
 
-Route::middleware(['auth', 'hotelAdmin'])->group(function () {
+Route::middleware(['auth', 'hotel_admin'])->group(function () {
     Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
     Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
     Route::get('/rooms/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
@@ -66,12 +66,12 @@ Route::middleware(['auth', 'userOnly'])->group(function () {
         ->name('bookings.pay');
 });
 
-Route::middleware(['auth', 'hotelAdmin'])->group(function () {
+Route::middleware(['auth', 'hotel_admin'])->group(function () {
     Route::get('/admin/bookings', [BookingController::class, 'adminIndex'])
         ->name('admin.bookings');
 });
 
-Route::middleware(['auth', 'superAdmin'])->group(function () {
+Route::middleware(['auth', 'super_admin'])->group(function () {
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 });
