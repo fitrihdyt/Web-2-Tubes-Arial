@@ -41,7 +41,6 @@
                 {{-- ================= GUEST ================= --}}
                 @guest
                     <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
-                    <a href="{{ route('hotels.index') }}" class="nav-link">Hotels</a>
                     <a href="#" class="nav-link">About</a>
                 @endguest
 
