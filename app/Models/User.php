@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'avatar',
         'phone',
+        'role',
     ];
 
     /**
@@ -52,4 +53,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
+    public function isHotelAdmin(): bool
+    {
+        return $this->role === 'admin_hotel';
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
+}
 }

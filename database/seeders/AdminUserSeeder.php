@@ -13,13 +13,23 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        // SUPER ADMIN
         User::firstOrCreate(
             ['email' => 'bomin@gmail.com'],
             [
-                'name' => 'Admin',
+                'name' => 'Super Admin',
                 'password' => Hash::make('qwerty1234'),
-                'role' => 'admin',
+                'role' => 'super_admin',
+            ]
+        );
+
+        // ADMIN HOTEL
+        User::firstOrCreate(
+            ['email' => 'telmin@gmail.com'],
+            [
+                'name' => 'Hotel Admin',
+                'password' => Hash::make('qwerty1234'),
+                'role' => 'admin_hotel',
             ]
         );
     }
