@@ -3,8 +3,11 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\IsHotelAdmin;
+use App\Http\Middleware\IsSuperAdmin;
+use App\Http\Middleware\IsUser;
+
 use App\Http\Middleware\NotAdmin;
-use App\Http\Middleware\IsAdmin;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,6 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias([
+            'IsHotelAdmin' => IsHotelAdmin::class,
+            'IsSuperAdmin' => IsSuperAdmin::class,
+            'IsUser'       => IsUser::class,
+            'notAdmin'     => NotAdmin::class,
+        ]);
 
         $middleware->validateCsrfTokens(except: [
             'payment/midtrans-callback',

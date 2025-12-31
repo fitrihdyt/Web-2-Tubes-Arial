@@ -51,7 +51,6 @@
                         <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
                         <a href="{{ route('hotels.index') }}" class="nav-link">Hotels</a>
                         <a href="{{ route('rooms.index') }}" class="nav-link">Rooms</a>
-                        <a href="{{ route('admin.bookings') }}" class="nav-link">Bookings</a>
                     @endif
                 @endauth
 

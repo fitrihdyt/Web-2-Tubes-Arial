@@ -4,13 +4,14 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class NotAdmin
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user() && auth()->user()->isAdmin) {
+        if (Auth::check() && in_array(Auth::user()->role, ['super_admin', 'hotel_admin'])) {
             abort(403);
         }
 
