@@ -2,34 +2,38 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Facility;
 
 class FacilitySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
-         $facilities = [
+        $facilities = [
+            'WiFi',
+            'AC',
             'Kolam Renang',
-            'Gym',
-            'WiFi Gratis',
             'Parkir Gratis',
             'Restoran',
+            'Breakfast',
+            'Gym',
             'Spa',
-            'Resepsionis 24 Jam',
             'Lift',
-            'AC',
+            'Resepsionis 24 Jam',
+            'Laundry',
+            'Meeting Room',
+            'TV',
+            'Air Panas',
+            'Smoking Area',
+            'Non Smoking Room',
+            'Shuttle Bandara',
+            'Other',
         ];
 
-        foreach ($facilities as $f) {
-            Facility::firstOrCreate(['name' => $f]);
+        foreach ($facilities as $facility) {
+            Facility::create([
+                'name' => $facility
+            ]);
         }
-
-        Facility::firstOrCreate(['name' => 'Other']);
     }
 }

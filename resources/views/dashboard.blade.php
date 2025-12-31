@@ -34,12 +34,14 @@
                         value="{{ request('search') }}"
                         placeholder="Kota atau nama hotel"
                         class="md:col-span-3 px-5 py-4 rounded-xl border border-gray-200
+                                text-[#134662] placeholder:text-gray-500
                                focus:ring-2 focus:ring-[#134662]"
                     >
 
                     <select
                         name="price"
                         class="md:col-span-2 px-5 py-4 rounded-xl border border-gray-200
+                                 text-[#134662] 
                                focus:ring-2 focus:ring-[#134662]">
                         <option value="">Semua Harga</option>
                         <option value="0-500">Under 500k</option>
