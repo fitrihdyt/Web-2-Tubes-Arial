@@ -3,14 +3,15 @@
 @section('content')
 <h1 class="text-2xl font-bold mb-6">Daftar Room</h1>
 
-    @auth
-        @if(auth()->user()->role === 'hotel_admin')
-            <a href="{{ route('rooms.create') }}"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-                + Tambah Room
-            </a>
-        @endif
-    @endauth
+{{-- BUTTON TAMBAH ROOM --}}
+@auth
+    @if(auth()->user()->role === 'hotel_admin')
+        <a href="{{ route('rooms.create') }}"
+           class="inline-block mb-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+            + Tambah Room
+        </a>
+    @endif
+@endauth
 
 <div class="bg-white rounded-xl shadow overflow-x-auto">
     <table class="w-full text-left">
@@ -26,38 +27,78 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($rooms as $room)
-            <tr class="border-t">
-                <td class="p-3">
-                    @if ($room->thumbnail)
-                        <img src="{{ asset('storage/' . $room->thumbnail) }}"
-                             class="w-16 h-16 object-cover rounded-lg">
-                    @else
-                        <span class="text-gray-400">-</span>
-                    @endif
-                </td>
-                <td class="p-3">{{ $room->hotel->name }}</td>
-                <td class="p-3">{{ $room->name }}</td>
-                <td class="p-3">Rp {{ number_format($room->price) }}</td>
-                <td class="p-3">{{ $room->capacity }} org</td>
-                <td class="p-3">{{ $room->stock }}</td>
-                <td class="p-3 flex gap-2">
-                    <a href="{{ route('rooms.show', $room) }}" class="text-blue-600">Detail</a>
-                    @if(auth()->check() && auth()->user()->role === 'admin')
-                        <a href="{{ route('rooms.edit', $room) }}" class="text-yellow-600">Edit</a>
-                    @endif
-                    @if(auth()->check() && auth()->user()->role === 'admin')
-                        <form action="{{ route('rooms.destroy', $room) }}"
-                            method="POST"
-                            onsubmit="return confirm('Hapus room ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="text-red-600">Hapus</button>
-                        </form>
-                    @endif
-                </td>
-            </tr>
-            @endforeach
+            @forelse ($rooms as $room)
+                <tr class="border-t">
+                    {{-- FOTO --}}
+                    <td class="p-3">
+                        @if ($room->thumbnail)
+                            <img src="{{ asset('storage/' . $room->thumbnail) }}"
+                                 class="w-16 h-16 object-cover rounded-lg">
+                        @else
+                            <span class="text-gray-400">-</span>
+                        @endif
+                    </td>
+
+                    {{-- HOTEL --}}
+                    <td class="p-3">
+                        {{ $room->hotel->name }}
+                    </td>
+
+                    {{-- NAMA --}}
+                    <td class="p-3">
+                        {{ $room->name }}
+                    </td>
+
+                    {{-- HARGA --}}
+                    <td class="p-3">
+                        Rp {{ number_format($room->price) }}
+                    </td>
+
+                    {{-- KAPASITAS --}}
+                    <td class="p-3">
+                        {{ $room->capacity }} org
+                    </td>
+
+                    {{-- STOCK FISIK --}}
+                    <td class="p-3">
+                        {{ $room->stock }}
+                    </td>
+
+                    {{-- AKSI --}}
+                    <td class="p-3">
+                        <div class="flex gap-3 items-center">
+                            <a href="{{ route('rooms.show', $room) }}"
+                               class="text-blue-600 hover:underline">
+                                Detail
+                            </a>
+
+                            @if(auth()->check() && auth()->user()->role === 'hotel_admin')
+                                <a href="{{ route('rooms.edit', $room) }}"
+                                   class="text-yellow-600 hover:underline">
+                                    Edit
+                                </a>
+
+                                <form action="{{ route('rooms.destroy', $room) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('Hapus room ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="text-red-600 hover:underline">
+                                        Hapus
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="7" class="p-6 text-center text-gray-500">
+                        Belum ada room.
+                    </td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </div>
