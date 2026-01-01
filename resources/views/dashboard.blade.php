@@ -106,7 +106,7 @@
                         [&::-webkit-scrollbar]:hidden">
 
                     {{-- HOTEL CARD --}}
-                    @foreach($hotels as $hotel)
+                    @foreach($hotels->take(8) as $hotel)
                         <a href="{{ route('hotels.show', $hotel) }}"
                         class="snap-start min-w-[280px] bg-white rounded-3xl
                                 overflow-hidden shadow
@@ -188,46 +188,59 @@
                         </a>
                     @endforeach
 
-                    {{-- MORE CARD --}}
-                    <a href="{{ route('hotels.index') }}"
-                    class="snap-start min-w-[280px] flex flex-col
-                            items-center justify-center
-                            border-2 border-dashed border-[#134662]/30
-                            rounded-3xl text-center
-                            hover:bg-[#134662]/5 transition">
+            <a href="{{ route('hotels.index') }}"
+                id="exploreCard"
+                class="snap-start min-w-[280px] h-[360px]
+                        flex flex-col items-center justify-center
+                        rounded-3xl border-2 border-dashed border-[#134662]/30
+                        text-center
+                        transition-colors duration-300">
 
-                        <div class="w-14 h-14 flex items-center justify-center
-                                    rounded-full bg-[#eef6f8] mb-4">
-                            <svg class="w-6 h-6 text-[#134662]"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                stroke-width="2">
-                                <path stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M12 4v16m8-8H4"/>
-                            </svg>
-                        </div>
 
-                        <p class="text-lg font-semibold text-[#134662]">
-                            Lihat Semua Hotel
-                        </p>
+                    <!-- ICON -->
+                    <div id="exploreIcon"
+                        class="w-16 h-16 flex items-center justify-center
+                                rounded-full
+                                border border-[#134662]/30
+                                bg-transparent
+                                mb-6
+                                transition-colors duration-300">
 
-                        <p class="text-sm text-gray-400 mt-1">
-                            Jelajahi lebih banyak pilihan
-                        </p>
-                    </a>
+                        <svg id="exploreArrow"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-6 h-6 text-[#134662] transition-colors duration-300"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="2">
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+
+                    <p id="exploreTitle"
+                    class="text-lg font-semibold text-[#134662] transition-colors duration-300">
+                        Explore More
+                    </p>
+
+                    <p id="exploreDesc"
+                    class="text-sm mt-1 text-[#134662]/70 transition-colors duration-300">
+                        Lihat semua hotel
+                    </p>
+                </a>
+
+
 
                 </div>
 
                 {{-- SCROLL INDICATOR --}}
-                <div class="px-6">
-                    <div class="max-w-[300px] mx-auto mt-4">
-                        <div class="h-1 rounded-full bg-gray-200 overflow-hidden">
-                            <div class="w-1/3 h-full bg-[#134662]"></div>
-                        </div>
+                <div class="mt-4 flex justify-center">
+                    <div class="w-40 h-1 rounded-full bg-[#134662]/20 overflow-hidden">
+                        <div class="h-full w-1/3 bg-[#134662] rounded-full"></div>
                     </div>
                 </div>
+
 
 
             </div>
@@ -532,5 +545,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 })
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('hotel-scroll');
+    const indicator = document.getElementById('scroll-indicator');
+
+    if (!container || !indicator) return;
+
+    container.addEventListener('scroll', () => {
+        const maxScroll =
+            container.scrollWidth - container.clientWidth;
+
+        const scrollPercent =
+            container.scrollLeft / maxScroll;
+
+        indicator.style.width =
+            `${Math.max(scrollPercent * 100, 10)}%`;
+    });
+});
+</script>
+<script>
+const card  = document.getElementById('exploreCard')
+const icon  = document.getElementById('exploreIcon')
+const title = document.getElementById('exploreTitle')
+const desc  = document.getElementById('exploreDesc')
+const arrow = document.getElementById('exploreArrow')
+
+card.addEventListener('mouseenter', () => {
+  card.classList.add('bg-[#134662]', 'border-[#134662]')
+  icon.classList.add('bg-white', 'border-white')
+  title.classList.add('text-white')
+  desc.classList.add('text-white/80')
+
+  arrow.classList.remove('text-[#134662]')
+  arrow.classList.add('text-white')
+})
+
+card.addEventListener('mouseleave', () => {
+  card.classList.remove('bg-[#134662]', 'border-[#134662]')
+  icon.classList.remove('bg-white', 'border-white')
+  title.classList.remove('text-white')
+  desc.classList.remove('text-white/80')
+
+  arrow.classList.add('text-[#134662]')
+})
+</script>
+
 
 @endsection
