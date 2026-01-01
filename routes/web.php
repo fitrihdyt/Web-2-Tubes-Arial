@@ -9,6 +9,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\NotAdmin;
 
 use App\Http\Middleware\IsHotelAdmin;
@@ -38,6 +39,8 @@ Route::get('/hotels', [HotelController::class, 'index'])
 Route::middleware(['auth', IsSuperAdmin::class])->group(function () {
     Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])
         ->name('hotels.destroy');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 
 Route::middleware(['auth', 'IsHotelAdmin'])->group(function () {

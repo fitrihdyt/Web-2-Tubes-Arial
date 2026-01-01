@@ -45,7 +45,7 @@
                     @if(auth()->user()->role === 'super_admin')
                         <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
                         <a href="{{ route('hotels.index') }}" class="nav-link">Hotels</a>
-                        <a href="#" class="nav-link">Users</a>
+                    <a href="{{ route('users.index') }}" class="nav-link">Users</a>
                     @endif
                 @endauth
             </div>

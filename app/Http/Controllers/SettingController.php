@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
@@ -20,7 +21,7 @@ class SettingController extends Controller
             'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($request->hasFile('avatar')) {
             if ($user->avatar) {
