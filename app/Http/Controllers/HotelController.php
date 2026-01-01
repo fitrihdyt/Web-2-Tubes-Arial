@@ -259,27 +259,47 @@ class HotelController extends Controller
         $lat = $request->lat;
         $lng = $request->lng;
 
-        $hotels = Hotel::select(
+        $hotels = Hotel::query()
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->select([
                 'id',
                 'name',
                 'city',
                 'latitude',
-                'longitude'
-            )
-            ->selectRaw("
-                (6371 * acos(
+                'longitude',
+            ])
+            ->selectRaw(
+                '(6371 * acos(
                     cos(radians(?)) *
                     cos(radians(latitude)) *
                     cos(radians(longitude) - radians(?)) +
                     sin(radians(?)) *
                     sin(radians(latitude))
-                )) AS distance
-            ", [$lat, $lng, $lat])
-            ->whereNotNull('latitude')
-            ->whereNotNull('longitude')
+                ))',
+                [$lat, $lng, $lat]
+            )
             ->withMin('rooms', 'price')
-            ->having('distance', '<=', 5) // radius 5 KM
-            ->orderBy('distance')
+            ->whereRaw(
+                '(6371 * acos(
+                    cos(radians(?)) *
+                    cos(radians(latitude)) *
+                    cos(radians(longitude) - radians(?)) +
+                    sin(radians(?)) *
+                    sin(radians(latitude))
+                )) <= ?',
+                [$lat, $lng, $lat, 5] // radius 5 KM
+            )
+            ->orderByRaw(
+                '(6371 * acos(
+                    cos(radians(?)) *
+                    cos(radians(latitude)) *
+                    cos(radians(longitude) - radians(?)) +
+                    sin(radians(?)) *
+                    sin(radians(latitude))
+                ))',
+                [$lat, $lng, $lat]
+            )
             ->limit(6)
             ->get()
             ->map(fn ($hotel) => [
@@ -293,6 +313,7 @@ class HotelController extends Controller
 
         return response()->json($hotels);
     }
+
 
 
 }
