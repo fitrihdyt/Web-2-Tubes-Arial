@@ -187,11 +187,6 @@
     });
 </script>
 
-<style>
-    .nav-link {
-        @apply text-neutral-600 hover:text-neutral-900 transition;
-    }
-</style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 @stack('scripts')

@@ -17,3 +17,7 @@ h1.text-3xl {
 .text-blue-600 {
     color: #C5A47E !important;
 }
+
+.nav-link {
+    @apply text-neutral-600 hover:text-neutral-900 transition;
+}
