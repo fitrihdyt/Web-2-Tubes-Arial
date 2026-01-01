@@ -44,9 +44,21 @@
                                  text-[#134662] 
                                focus:ring-2 focus:ring-[#134662]">
                         <option value="">Semua Harga</option>
-                        <option value="0-500">Under 500k</option>
-                        <option value="500-1000">500k – 1jt</option>
-                        <option value="1000+">Di atas 1jt</option>
+
+                        <option value="0-500"
+                            {{ request('price') == '0-500' ? 'selected' : '' }}>
+                            Under 500k
+                        </option>
+
+                        <option value="500-1000"
+                            {{ request('price') == '500-1000' ? 'selected' : '' }}>
+                            500k - 1jt
+                        </option>
+
+                        <option value="1000+"
+                            {{ request('price') == '1000+' ? 'selected' : '' }}>
+                            Di atas 1jt
+                        </option>
                     </select>
 
                     {{-- BUTTON SEARCH ICON --}}

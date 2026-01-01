@@ -25,50 +25,56 @@ class HotelController extends Controller
 
     // Dashboard
     public function dashboard(Request $request)
-    {
-        $query = Hotel::query()
-            ->withMin('rooms', 'price')
-            ->with('facilities');
+{
+    $query = Hotel::query()
+        ->withMin('rooms', 'price')
+        ->with('facilities');
 
-        if ($request->filled('search')) {
-            $search = trim($request->search);
+    // 🔍 SEARCH
+    if ($request->filled('search')) {
+        $search = trim($request->search);
 
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'ILIKE', "%{$search}%")
-                ->orWhere('city', 'ILIKE', "%{$search}%");
-            });
-        }
-
-        if ($request->filled('star')) {
-            $query->whereIn('star', $request->star);
-        }
-
-        
-        if ($request->filled('price')) {
-            $query->whereHas('rooms', function ($q) use ($request) {
-                match ($request->price) {
-                    '0-500' => $q->where('price', '<=', 500000),
-                    '500-1000' => $q->whereBetween('price', [500000, 1000000]),
-                    '1000+' => $q->where('price', '>=', 1000000),
-                    default => null,
-                    };
-                });
-        }
-
-
-        if ($request->filled('sort')) {
-            match ($request->sort) {
-                'price_asc' => $query->orderBy('rooms_min_price'),
-                'price_desc' => $query->orderByDesc('rooms_min_price'),
-                'star_desc' => $query->orderByDesc('star'),
-                default => null,
-            };
-        }
-
-        $hotels = $query->get();
-
-        return view('dashboard', compact('hotels'));
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'ILIKE', "%{$search}%")
+              ->orWhere('city', 'ILIKE', "%{$search}%");
+        });
     }
+
+    // ⭐ STAR
+    if ($request->filled('star')) {
+        $query->whereIn('star', $request->star);
+    }
+
+    // 💰 PRICE (FIXED)
+    if ($request->filled('price')) {
+        match ($request->price) {
+            '0-500' =>
+                $query->having('rooms_min_price', '<=', 500000),
+
+            '500-1000' =>
+                $query->havingBetween('rooms_min_price', [500000, 1000000]),
+
+            '1000+' =>
+                $query->having('rooms_min_price', '>=', 1000000),
+
+            default => null,
+        };
+    }
+
+    // ↕ SORT
+    if ($request->filled('sort')) {
+        match ($request->sort) {
+            'price_asc' => $query->orderBy('rooms_min_price'),
+            'price_desc' => $query->orderByDesc('rooms_min_price'),
+            'star_desc' => $query->orderByDesc('star'),
+            default => null,
+        };
+    }
+
+    $hotels = $query->get();
+
+    return view('dashboard', compact('hotels'));
+}
 
     /**
      * Form tambah hotel
