@@ -75,7 +75,8 @@
 
     {{-- HOTEL LIST --}}
     <section class="max-w-7xl mx-auto px-6 py-20">
-        <h2 class="text-2xl font-bold text-[#134662] mb-10">
+
+        <h2 class="text-2xl font-bold text-[#134662] mb-6">
             Rekomendasi Hotel
         </h2>
 
@@ -84,67 +85,95 @@
                 <p class="text-gray-400 text-lg">Hotel tidak ditemukan.</p>
             </div>
         @else
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div
+                class="flex gap-8 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory
+                    [&::-webkit-scrollbar]:hidden">
+
                 @foreach($hotels as $hotel)
-                <a href="{{ route('hotels.show', $hotel) }}"
-                   class="group bg-white rounded-3xl overflow-hidden
-                          shadow hover:shadow-2xl transition">
+                    <a href="{{ route('hotels.show', $hotel) }}"
+                    class="snap-start min-w-[280px] bg-white rounded-3xl overflow-hidden
+                            shadow hover:shadow-xl transition group">
 
-                    <div class="relative h-56">
-                        <img
-                            src="{{ $hotel->thumbnail
-                                ? asset('storage/'.$hotel->thumbnail)
-                                : 'https://via.placeholder.com/400x300' }}"
-                            class="w-full h-full object-cover
-                                   group-hover:scale-105 transition duration-500"
-                        >
+                        {{-- IMAGE --}}
+                        <div class="relative h-48 bg-gray-100">
+                            <img
+                                src="{{ $hotel->thumbnail
+                                    ? asset('storage/'.$hotel->thumbnail)
+                                    : 'https://via.placeholder.com/400x300' }}"
+                                class="w-full h-full object-cover
+                                    group-hover:scale-105 transition duration-500">
 
-                        <span class="absolute top-4 left-4 bg-white px-3 py-1
-                                     rounded-full text-sm font-bold text-[#134662]">
-                            ★ {{ $hotel->star }}
-                        </span>
-                    </div>
+                            {{-- STAR --}}
+                            <div class="absolute top-4 left-4 flex items-center gap-1
+                                        bg-white/90 backdrop-blur px-3 py-1 rounded-full">
 
-                    <div class="p-6">
-                        <p class="text-xs uppercase tracking-widest text-gray-400">
-                            {{ $hotel->city }}
-                        </p>
-
-                        <h3 class="text-lg font-semibold text-gray-900 mt-1">
-                            {{ $hotel->name }}
-                        </h3>
-
-                        <div class="mt-5 flex justify-between items-end">
-                            <div>
-                                <p class="text-xs text-gray-400">Mulai dari</p>
-                                <p class="text-lg font-bold text-[#134662]">
-                                    Rp {{ number_format($hotel->rooms_min_price ?? 0, 0, ',', '.') }}
-                                    <span class="text-sm font-normal text-gray-500">/malam</span>
-                                </p>
-                            </div>
-
-                            {{-- ARROW ICON --}}
-                            <div class="w-10 h-10 flex items-center justify-center
-                                        rounded-full bg-[#eef6f8]
-                                        group-hover:bg-[#134662]
-                                        group-hover:text-white transition">
-
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     class="w-5 h-5"
-                                     fill="none"
-                                     viewBox="0 0 24 24"
-                                     stroke="currentColor"
-                                     stroke-width="2">
-                                    <path stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          d="M9 5l7 7-7 7"/>
-                                </svg>
-
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <svg class="w-4 h-4 {{ $i <= $hotel->star ? 'text-yellow-400' : 'text-gray-300' }}"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921
+                                                1.902 0l1.286 3.967a1
+                                                1 0 00.95.69h4.178c.969
+                                                0 1.371 1.24.588
+                                                1.81l-3.385
+                                                2.46a1 1 0 00-.364
+                                                1.118l1.287
+                                                3.966c.3.922-.755
+                                                1.688-1.54
+                                                1.118l-3.386-2.46a1
+                                                1 0 00-1.175
+                                                0l-3.386
+                                                2.46c-.784.57-1.838-.196-1.539-1.118l1.286-3.966a1
+                                                1 0 00-.364-1.118L2.047
+                                                8.394c-.783-.57-.38-1.81.588-1.81h4.178a1
+                                                1 0 00.95-.69l1.286-3.967z"/>
+                                    </svg>
+                                @endfor
                             </div>
                         </div>
-                    </div>
-                </a>
+
+                        {{-- CONTENT --}}
+                        <div class="p-6">
+                            <p class="text-xs uppercase tracking-widest text-gray-400">
+                                {{ $hotel->city }}
+                            </p>
+
+                            <h3 class="text-lg font-semibold text-gray-900 mt-1">
+                                {{ $hotel->name }}
+                            </h3>
+
+                            <div class="mt-5 flex justify-between items-end">
+                                <div>
+                                    <p class="text-xs text-gray-400">Mulai dari</p>
+                                    <p class="text-lg font-bold text-[#134662]">
+                                        Rp {{ number_format($hotel->rooms_min_price ?? 0, 0, ',', '.') }}
+                                        <span class="text-sm font-normal text-gray-500">/ malam</span>
+                                    </p>
+                                </div>
+
+                                {{-- ARROW --}}
+                                <div class="w-10 h-10 flex items-center justify-center
+                                            rounded-full bg-[#eef6f8]
+                                            group-hover:bg-[#134662]
+                                            group-hover:text-white transition">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-5 h-5"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="2">
+                                        <path stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                    </a>
                 @endforeach
+
             </div>
         @endif
     </section>
