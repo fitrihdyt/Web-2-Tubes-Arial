@@ -2,22 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap');
-
-h1.text-3xl {
-    font-family: 'Playfair Display', serif !important;
-    color: #2D5356 !important;
-}
-
-.bg-blue-600 {
-    background-color: #2D5356 !important;
-}
-
-.text-blue-600 {
-    color: #C5A47E !important;
-}
-
+/* NAV LINK */
 .nav-link {
-    @apply text-neutral-600 hover:text-neutral-900 transition;
+    position: relative;
+    color: #525252;
+    padding: 4px 0;
+    transition: color 0.3s ease, transform 0.2s ease;
+    opacity: 0;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0%;
+    height: 2px;
+    background-color: #171717;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #171717;
+    transform: translateY(-1px);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-link.active {
+    color: #171717;
+    font-weight: 600;
+}
+
+/* STAGGER ANIMATION */
+.nav-animate {
+    animation: fadeSlide 0.5s ease forwards;
+}
+
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
