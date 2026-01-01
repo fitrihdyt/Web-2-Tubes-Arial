@@ -32,7 +32,7 @@
                 @auth
                     @if(auth()->user()->role === 'user')
                         <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
-                        <a href="{{ route('bookings.index') }}" class="nav-link">My Bookings</a>
+                        <a href="{{ route('bookings.index') }}" class="nav-link">Bookings</a>
                     @endif
 
                     @if(auth()->user()->role === 'hotel_admin')
