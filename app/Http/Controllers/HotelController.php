@@ -46,20 +46,28 @@ class HotelController extends Controller
         $query->whereIn('star', $request->star);
     }
 
+    // 💰 PRICE (POSTGRESQL SAFE — NO HAVING)
     if ($request->filled('price')) {
         match ($request->price) {
             '0-500' =>
-                $query->havingRaw('rooms_min_price <= ?', [500000]),
+                $query->whereHas('rooms', function ($q) {
+                    $q->where('price', '<=', 500000);
+                }),
 
             '500-1000' =>
-                $query->havingRaw('rooms_min_price BETWEEN ? AND ?', [500000, 1000000]),
+                $query->whereHas('rooms', function ($q) {
+                    $q->whereBetween('price', [500000, 1000000]);
+                }),
 
             '1000+' =>
-                $query->havingRaw('rooms_min_price >= ?', [1000000]),
+                $query->whereHas('rooms', function ($q) {
+                    $q->where('price', '>=', 1000000);
+                }),
 
             default => null,
         };
     }
+
 
 
     // ↕ SORT
