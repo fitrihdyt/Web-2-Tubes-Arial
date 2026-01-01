@@ -61,20 +61,25 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function midtransCallback()
+    public function midtransCallback(Request $request)
     {
-        
         Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production');
 
         $notif = new Notification();
 
-        $orderId = $notif->order_id; 
+        $orderId     = $notif->order_id;
         $transaction = $notif->transaction_status;
-        $fraud = $notif->fraud_status ?? null;
+        $fraud       = $notif->fraud_status ?? null;
 
-       
-        $bookingId = str_replace('BOOKING-', '', $orderId);
+        // ✅ FIX AMBIL BOOKING ID
+        $parts = explode('-', $orderId);
+        $bookingId = $parts[1] ?? null;
+
+        if (!$bookingId) {
+            return response()->json(['message' => 'Invalid order id'], 400);
+        }
+
         $booking = Booking::find($bookingId);
 
         if (!$booking) {
@@ -82,8 +87,8 @@ class PaymentController extends Controller
         }
 
         if (
-            $transaction === 'capture' && $fraud === 'accept'
-            || $transaction === 'settlement'
+            ($transaction === 'capture' && $fraud === 'accept') ||
+            $transaction === 'settlement'
         ) {
             $status = 'paid';
         } elseif ($transaction === 'pending') {
@@ -96,6 +101,7 @@ class PaymentController extends Controller
 
         return response()->json(['message' => 'OK'], 200);
     }
+
 
     protected function updateBookingStatus(Booking $booking, string $status, $notif)
     {
