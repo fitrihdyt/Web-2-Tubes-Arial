@@ -36,7 +36,7 @@
                 @auth
                     @if(auth()->user()->role === 'user')
                         <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
-                        <a href="{{ route('bookings.history') }}" class="nav-link">My Bookings</a>
+                        <a href="{{ route('bookings.history')}}" class="nav-link">My Bookings</a>
                     @endif
                 @endauth
 
