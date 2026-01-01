@@ -85,6 +85,16 @@
         </div>
     @endif
 
+    {{-- MAP LOCATION --}}
+    @if($hotel->latitude && $hotel->longitude)
+        <div class="bg-white rounded-3xl shadow p-6 mb-10">
+            <h2 class="text-xl font-semibold mb-4">Lokasi Hotel</h2>
+
+            <div id="hotelMap"
+                class="w-full h-[360px] rounded-2xl overflow-hidden border"></div>
+        </div>
+    @endif
+
     {{-- ROOMS --}}
     <h2 class="text-2xl font-bold mb-6">Pilihan Kamar</h2>
 
@@ -154,4 +164,28 @@
     @endif
 
 </div>
+
 @endsection
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const lat = @json($hotel->latitude);
+    const lng = @json($hotel->longitude);
+
+    if (!lat || !lng) return;
+
+    const map = L.map('hotelMap', {
+        scrollWheelZoom: false
+    }).setView([lat, lng], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    L.marker([lat, lng])
+        .addTo(map)
+        .bindPopup(`<b>{{ $hotel->name }}</b><br>{{ $hotel->city }}`);
+});
+</script>
+@endpush
+
