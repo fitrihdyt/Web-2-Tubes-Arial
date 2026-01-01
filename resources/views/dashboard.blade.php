@@ -387,5 +387,96 @@ document.addEventListener('DOMContentLoaded', () => {
             })
     }
 })
+</script><script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const map = L.map('map', { scrollWheelZoom: false })
+        .setView([-6.2, 106.8], 11)
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map)
+
+    let userMarker
+    let hotelMarkers = L.layerGroup().addTo(map)
+
+    const nearbyContainer = document.getElementById('nearbyHotels')
+
+    // KLIK MAP
+    map.on('click', e => {
+        const { lat, lng } = e.latlng
+
+        if (userMarker) userMarker.setLatLng(e.latlng)
+        else userMarker = L.marker(e.latlng).addTo(map)
+
+        loadNearbyHotels(lat, lng)
+    })
+
+    // LOKASI SAYA
+    document.getElementById('myLocation').onclick = () => {
+        navigator.geolocation.getCurrentPosition(pos => {
+            const lat = pos.coords.latitude
+            const lng = pos.coords.longitude
+
+            map.setView([lat, lng], 13)
+
+            if (userMarker) userMarker.setLatLng([lat, lng])
+            else userMarker = L.marker([lat, lng]).addTo(map)
+
+            loadNearbyHotels(lat, lng)
+        })
+    }
+
+    function loadNearbyHotels(lat, lng) {
+        nearbyContainer.innerHTML = `
+            <p class="text-gray-400 col-span-full">Memuat hotel terdekat...</p>
+        `
+
+        fetch(`/hotels-nearby?lat=${lat}&lng=${lng}`)
+            .then(res => res.json())
+            .then(hotels => {
+                hotelMarkers.clearLayers()
+                nearbyContainer.innerHTML = ''
+
+                if (hotels.length === 0) {
+                    nearbyContainer.innerHTML = `
+                        <p class="text-gray-400 col-span-full">
+                            Tidak ada hotel di sekitar lokasi ini.
+                        </p>
+                    `
+                    return
+                }
+
+                hotels.forEach(hotel => {
+
+                    // MARKER
+                    L.marker([hotel.latitude, hotel.longitude])
+                        .addTo(hotelMarkers)
+                        .bindPopup(`<strong>${hotel.name}</strong><br>Rp ${hotel.min_price}`)
+
+                    // CARD LIST
+                    nearbyContainer.innerHTML += `
+                        <a href="/hotels/${hotel.id}"
+                           class="bg-white rounded-2xl shadow hover:shadow-lg transition p-5">
+
+                            <h5 class="font-semibold text-[#134662]">
+                                ${hotel.name}
+                            </h5>
+
+                            <p class="text-sm text-gray-500 mt-1">
+                                ${hotel.city ?? ''}
+                            </p>
+
+                            <p class="mt-3 font-bold text-[#134662]">
+                                Rp ${hotel.min_price}
+                                <span class="text-sm font-normal text-gray-400">/ malam</span>
+                            </p>
+                        </a>
+                    `
+                })
+            })
+    }
+})
 </script>
+
 @endsection

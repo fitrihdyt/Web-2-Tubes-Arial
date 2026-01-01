@@ -249,5 +249,50 @@ class HotelController extends Controller
         return view('hotels.bookings', compact('hotel'));
     }
 
+    public function nearby(Request $request)
+    {
+        $request->validate([
+            'lat' => 'required|numeric',
+            'lng' => 'required|numeric',
+        ]);
+
+        $lat = $request->lat;
+        $lng = $request->lng;
+
+        $hotels = Hotel::select(
+                'id',
+                'name',
+                'city',
+                'latitude',
+                'longitude'
+            )
+            ->selectRaw("
+                (6371 * acos(
+                    cos(radians(?)) *
+                    cos(radians(latitude)) *
+                    cos(radians(longitude) - radians(?)) +
+                    sin(radians(?)) *
+                    sin(radians(latitude))
+                )) AS distance
+            ", [$lat, $lng, $lat])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->withMin('rooms', 'price')
+            ->having('distance', '<=', 5) // radius 5 KM
+            ->orderBy('distance')
+            ->limit(6)
+            ->get()
+            ->map(fn ($hotel) => [
+                'id' => $hotel->id,
+                'name' => $hotel->name,
+                'city' => $hotel->city,
+                'latitude' => $hotel->latitude,
+                'longitude' => $hotel->longitude,
+                'min_price' => number_format($hotel->rooms_min_price ?? 0, 0, ',', '.'),
+            ]);
+
+        return response()->json($hotels);
+    }
+
 
 }
