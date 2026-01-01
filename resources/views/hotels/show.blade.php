@@ -99,86 +99,79 @@
         </div>
     @endif
 
-    {{-- MAP LOCATION --}}
+<div class="grid md:grid-cols-3 gap-6 mb-10">
+
+    {{-- ROOMS (SEJAJAR THUMBNAIL HOTEL) --}}
+    <div class="md:col-span-2">
+        <h2 class="text-2xl font-bold mb-4">Pilihan Kamar</h2>
+
+        @if($hotel->rooms->isEmpty())
+            <div class="bg-white p-6 rounded-3xl shadow">
+                Belum ada kamar tersedia.
+            </div>
+        @else
+            <div class="space-y-4">
+                @foreach($hotel->rooms as $room)
+                    <a href="{{ route('rooms.show', $room) }}"
+                       class="group bg-white rounded-3xl shadow hover:shadow-lg transition
+                              overflow-hidden flex h-[180px]">
+
+                        {{-- THUMBNAIL --}}
+                        <div class="w-56 bg-gray-100 shrink-0">
+                            @if($room->thumbnail)
+                                <img src="{{ asset('storage/'.$room->thumbnail) }}"
+                                     class="w-full h-full object-cover">
+                            @endif
+                        </div>
+
+                        {{-- CONTENT --}}
+                        <div class="p-6 flex flex-col justify-between flex-1">
+
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800
+                                           group-hover:text-[#ff5a1f] transition">
+                                    {{ $room->name }}
+                                </h3>
+
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Kapasitas {{ $room->capacity }} orang
+                                </p>
+
+                                <p class="text-xl font-bold text-[#ff5a1f] mt-3">
+                                    Rp {{ number_format($room->price, 0, ',', '.') }}
+                                    <span class="text-sm text-gray-400 font-normal">/ malam</span>
+                                </p>
+
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Stok:
+                                    <span class="{{ $room->stock > 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
+                                        {{ $room->stock > 0 ? $room->stock : 'Habis' }}
+                                    </span>
+                                </p>
+                            </div>
+
+                            <span class="text-sm text-blue-600 underline">
+                                Lihat detail kamar
+                            </span>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+    </div>
+
+    {{-- MAP (SEJAJAR DESKRIPSI HOTEL) --}}
     @if($hotel->latitude && $hotel->longitude)
-        <div class="bg-white rounded-3xl shadow p-6 mb-10">
+        <div class="bg-white rounded-3xl shadow p-6 h-[420px] flex flex-col">
             <h2 class="text-xl font-semibold mb-4">Lokasi Hotel</h2>
 
             <div id="hotelMap"
-                class="w-full h-[360px] rounded-2xl overflow-hidden border"></div>
+                 class="flex-1 rounded-2xl overflow-hidden border"></div>
         </div>
     @endif
 
-    {{-- ROOMS --}}
-    <h2 class="text-2xl font-bold mb-6">Pilihan Kamar</h2>
+</div>
 
-    @if($hotel->rooms->isEmpty())
-        <div class="bg-white p-6 rounded-2xl shadow">
-            Belum ada kamar tersedia.
-        </div>
-    @else
-        <div class="grid md:grid-cols-2 gap-6">
-        @foreach($hotel->rooms as $room)
-        <a href="{{ route('rooms.show', $room->id) }}"
-
-            <div class="bg-white rounded-3xl shadow hover:shadow-lg transition overflow-hidden">
-
-                <div class="h-44 bg-gray-100">
-                    @if($room->thumbnail)
-                        <img src="{{ asset('storage/'.$room->thumbnail) }}"
-                             class="w-full h-full object-cover">
-                    @endif
-                </div>
-
-                <div class="p-6 flex flex-col gap-4">
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800">
-                            {{ $room->name }}
-                        </h3>
-
-                        <p class="text-sm text-gray-500 mt-1">
-                            Kapasitas {{ $room->capacity }} orang
-                        </p>
-
-                        <p class="text-xl font-bold text-[#ff5a1f] mt-3">
-                            Rp {{ number_format($room->price, 0, ',', '.') }}
-                            <span class="text-sm text-gray-400 font-normal">/ malam</span>
-                        </p>
-
-                        <p class="text-sm mt-1 text-gray-500">
-                            Stok: {{ $room->stock }}
-                        </p>
-                    </div>
-
-                    {{-- ACTION --}}
-                    <div class="mt-5">
-                        @auth
-                            @if($room->stock > 0)
-                                <a href="{{ route('bookings.create', $room) }}"
-                                   class="block text-center bg-[#ff5a1f] hover:bg-[#e64a19]
-                                          text-white py-3 rounded-xl font-semibold">
-                                    Booking Sekarang
-                                </a>
-                            @else
-                                <div class="text-center text-red-500 font-semibold">
-                                    Kamar Penuh
-                                </div>
-                            @endif
-                        @else
-                            <a href="{{ route('login') }}"
-                               class="block text-center text-blue-600 underline">
-                                Login untuk booking
-                            </a>
-                        @endauth
-                    </div>
-
-                </div>
-            </div>
-        </a>
-        @endforeach
-        </div>
-    @endif
 
 </div>
 @endsection
