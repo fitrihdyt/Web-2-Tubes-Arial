@@ -221,11 +221,14 @@
                 </div>
 
                 {{-- SCROLL INDICATOR --}}
-                <div class="flex justify-center mt-4">
-                    <div class="w-24 h-1 rounded-full bg-gray-200 overflow-hidden">
-                        <div class="w-1/3 h-full bg-[#134662]"></div>
+                <div class="px-6">
+                    <div class="max-w-[300px] mx-auto mt-4">
+                        <div class="h-1 rounded-full bg-gray-200 overflow-hidden">
+                            <div class="w-1/3 h-full bg-[#134662]"></div>
+                        </div>
                     </div>
                 </div>
+
 
             </div>
         @endif
