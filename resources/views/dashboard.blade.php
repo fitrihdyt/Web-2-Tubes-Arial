@@ -247,8 +247,7 @@
                             <span class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 5a2 2 0 012-2h3l2 5-2 1a11 11 0 005 5l1-2 5 2v3a2 2 0 01-2 2h-1C9.716 19 5 14.284 5 8V7a2 2 0 00-2-2z"/>
-                                </svg>
+                                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.128a11.042 11.042 0 005.516 5.516l1.128-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.163 21 3 14.837 3 7V5z"/>                                </svg>
                             </span>
                             +62 812-3456-7890
                         </li>
@@ -271,7 +270,7 @@
             </div>
 
             <!-- DIVIDER -->
-            <div class="mt-20 border-t border-white/10"></div>
+            <div class="mt-8 border-t border-white/10"></div>
 
             <!-- BOTTOM -->
             <div class="mt-8 flex flex-col md:flex-row justify-between items-center
