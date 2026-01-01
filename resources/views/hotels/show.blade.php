@@ -50,7 +50,7 @@
                 </div>
 
                 {{-- DESCRIPTION --}}
-                <p class="text-sm text-gray-600 mt-4 leading-relaxed">
+                <p class="text-sm text-gray-600 mt-4 leading-relaxed text-justify">
                     {{ $hotel->description }}
                 </p>
             </div>
