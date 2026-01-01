@@ -198,7 +198,7 @@
         </div>
     </section>
     <footer class="bg-[#0f3a4e] text-white mt-32">
-        <div class="max-w-7xl mx-auto px-6 py-14">
+        <div class="max-w-7xl mx-auto px-6 py-12">
 
             <!-- TOP -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
