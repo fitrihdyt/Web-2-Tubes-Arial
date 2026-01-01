@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-[#eef6f8] min-h-screen pt-24">
+<div class="bg-[#eef6f8] min-h-screen pt-23">
 
     {{-- HERO --}}
     <section class="max-w-7xl mx-auto px-6">
