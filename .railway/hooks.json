@@ -1,3 +1,10 @@
 {
-  "postdeploy": "php artisan migrate --force && php artisan db:seed --force"
+  "deploy": {
+    "commands": [
+      "php artisan config:clear",
+      "php artisan cache:clear",
+      "php artisan migrate --force",
+      "php artisan db:seed --force"
+    ]
+  }
 }
