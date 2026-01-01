@@ -98,100 +98,139 @@
             </div>
         @else
             <div class="relative -mx-6">
+
+                {{-- SCROLL AREA --}}
                 <div
-                    class="flex gap-8 overflow-x-auto px-6 pb-6
+                    class="flex gap-8 overflow-x-auto px-6 pb-10
                         scroll-smooth snap-x snap-mandatory
                         [&::-webkit-scrollbar]:hidden">
 
+                    {{-- HOTEL CARD --}}
+                    @foreach($hotels as $hotel)
+                        <a href="{{ route('hotels.show', $hotel) }}"
+                        class="snap-start min-w-[280px] bg-white rounded-3xl
+                                overflow-hidden shadow
+                                hover:shadow-xl transition group">
 
-                @foreach($hotels as $hotel)
-                    <a href="{{ route('hotels.show', $hotel) }}"
-                    class="snap-start min-w-[280px] bg-white rounded-3xl overflow-hidden
-                            shadow hover:shadow-xl transition group">
+                            {{-- IMAGE --}}
+                            <div class="relative h-48 bg-gray-100">
+                                <img
+                                    src="{{ $hotel->thumbnail
+                                        ? asset('storage/'.$hotel->thumbnail)
+                                        : 'https://via.placeholder.com/400x300' }}"
+                                    class="w-full h-full object-cover
+                                        group-hover:scale-105 transition duration-500">
 
-                        {{-- IMAGE --}}
-                        <div class="relative h-48 bg-gray-100">
-                            <img
-                                src="{{ $hotel->thumbnail
-                                    ? asset('storage/'.$hotel->thumbnail)
-                                    : 'https://via.placeholder.com/400x300' }}"
-                                class="w-full h-full object-cover
-                                    group-hover:scale-105 transition duration-500">
-
-                            {{-- STAR --}}
-                            <div class="absolute top-4 left-4 flex items-center gap-1
-                                        bg-white/90 backdrop-blur px-3 py-1 rounded-full">
-
-                                @for ($i = 1; $i <= 5; $i++)
-                                    <svg class="w-4 h-4 {{ $i <= $hotel->star ? 'text-yellow-400' : 'text-gray-300' }}"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921
-                                                1.902 0l1.286 3.967a1
-                                                1 0 00.95.69h4.178c.969
-                                                0 1.371 1.24.588
-                                                1.81l-3.385
-                                                2.46a1 1 0 00-.364
-                                                1.118l1.287
-                                                3.966c.3.922-.755
-                                                1.688-1.54
-                                                1.118l-3.386-2.46a1
-                                                1 0 00-1.175
-                                                0l-3.386
-                                                2.46c-.784.57-1.838-.196-1.539-1.118l1.286-3.966a1
-                                                1 0 00-.364-1.118L2.047
-                                                8.394c-.783-.57-.38-1.81.588-1.81h4.178a1
-                                                1 0 00.95-.69l1.286-3.967z"/>
-                                    </svg>
-                                @endfor
-                            </div>
-                        </div>
-
-                        {{-- CONTENT --}}
-                        <div class="p-6">
-                            <p class="text-xs uppercase tracking-widest text-gray-400">
-                                {{ $hotel->city }}
-                            </p>
-
-                            <h3 class="text-lg font-semibold text-gray-900 mt-1">
-                                {{ $hotel->name }}
-                            </h3>
-
-                            <div class="mt-5 flex justify-between items-end">
-                                <div>
-                                    <p class="text-xs text-gray-400">Mulai dari</p>
-                                    <p class="text-lg font-bold text-[#134662]">
-                                        Rp {{ number_format($hotel->rooms_min_price ?? 0, 0, ',', '.') }}
-                                        <span class="text-sm font-normal text-gray-500">/ malam</span>
-                                    </p>
-                                </div>
-
-                                {{-- ARROW --}}
-                                <div class="w-10 h-10 flex items-center justify-center
-                                            rounded-full bg-[#eef6f8]
-                                            group-hover:bg-[#134662]
-                                            group-hover:text-white transition">
-
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="w-5 h-5"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        stroke-width="2">
-                                        <path stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="M9 5l7 7-7 7"/>
-                                    </svg>
+                                {{-- STAR --}}
+                                <div class="absolute top-4 left-4 flex items-center gap-1
+                                            bg-white/90 backdrop-blur px-3 py-1 rounded-full">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <svg class="w-4 h-4 {{ $i <= $hotel->star ? 'text-yellow-400' : 'text-gray-300' }}"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921
+                                                    1.902 0l1.286 3.967a1
+                                                    1 0 00.95.69h4.178c.969
+                                                    0 1.371 1.24.588
+                                                    1.81l-3.385
+                                                    2.46a1 1 0 00-.364
+                                                    1.118l1.287
+                                                    3.966c.3.922-.755
+                                                    1.688-1.54
+                                                    1.118l-3.386-2.46a1
+                                                    1 0 00-1.175
+                                                    0l-3.386
+                                                    2.46c-.784.57-1.838-.196-1.539-1.118l1.286-3.966a1
+                                                    1 0 00-.364-1.118L2.047
+                                                    8.394c-.783-.57-.38-1.81.588-1.81h4.178a1
+                                                    1 0 00.95-.69l1.286-3.967z"/>
+                                        </svg>
+                                    @endfor
                                 </div>
                             </div>
+
+                            {{-- CONTENT --}}
+                            <div class="p-6">
+                                <p class="text-xs uppercase tracking-widest text-gray-400">
+                                    {{ $hotel->city }}
+                                </p>
+
+                                <h3 class="text-lg font-semibold text-gray-900 mt-1">
+                                    {{ $hotel->name }}
+                                </h3>
+
+                                <div class="mt-5 flex justify-between items-end">
+                                    <div>
+                                        <p class="text-xs text-gray-400">Mulai dari</p>
+                                        <p class="text-lg font-bold text-[#134662]">
+                                            Rp {{ number_format($hotel->rooms_min_price ?? 0, 0, ',', '.') }}
+                                            <span class="text-sm font-normal text-gray-500">/ malam</span>
+                                        </p>
+                                    </div>
+
+                                    {{-- ARROW --}}
+                                    <div class="w-10 h-10 flex items-center justify-center
+                                                rounded-full bg-[#eef6f8]
+                                                group-hover:bg-[#134662]
+                                                group-hover:text-white transition">
+                                        <svg class="w-5 h-5"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            stroke-width="2">
+                                            <path stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                d="M9 5l7 7-7 7"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+
+                    {{-- MORE CARD --}}
+                    <a href="{{ route('hotels.index') }}"
+                    class="snap-start min-w-[280px] flex flex-col
+                            items-center justify-center
+                            border-2 border-dashed border-[#134662]/30
+                            rounded-3xl text-center
+                            hover:bg-[#134662]/5 transition">
+
+                        <div class="w-14 h-14 flex items-center justify-center
+                                    rounded-full bg-[#eef6f8] mb-4">
+                            <svg class="w-6 h-6 text-[#134662]"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2">
+                                <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M12 4v16m8-8H4"/>
+                            </svg>
                         </div>
 
+                        <p class="text-lg font-semibold text-[#134662]">
+                            Lihat Semua Hotel
+                        </p>
+
+                        <p class="text-sm text-gray-400 mt-1">
+                            Jelajahi lebih banyak pilihan
+                        </p>
                     </a>
-                @endforeach
+
                 </div>
+
+                {{-- SCROLL INDICATOR --}}
+                <div class="flex justify-center mt-4">
+                    <div class="w-24 h-1 rounded-full bg-gray-200 overflow-hidden">
+                        <div class="w-1/3 h-full bg-[#134662]"></div>
+                    </div>
+                </div>
+
             </div>
         @endif
-    </section>
+    </section>      
+
 
     <!-- MAP SECTION (PINDAH KE BAWAH) -->
     {{-- MAP + LIST --}}

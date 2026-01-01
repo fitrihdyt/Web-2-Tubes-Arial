@@ -32,6 +32,7 @@
                 @auth
                     @if(auth()->user()->role === 'user')
                         <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
+                        <a href="{{ route('hotels.index') }}" class="nav-link">Hotels</a>
                         <a href="{{ route('bookings.index') }}" class="nav-link">Bookings</a>
                     @endif
 
