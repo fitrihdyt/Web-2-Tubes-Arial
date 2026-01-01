@@ -49,7 +49,6 @@
                 @auth
                     @if(auth()->user()->role === 'user')
                         <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
-                        <a href="{{ route('hotels.index') }}" class="nav-link">Hotels</a>
                         <a href="{{ route('bookings.history') }}" class="nav-link">My Bookings</a>
                     @endif
                 @endauth
@@ -69,7 +68,6 @@
                         <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
                         <a href="{{ route('hotels.index') }}" class="nav-link">Hotels</a>
                         <a href="#" class="nav-link">Users</a>
-                        <a href="{{ route('settings.index') }}" class="nav-link">Settings</a>
                     @endif
                 @endauth
             </div>
@@ -144,8 +142,6 @@
 
         @guest
             <a href="{{ route('dashboard') }}" class="block nav-link">Home</a>
-            <a href="{{ route('hotels.index') }}" class="block nav-link">Hotels</a>
-            <a href="#" class="block nav-link">About</a>
         @endguest
 
         @auth
