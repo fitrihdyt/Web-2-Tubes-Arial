@@ -85,9 +85,12 @@
                 <p class="text-gray-400 text-lg">Hotel tidak ditemukan.</p>
             </div>
         @else
-            <div
-                class="flex gap-8 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory
-                    [&::-webkit-scrollbar]:hidden">
+            <div class="relative -mx-6">
+                <div
+                    class="flex gap-8 overflow-x-auto px-6 pb-6
+                        scroll-smooth snap-x snap-mandatory
+                        [&::-webkit-scrollbar]:hidden">
+
 
                 @foreach($hotels as $hotel)
                     <a href="{{ route('hotels.show', $hotel) }}"
@@ -173,7 +176,7 @@
 
                     </a>
                 @endforeach
-
+                </div>
             </div>
         @endif
     </section>
