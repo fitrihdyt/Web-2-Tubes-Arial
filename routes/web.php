@@ -9,6 +9,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\NotAdmin;
 
 use App\Http\Middleware\IsHotelAdmin;
 use App\Http\Middleware\IsSuperAdmin;
@@ -64,14 +65,19 @@ Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show')
 
 Route::middleware('auth')->group(function () {
 
+
+    Route::get('/bookings/history', [BookingController::class, 'history'])
+        ->name('bookings.history');
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/create/{room}', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 
-    Route::get('/bookings/history', [BookingController::class, 'history'])
-        ->name('bookings.history');
+    
+
+    Route::get('/bookings/{booking}/rating', [BookingController::class, 'createRating'])
+        ->name('bookings.rating.create');
 
     Route::post('/bookings/{booking}/rating', [BookingController::class, 'storeRating'])
         ->name('bookings.rating');
@@ -83,9 +89,9 @@ Route::middleware('auth')->group(function () {
         ->name('bookings.pay');
 });
 
-Route::middleware(['auth', 'notAdmin'])->group(function () {
-    Route::get('/my-bookings', [BookingController::class, 'history'])
-        ->name('bookings.history');
+Route::middleware(['auth', IsUser::class])->group(function () {
+    // Route::get('/my-bookings', [BookingController::class, 'history'])
+    //     ->name('bookings.history');
 
     Route::post('/ratings', [RatingController::class, 'store'])
         ->name('ratings.store');
