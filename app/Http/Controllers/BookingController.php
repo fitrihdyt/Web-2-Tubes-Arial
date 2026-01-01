@@ -129,7 +129,7 @@ class BookingController extends Controller
         $bookings = Booking::with('room.hotel')
             ->where('user_id', Auth::id())
             ->where('status', 'paid')
-            // ->whereDate('check_out', '<', now())
+            ->whereDate('check_out', '<', now())
             ->orderByDesc('check_out')
             ->get();
 
