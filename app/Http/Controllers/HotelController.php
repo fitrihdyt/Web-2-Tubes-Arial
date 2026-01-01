@@ -6,6 +6,7 @@ use App\Models\Hotel;
 use App\Models\Facility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class HotelController extends Controller
 {
@@ -14,12 +15,12 @@ class HotelController extends Controller
      */
     public function index(Request $request)
     {
-       $hotels = Hotel::with('facilities')
-        ->withMin('rooms', 'price')   // ⬅️ WAJIB
-        ->latest()
-        ->get();
+        $hotels = Hotel::with('facilities')
+            ->withMin('rooms', 'price')
+            ->latest()
+            ->get();
 
-    return view('hotels.index', compact('hotels'));
+        return view('hotels.index', compact('hotels'));
     }
 
     // Dashboard
@@ -27,22 +28,19 @@ class HotelController extends Controller
     {
         $query = Hotel::query()
             ->withMin('rooms', 'price')
-            ->with('facilities'); 
+            ->with('facilities');
 
-        // SEARCH
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')
-                ->orWhere('city', 'like', '%' . $request->search . '%');
+                  ->orWhere('city', 'like', '%' . $request->search . '%');
             });
         }
 
-        // STAR
         if ($request->filled('star')) {
             $query->whereIn('star', $request->star);
         }
 
-        // PRICE
         if ($request->filled('price')) {
             match ($request->price) {
                 '0-500' => $query->having('rooms_min_price', '<=', 500000),
@@ -52,7 +50,6 @@ class HotelController extends Controller
             };
         }
 
-        // SORT
         if ($request->filled('sort')) {
             match ($request->sort) {
                 'price_asc' => $query->orderBy('rooms_min_price'),
@@ -72,9 +69,7 @@ class HotelController extends Controller
      */
     public function create()
     {
-        // ✅ TAMBAHAN
         $facilities = Facility::all();
-
         return view('hotels.create', compact('facilities'));
     }
 
@@ -93,20 +88,16 @@ class HotelController extends Controller
             'longitude' => 'nullable|numeric',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-
-            // ✅ TAMBAHAN (VALIDASI FASILITAS)
             'facilities' => 'nullable|array',
             'facilities.*' => 'exists:facilities,id',
             'custom_facilities.*' => 'nullable|string|max:100',
         ]);
 
-        // Upload thumbnail
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] = $request->file('thumbnail')
                 ->store('hotels/thumbnails', 'public');
         }
 
-        // Upload multiple images
         if ($request->hasFile('images')) {
             $images = [];
             foreach ($request->file('images') as $image) {
@@ -115,7 +106,6 @@ class HotelController extends Controller
             $validated['images'] = $images;
         }
 
-        // ❗ UBAH JADI VARIABLE (TAMBAHAN)
         $hotelData = collect($validated)->except([
             'facilities',
             'custom_facilities'
@@ -123,10 +113,7 @@ class HotelController extends Controller
 
         $hotel = Hotel::create($hotelData);
 
-
-        // ✅ TAMBAHAN: SIMPAN FASILITAS
         $facilityData = [];
-
         foreach ($request->facilities ?? [] as $facilityId) {
             $facilityData[$facilityId] = [
                 'custom_name' => $request->custom_facilities[$facilityId] ?? null
@@ -143,8 +130,17 @@ class HotelController extends Controller
      */
     public function show(Hotel $hotel)
     {
-        // ✅ TAMBAHAN
-        $hotel->load('rooms', 'facilities');
+        // OPTIONAL: pastikan admin cuma lihat hotel miliknya
+        if (Auth::check() && Auth::user()->hotel_id && Auth::user()->hotel_id != $hotel->id) {
+            abort(403);
+        }
+
+        $hotel->load([
+            'rooms',
+            'facilities',
+            'bookings.user',
+            'bookings.room'
+        ]);
 
         return view('hotels.show', compact('hotel'));
     }
@@ -154,7 +150,6 @@ class HotelController extends Controller
      */
     public function edit(Hotel $hotel)
     {
-        // ✅ TAMBAHAN
         $facilities = Facility::all();
         $hotel->load('facilities');
 
@@ -167,23 +162,20 @@ class HotelController extends Controller
     public function update(Request $request, Hotel $hotel)
     {
         $validated = $request->validate([
-            'name'          => 'required|string|max:255',
-            'description'   => 'nullable|string',
-            'address'       => 'required|string',
-            'city'          => 'required|string|max:100',
-            'star'          => 'required|integer|min:1|max:5',
-            'latitude'      => 'nullable|numeric',
-            'longitude'     => 'nullable|numeric',
-            'thumbnail'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'images.*'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-
-            // ✅ TAMBAHAN
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'address' => 'required|string',
+            'city' => 'required|string|max:100',
+            'star' => 'required|integer|min:1|max:5',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'facilities' => 'nullable|array',
             'facilities.*' => 'exists:facilities,id',
             'custom_facilities.*' => 'nullable|string|max:100',
         ]);
 
-        // Update thumbnail jika ada
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] = $request->file('thumbnail')
                 ->store('hotels/thumbnails', 'public');
@@ -191,14 +183,11 @@ class HotelController extends Controller
             $validated['thumbnail'] = $hotel->thumbnail;
         }
 
-        // Gabungkan images lama + baru
         if ($request->hasFile('images')) {
             $images = $hotel->images ?? [];
-
             foreach ($request->file('images') as $image) {
                 $images[] = $image->store('hotels/images', 'public');
             }
-
             $validated['images'] = $images;
         } else {
             $validated['images'] = $hotel->images;
@@ -209,12 +198,9 @@ class HotelController extends Controller
             'custom_facilities'
         ])->toArray();
 
-        $hotel->update($hotelData);     
+        $hotel->update($hotelData);
 
-
-        // ✅ TAMBAHAN: UPDATE FASILITAS
         $facilityData = [];
-
         foreach ($request->facilities ?? [] as $facilityId) {
             $facilityData[$facilityId] = [
                 'custom_name' => $request->custom_facilities[$facilityId] ?? null
@@ -250,24 +236,21 @@ class HotelController extends Controller
             ->with('success', 'Hotel berhasil dihapus');
     }
 
-    public function nearby(Request $request)
+    /**
+     * Booking hotel (ADMIN)
+     */
+    public function bookings(Hotel $hotel)
     {
-        $lat = $request->lat;
-        $lng = $request->lng;
+        // Pastikan admin login & cuma lihat hotel miliknya
+        if (!auth()->check() || auth()->user()->hotel_id != $hotel->id) {
+            abort(403);
+        }
 
-        return Hotel::selectRaw("
-            *,
-            (6371 * acos(
-                cos(radians(?)) *
-                cos(radians(latitude)) *
-                cos(radians(longitude) - radians(?)) +
-                sin(radians(?)) *
-                sin(radians(latitude))
-            )) AS distance
-        ", [$lat, $lng, $lat])
-        ->having('distance', '<=', 5)
-        ->orderBy('distance')
-        ->get();
+        $hotel->load([
+            'bookings.user',
+            'bookings.room'
+        ]);
+
+        return view('hotels.bookings', compact('hotel'));
     }
-
 }

@@ -66,6 +66,19 @@
                 </div>
             @endif
 
+            {{-- ✅ TAMBAHAN (ADMIN ONLY - TIDAK MENGUBAH YANG LAIN) --}}
+            @auth
+                @if(auth()->user()->hotel_id === $hotel->id)
+                    <div class="mt-6">
+                        <a href="{{ route('hotels.bookings', $hotel) }}"
+                           class="block text-center bg-blue-600 hover:bg-blue-700
+                                  text-white py-3 rounded-xl font-semibold transition">
+                            Lihat Data Booking Hotel
+                        </a>
+                    </div>
+                @endif
+            @endauth
+
         </div>
 
     </div>
@@ -114,7 +127,7 @@
                     @endif
                 </div>
 
-                    <div class="p-6 flex flex-col gap-4">
+                <div class="p-6 flex flex-col gap-4">
 
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800">
@@ -164,8 +177,8 @@
     @endif
 
 </div>
-
 @endsection
+
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -188,4 +201,3 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
-

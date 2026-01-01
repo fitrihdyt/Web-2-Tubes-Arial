@@ -39,4 +39,9 @@ class Hotel extends Model
             ->withTimestamps();
     
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }
