@@ -198,42 +198,92 @@
         </div>
     </section>
     <footer class="bg-[#0f3a4e] text-white mt-24">
-    <div class="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-4 gap-10">
+    <div class="max-w-7xl mx-auto px-6 py-16">
 
-        <!-- BRAND -->
-        <div>
-            <h3 class="text-2xl font-bold mb-3">BookMe</h3>
-            <p class="text-sm text-white/80 leading-relaxed">
-                Platform booking hotel yang nyaman, cepat, dan terpercaya untuk perjalananmu.
-            </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+            <!-- LEFT -->
+            <div>
+                <h3 class="text-2xl font-semibold mb-4">BookMe.</h3>
+
+                <p class="text-sm text-white/80 leading-relaxed max-w-md">
+                    BookMe adalah platform booking hotel yang membantu kamu
+                    menemukan penginapan terbaik dengan proses cepat,
+                    aman, dan nyaman di seluruh Indonesia.
+                </p>
+
+                <p class="mt-4 text-sm italic text-white/60">
+                    Making your stay easier, one booking at a time.
+                </p>
+
+                <a href="#"
+                   class="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-full
+                          border border-white/30 text-sm
+                          hover:bg-white hover:text-[#0f3a4e] transition">
+                    Tentang Tim Kami
+                </a>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="md:justify-self-end">
+                <h4 class="text-sm font-semibold tracking-widest text-white/80 mb-4">
+                    HELP CENTER
+                </h4>
+
+                <ul class="space-y-4 text-sm text-white/70">
+
+                    <!-- EMAIL -->
+                    <li class="flex items-center gap-3">
+                        <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        support@bookme.id
+                    </li>
+
+                    <!-- PHONE -->
+                    <li class="flex items-center gap-3">
+                        <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M3 5a2 2 0 012-2h3l2 5-2 1a11 11 0 005 5l1-2 5 2v3a2 2 0 01-2 2h-1C9.716 19 5 14.284 5 8V7a2 2 0 00-2-2z"/>
+                        </svg>
+                        +62 812-3456-7890
+                    </li>
+
+                    <!-- LOCATION -->
+                    <li class="flex items-center gap-3">
+                        <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 11c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M19 11c0 5-7 10-7 10S5 16 5 11a7 7 0 1114 0z"/>
+                        </svg>
+                        Jakarta, Indonesia
+                    </li>
+
+                </ul>
+            </div>
+
         </div>
 
-        <!-- MENU -->
-        <div>
-            <h4 class="font-semibold mb-4">Menu</h4>
-            <ul class="space-y-2 text-sm text-white/80">
-                <li><a href="#" class="hover:underline">Dashboard</a></li>
-                <li><a href="#" class="hover:underline">Hotel</a></li>
-                <li><a href="#" class="hover:underline">Rooms</a></li>
-            </ul>
+        <!-- BOTTOM -->
+        <div class="mt-14 pt-6 border-t border-white/10
+                    flex flex-col md:flex-row justify-between items-center
+                    text-sm text-white/60 gap-4">
+
+            <span>
+                © {{ date('Y') }} BookMe. All rights reserved.
+            </span>
+
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Service</a>
+            </div>
         </div>
 
-        <!-- SUPPORT -->
-        <div>
-            <h4 class="font-semibold mb-4">Bantuan</h4>
-            <ul class="space-y-2 text-sm text-white/80">
-                <li><a href="#" class="hover:underline">FAQ</a></li>
-                <li><a href="#" class="hover:underline">Kontak</a></li>
-                <li><a href="#" class="hover:underline">Kebijakan Privasi</a></li>
-            </ul>
-        </div>
-
-        <!-- COPYRIGHT -->
-        <div class="flex md:justify-end items-end text-sm text-white/70">
-            © {{ date('Y') }} BookMe. All rights reserved.
-        </div>
     </div>
 </footer>
+
 
 </div>
 
