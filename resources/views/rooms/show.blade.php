@@ -1,72 +1,75 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 space-y-8">
+<div class="max-w-6xl mx-auto px-6 py-10 space-y-10">
 
-    {{-- CARD --}}
-    <div class="bg-white rounded-2xl shadow overflow-hidden">
+    {{-- HEADER CARD --}}
+    <div class="bg-white rounded-3xl shadow overflow-hidden">
 
-        {{-- TOP --}}
-        <div class="flex flex-col md:flex-row gap-8 p-6">
+        <div class="grid md:grid-cols-2 gap-8 p-8">
 
             {{-- IMAGE --}}
-            <div class="w-full md:w-[360px] h-[240px]
-                        bg-gray-100 rounded-xl overflow-hidden shrink-0">
+            <div class="rounded-2xl overflow-hidden bg-gray-100 h-[280px]">
                 @if($room->thumbnail)
                     <img src="{{ asset('storage/' . $room->thumbnail) }}"
                          class="w-full h-full object-cover">
                 @else
-                    <div class="w-full h-full flex items-center justify-center text-gray-400">
-                        No Image
+                    <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                        No Image Available
                     </div>
                 @endif
             </div>
 
             {{-- INFO --}}
-            <div class="flex-1 flex flex-col justify-between">
+            <div class="flex flex-col justify-between">
 
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-800">
-                        {{ $room->name }}
-                    </h1>
+                <div class="space-y-4">
 
-                    <p class="text-sm text-gray-500 mt-1">
-                        Hotel
-                        <a href="{{ route('hotels.show', $room->hotel) }}"
-                           class="text-[#134662] hover:underline font-medium">
-                            {{ $room->hotel->name }}
-                        </a>
-                    </p>
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">
+                            {{ $room->name }}
+                        </h1>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            Hotel
+                            <a href="{{ route('hotels.show', $room->hotel) }}"
+                               class="text-[#134662] font-medium hover:underline">
+                                {{ $room->hotel->name }}
+                            </a>
+                        </p>
+                    </div>
 
                     {{-- PRICE --}}
-                    <p class="text-2xl font-bold text-[#ff5a1f] mt-4">
-                        Rp {{ number_format($room->price, 0, ',', '.') }}
-                        <span class="text-sm font-normal text-gray-400">
-                            / malam
-                        </span>
-                    </p>
+                    <div class="pt-2">
+                        <p class="text-3xl font-bold text-[#ff5a1f]">
+                            Rp {{ number_format($room->price, 0, ',', '.') }}
+                            <span class="text-sm font-normal text-gray-400">
+                                / malam
+                            </span>
+                        </p>
+                    </div>
 
                     {{-- META --}}
-                    <div class="flex flex-wrap gap-6 mt-4 text-sm text-gray-600">
+                    <div class="flex flex-wrap gap-8 pt-2 text-sm text-gray-600">
 
-                        <div class="flex items-center gap-1">
-                            {{-- USER ICON --}}
-                            <svg class="w-4 h-4 text-gray-400"
-                                 fill="none" stroke="currentColor" stroke-width="1.8"
+                        {{-- CAPACITY --}}
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-gray-400"
+                                 fill="none" stroke="currentColor" stroke-width="1.7"
                                  viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 100-8 4 4 0 000 8z"/>
+                                      d="M16 14a4 4 0 10-8 0m8 0a4 4 0 01-8 0m8 0v6H8v-6"/>
                             </svg>
                             Kapasitas {{ $room->capacity }} orang
                         </div>
 
-                        <div class="flex items-center gap-1">
-                            {{-- BOX ICON --}}
-                            <svg class="w-4 h-4 text-gray-400"
-                                 fill="none" stroke="currentColor" stroke-width="1.8"
+                        {{-- STOCK --}}
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-gray-400"
+                                 fill="none" stroke="currentColor" stroke-width="1.7"
                                  viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z"/>
+                                      d="M3 7h18M3 12h18M3 17h18"/>
                             </svg>
                             Stok
                             <span class="font-semibold
@@ -74,50 +77,52 @@
                                 {{ $room->stock > 0 ? $room->stock : 'Habis' }}
                             </span>
                         </div>
+
                     </div>
                 </div>
 
                 {{-- ACTION --}}
-                <div class="flex flex-wrap gap-4 mt-6">
+                <div class="pt-8 flex flex-wrap gap-4">
 
                     @auth
-                        @if(auth()->user()->role === 'user')
+                        @if(auth()->user()->role === 'user' && $room->stock > 0)
                             <a href="{{ route('bookings.create', $room) }}"
                                class="bg-[#ff5a1f] hover:bg-[#e64a19]
-                                      text-white px-6 py-3 rounded-xl
-                                      text-sm font-semibold shadow">
-                                Book Sekarang
+                                      text-white px-8 py-4 rounded-xl
+                                      text-sm font-semibold shadow transition">
+                                Booking Sekarang
                             </a>
                         @endif
 
-                        @if(auth()->user()->role === 'admin')
+                        @if(auth()->user()->role === 'hotel_admin')
                             <a href="{{ route('rooms.edit', $room) }}"
-                               class="bg-yellow-500 hover:bg-yellow-600
-                                      text-white px-6 py-3 rounded-xl
-                                      text-sm font-semibold shadow">
-                                Edit Room
+                               class="border border-gray-300 hover:bg-gray-50
+                                      text-gray-700 px-8 py-4 rounded-xl
+                                      text-sm font-semibold transition">
+                                Edit Kamar
                             </a>
                         @endif
                     @else
                         <a href="{{ route('login') }}"
                            class="bg-[#ff5a1f] hover:bg-[#e64a19]
-                                  text-white px-6 py-3 rounded-xl
-                                  text-sm font-semibold shadow">
+                                  text-white px-8 py-4 rounded-xl
+                                  text-sm font-semibold shadow transition">
                             Login untuk Booking
                         </a>
                     @endauth
 
                 </div>
+
             </div>
         </div>
 
         {{-- DESCRIPTION --}}
-        <div class="border-t px-6 py-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-2">
-                Deskripsi Room
+        <div class="border-t px-8 py-8">
+            <h2 class="text-lg font-semibold text-gray-900 mb-3">
+                Deskripsi Kamar
             </h2>
-            <p class="text-gray-600 leading-relaxed">
-                {{ $room->description ?? 'Tidak ada deskripsi.' }}
+            <p class="text-gray-600 leading-relaxed max-w-3xl">
+                {{ $room->description ?? 'Tidak ada deskripsi untuk kamar ini.' }}
             </p>
         </div>
 

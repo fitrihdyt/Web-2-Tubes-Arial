@@ -119,6 +119,8 @@
     @else
         <div class="grid md:grid-cols-2 gap-6">
         @foreach($hotel->rooms as $room)
+        <a href="{{ route('rooms.show', $room->id) }}"
+
             <div class="bg-white rounded-3xl shadow hover:shadow-lg transition overflow-hidden">
 
                 <div class="h-44 bg-gray-100">
@@ -173,6 +175,7 @@
 
                 </div>
             </div>
+        </a>
         @endforeach
         </div>
     @endif
