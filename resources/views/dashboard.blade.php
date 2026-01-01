@@ -101,9 +101,11 @@
 
                 {{-- SCROLL AREA --}}
                 <div
+                    id="hotel-scroll"
                     class="flex gap-8 overflow-x-auto px-6 pb-10
                         scroll-smooth snap-x snap-mandatory
                         [&::-webkit-scrollbar]:hidden">
+
 
                     {{-- HOTEL CARD --}}
                     @foreach($hotels->take(8) as $hotel)
@@ -200,11 +202,9 @@
                     <!-- ICON -->
                     <div id="exploreIcon"
                         class="w-16 h-16 flex items-center justify-center
-                                rounded-full
-                                border border-[#134662]/30
-                                bg-transparent
-                                mb-6
-                                transition-colors duration-300">
+                                rounded-full bg-[#eef6f8]
+                                group-hover:bg-[#134662]
+                                group-hover:text-white transition">
 
                         <svg id="exploreArrow"
                             xmlns="http://www.w3.org/2000/svg"
@@ -230,16 +230,20 @@
                     </p>
                 </a>
 
-
-
                 </div>
 
                 {{-- SCROLL INDICATOR --}}
-                <div class="mt-4 flex justify-center">
-                    <div class="w-40 h-1 rounded-full bg-[#134662]/20 overflow-hidden">
-                        <div class="h-full w-1/3 bg-[#134662] rounded-full"></div>
+                <div class="mt-6 px-6">
+                    <div class="w-full h-1.5 rounded-full bg-[#134662]/20 overflow-hidden">
+                        <div
+                            id="scroll-indicator"
+                            class="h-full w-16 bg-[#134662] rounded-full transition-all duration-200"
+                            style="width: 33.3333%;">
+
+                        </div>
                     </div>
                 </div>
+
 
 
 
@@ -548,23 +552,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('hotel-scroll');
-    const indicator = document.getElementById('scroll-indicator');
+    const container = document.getElementById('hotel-scroll')
+    const indicator = document.getElementById('scroll-indicator')
 
-    if (!container || !indicator) return;
+    if (!container || !indicator) return
 
     container.addEventListener('scroll', () => {
         const maxScroll =
-            container.scrollWidth - container.clientWidth;
+            container.scrollWidth - container.clientWidth
 
-        const scrollPercent =
-            container.scrollLeft / maxScroll;
+        const percent =
+            container.scrollLeft / maxScroll
 
-        indicator.style.width =
-            `${Math.max(scrollPercent * 100, 10)}%`;
-    });
-});
+        const trackWidth =
+            indicator.parentElement.clientWidth
+
+        const indicatorWidth =
+            indicator.clientWidth
+
+        const maxTranslate =
+            trackWidth - indicatorWidth
+
+        indicator.style.transform =
+            `translateX(${percent * maxTranslate}px)`
+    })
+})
 </script>
+
+
 <script>
 const card  = document.getElementById('exploreCard')
 const icon  = document.getElementById('exploreIcon')
@@ -579,7 +594,7 @@ card.addEventListener('mouseenter', () => {
   desc.classList.add('text-white/80')
 
   arrow.classList.remove('text-[#134662]')
-  arrow.classList.add('text-white')
+  arrow.classList.add('text-[#134662]')
 })
 
 card.addEventListener('mouseleave', () => {
