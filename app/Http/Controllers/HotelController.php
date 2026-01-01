@@ -24,6 +24,7 @@ class HotelController extends Controller
     }
 
     // Dashboard
+
     public function dashboard(Request $request)
 {
     $query = Hotel::query()
@@ -45,21 +46,21 @@ class HotelController extends Controller
         $query->whereIn('star', $request->star);
     }
 
-    // 💰 PRICE (FIXED)
     if ($request->filled('price')) {
         match ($request->price) {
             '0-500' =>
-                $query->having('rooms_min_price', '<=', 500000),
+                $query->havingRaw('rooms_min_price <= ?', [500000]),
 
             '500-1000' =>
-                $query->havingBetween('rooms_min_price', [500000, 1000000]),
+                $query->havingRaw('rooms_min_price BETWEEN ? AND ?', [500000, 1000000]),
 
             '1000+' =>
-                $query->having('rooms_min_price', '>=', 1000000),
+                $query->havingRaw('rooms_min_price >= ?', [1000000]),
 
             default => null,
         };
     }
+
 
     // ↕ SORT
     if ($request->filled('sort')) {
@@ -75,7 +76,6 @@ class HotelController extends Controller
 
     return view('dashboard', compact('hotels'));
 }
-
     /**
      * Form tambah hotel
      */
