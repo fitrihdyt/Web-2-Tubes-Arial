@@ -151,7 +151,7 @@
                             </div>
 
                             <span class="text-sm text-blue-600 underline">
-                                Lihat detail kamar
+                                Lihat detail 
                             </span>
                         </div>
                     </a>
