@@ -31,9 +31,11 @@ class HotelController extends Controller
             ->with('facilities');
 
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('city', 'like', '%' . $request->search . '%');
+            $search = trim($request->search);
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ILIKE', "%{$search}%")
+                ->orWhere('city', 'ILIKE', "%{$search}%");
             });
         }
 
@@ -41,14 +43,18 @@ class HotelController extends Controller
             $query->whereIn('star', $request->star);
         }
 
+        
         if ($request->filled('price')) {
-            match ($request->price) {
-                '0-500' => $query->having('rooms_min_price', '<=', 500000),
-                '500-1000' => $query->havingBetween('rooms_min_price', [500000, 1000000]),
-                '1000+' => $query->having('rooms_min_price', '>=', 1000000),
-                default => null,
-            };
+            $query->whereHas('rooms', function ($q) use ($request) {
+                match ($request->price) {
+                    '0-500' => $q->where('price', '<=', 500000),
+                    '500-1000' => $q->whereBetween('price', [500000, 1000000]),
+                    '1000+' => $q->where('price', '>=', 1000000),
+                    default => null,
+                    };
+                });
         }
+
 
         if ($request->filled('sort')) {
             match ($request->sort) {
