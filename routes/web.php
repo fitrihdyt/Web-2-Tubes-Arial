@@ -42,18 +42,11 @@ Route::middleware(['auth', IsSuperAdmin::class])->group(function () {
 
 Route::middleware(['auth', 'IsHotelAdmin'])->group(function () {
     Route::get('/hotels/create', [HotelController::class, 'create'])->name('hotels.create');
+    Route::get('/hotels/{hotel}/bookings', [HotelController::class, 'bookings'])->name('hotels.bookings');
     Route::post('/hotels', [HotelController::class, 'store'])->name('hotels.store');
     Route::get('/hotels/{hotel}/edit', [HotelController::class, 'edit'])->name('hotels.edit');
     Route::put('/hotels/{hotel}', [HotelController::class, 'update'])->name('hotels.update');
 });
-
-Route::middleware(['auth', IsHotelAdmin::class])->group(function () {
-    Route::get(
-        '/hotels/{hotel}/bookings',
-        [HotelController::class, 'bookings']
-    )->name('hotels.bookings');
-});
-
 
 Route::get('/hotels/{hotel}', [HotelController::class, 'show'])
     ->name('hotels.show');

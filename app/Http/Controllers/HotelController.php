@@ -241,11 +241,6 @@ class HotelController extends Controller
      */
     public function bookings(Hotel $hotel)
     {
-        // Pastikan admin login & cuma lihat hotel miliknya
-        if (!auth()->check() || auth()->user()->hotel_id != $hotel->id) {
-            abort(403);
-        }
-
         $hotel->load([
             'bookings.user',
             'bookings.room'
@@ -253,4 +248,6 @@ class HotelController extends Controller
 
         return view('hotels.bookings', compact('hotel'));
     }
+
+
 }

@@ -14,9 +14,9 @@
             </p>
         </div>
 
-        <a href="{{ route('hotels.show', $hotel) }}"
-           class="text-blue-600 hover:underline text-sm font-semibold">
-            ← Kembali ke Detail Hotel
+        <a href="{{ route('hotels.index') }}"
+           class="text-sm text-gray-500 hover:underline">
+            Kembali
         </a>
     </div>
 

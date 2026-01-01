@@ -67,9 +67,11 @@
             @endif
 
             @auth
-                @if(auth()->user()->role === 'hotel_admin' && auth()->user()->hotel_id === $hotel->id)
+                @if(
+                    auth()->user()->role === 'hotel_admin'
+                )
                     <div class="mt-6">
-                        <a href="{{ route('hotels.bookings', $hotel) }}"
+                        <a href="{{ route('hotels.bookings', $hotel->id) }}"
                         class="block text-center bg-blue-600 hover:bg-blue-700
                                 text-white py-3 rounded-xl font-semibold transition">
                             Lihat Data Booking Hotel
