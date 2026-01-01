@@ -29,7 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
 });
 
 Route::get('/hotels', [HotelController::class, 'index'])
@@ -41,7 +40,6 @@ Route::middleware(['auth', IsSuperAdmin::class])->group(function () {
         ->name('hotels.destroy');
 });
 
-
 Route::middleware(['auth', 'IsHotelAdmin'])->group(function () {
     Route::get('/hotels/create', [HotelController::class, 'create'])->name('hotels.create');
     Route::post('/hotels', [HotelController::class, 'store'])->name('hotels.store');
@@ -49,7 +47,16 @@ Route::middleware(['auth', 'IsHotelAdmin'])->group(function () {
     Route::put('/hotels/{hotel}', [HotelController::class, 'update'])->name('hotels.update');
 });
 
-Route::get('/hotels/{hotel}', [HotelController::class, 'show'])->name('hotels.show');
+Route::middleware(['auth', IsHotelAdmin::class])->group(function () {
+    Route::get(
+        '/hotels/{hotel}/bookings',
+        [HotelController::class, 'bookings']
+    )->name('hotels.bookings');
+});
+
+
+Route::get('/hotels/{hotel}', [HotelController::class, 'show'])
+    ->name('hotels.show');
 
 Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
 
@@ -65,7 +72,6 @@ Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show')
 
 Route::middleware('auth')->group(function () {
 
-
     Route::get('/bookings/history', [BookingController::class, 'history'])
         ->name('bookings.history');
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
@@ -73,8 +79,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
-    // Route::get('/bookings/show/{booking}', [BookingController::class, 'show'])->name('bookings.show');
-    
 
     Route::get('/bookings/{booking}/rating', [BookingController::class, 'createRating'])
         ->name('bookings.rating.create');
@@ -90,9 +94,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', IsUser::class])->group(function () {
-    // Route::get('/my-bookings', [BookingController::class, 'history'])
-    //     ->name('bookings.history');
-
     Route::post('/ratings', [RatingController::class, 'store'])
         ->name('ratings.store');
 });

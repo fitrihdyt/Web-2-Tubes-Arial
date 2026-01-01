@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Room;
 use App\Models\Facility;
+use App\Models\Booking;
 
 class Hotel extends Model
 {
@@ -42,6 +43,13 @@ class Hotel extends Model
 
     public function bookings()
     {
-        return $this->hasMany(Booking::class);
+        return $this->hasManyThrough(
+            Booking::class,
+            Room::class,
+            'hotel_id', 
+            'room_id',  
+            'id',       
+            'id'        
+        );
     }
 }
