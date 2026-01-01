@@ -78,6 +78,25 @@
                             </span>
                         </div>
 
+                            @auth
+                                @if(in_array(auth()->user()->role, ['hotel_admin', 'super_admin']))
+                                    <div class="flex items-center gap-2">
+                                        <svg class="w-5 h-5 text-gray-400"
+                                            fill="none" stroke="currentColor" stroke-width="1.7"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M3 7h18M3 12h18M3 17h18"/>
+                                        </svg>
+                                        Stok
+                                        <span class="font-semibold
+                                            {{ $room->stock > 0 ? 'text-green-600' : 'text-red-600' }}">
+                                            {{ $room->stock > 0 ? $room->stock : 'Habis' }}
+                                        </span>
+                                    </div>
+                                @endif
+                            @endauth
+
+
                     </div>
                 </div>
 
@@ -121,7 +140,7 @@
             <h2 class="text-lg font-semibold text-gray-900 mb-3">
                 Deskripsi Kamar
             </h2>
-            <p class="text-gray-600 leading-relaxed max-w-3xl">
+            <p class="text-gray-600 leading-7 tracking-wide max-w-3xl text-justify">
                 {{ $room->description ?? 'Tidak ada deskripsi untuk kamar ini.' }}
             </p>
         </div>

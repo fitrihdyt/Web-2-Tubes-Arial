@@ -47,17 +47,17 @@
 
                         <option value="0-500"
                             {{ request('price') == '0-500' ? 'selected' : '' }}>
-                            Under 500k
+                            < Rp 500.000
                         </option>
 
                         <option value="500-1000"
                             {{ request('price') == '500-1000' ? 'selected' : '' }}>
-                            500k - 1jt
+                            Rp 500.000 - Rp 1.000.000
                         </option>
 
                         <option value="1000+"
                             {{ request('price') == '1000+' ? 'selected' : '' }}>
-                            Di atas 1jt
+                            > Rp 1.000.000
                         </option>
                     </select>
 
