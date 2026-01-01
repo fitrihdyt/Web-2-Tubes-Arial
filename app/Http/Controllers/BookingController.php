@@ -7,6 +7,7 @@ use App\Models\Room;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -15,7 +16,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::with('room.hotel')->where('user_id', auth()->id())->latest()->get();
+        $bookings = Booking::with('room.hotel')->where('user_id', Auth::id())->latest()->get();
 
         return view('bookings.index', compact('bookings'));
     }
@@ -67,7 +68,7 @@ class BookingController extends Controller
             $total = $days * $room->price * $qty;
 
             $booking = Booking::create([
-                'user_id'     => auth()->id(),
+                'user_id'     => Auth::id(),
                 'room_id'     => $room->id,
                 'check_in'    => $checkIn,
                 'check_out'   => $checkOut,
@@ -93,7 +94,7 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        abort_if($booking->user_id !== auth()->id(), 403);
+        abort_if($booking->user_id !== Auth::id(), 403);
 
         $booking->load('room.hotel');
 
@@ -105,7 +106,7 @@ class BookingController extends Controller
      */
     public function destroy(Booking $booking)
     {
-        abort_if($booking->user_id !== auth()->id(), 403);
+        abort_if($booking->user_id !== Auth::id(), 403);
 
         if ($booking->status === 'paid') {
             return back()->withErrors('Booking sudah dibayar');
@@ -126,9 +127,9 @@ class BookingController extends Controller
     public function history()
     {
         $bookings = Booking::with('room.hotel')
-            ->where('user_id', auth()->id())
+            ->where('user_id', Auth::id())
             ->where('status', 'paid')
-            ->whereDate('check_out', '<', now())
+            // ->whereDate('check_out', '<', now())
             ->orderByDesc('check_out')
             ->get();
 
@@ -137,7 +138,7 @@ class BookingController extends Controller
 
     public function storeRating(Request $request, Booking $booking)
     {
-        abort_if($booking->user_id !== auth()->id(), 403);
+        abort_if($booking->user_id !== Auth::id(), 403);
 
         if ($booking->status !== 'paid' || $booking->check_out >= now()) {
             return back()->withErrors('Booking belum selesai');
