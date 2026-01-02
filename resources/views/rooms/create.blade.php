@@ -28,16 +28,15 @@
                 <label class="text-sm font-medium text-gray-600">
                     Hotel
                 </label>
-                <select name="hotel_id"
-                        class="mt-1 w-full border rounded-xl px-4 py-2"
-                        required>
-                    <option value="">Pilih Hotel</option>
-                    @foreach ($hotels as $hotel)
-                        <option value="{{ $hotel->id }}">
-                            {{ $hotel->name }}
-                        </option>
-                    @endforeach
-                </select>
+
+                {{-- ID hotel dikirim diam-diam --}}
+                <input type="hidden" name="hotel_id" value="{{ $hotel->id }}">
+
+                {{-- Nama hotel cuma buat ditampilkan --}}
+                <input type="text"
+                    value="{{ $hotel->name }}"
+                    class="mt-1 w-full border rounded-xl px-4 py-2 bg-gray-100 text-gray-600"
+                    readonly>
             </div>
 
             {{-- ROOM NAME --}}

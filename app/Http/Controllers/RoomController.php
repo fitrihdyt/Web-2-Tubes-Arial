@@ -22,12 +22,17 @@ class RoomController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         //
-        $hotels = Hotel::all();
-        return view('rooms.create', compact('hotels'));
-    }
+        $hotel = null;
+
+        if ($request->filled('hotel')) {
+            $hotel = Hotel::findOrFail($request->hotel);
+        }
+
+        return view('rooms.create', compact('hotel'));
+        }
 
     /**
      * Store a newly created resource in storage.
@@ -60,7 +65,10 @@ class RoomController extends Controller
 
         Room::create($validated);
 
-        return redirect()->route('rooms.index')->with('success', 'Kamar berhasil ditambahkan');
+        return redirect()
+            ->route('hotels.show', $validated['hotel_id'])
+            ->with('success', 'Kamar berhasil ditambahkan');
+
     }
 
     /**
@@ -124,7 +132,9 @@ class RoomController extends Controller
 
         $room->update($validated);
 
-        return redirect()->route('rooms.index')->with('success', 'Kamar berhasil diperbarui');
+        return redirect()
+            ->route('hotels.show', $room->hotel_id)
+            ->with('success', 'Kamar berhasil diperbarui');
     }
 
     /**
@@ -145,6 +155,12 @@ class RoomController extends Controller
 
         $room->delete();
 
-        return redirect()->route('rooms.index')->with('success', 'Kamar berhasil dihapus');
+        $hotelId = $room->hotel_id;
+
+        $room->delete();
+
+        return redirect()
+            ->route('hotels.show', $hotelId)
+            ->with('success', 'Kamar berhasil dihapus');
     }
 }

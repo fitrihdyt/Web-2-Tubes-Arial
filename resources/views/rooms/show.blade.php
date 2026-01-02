@@ -1,7 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $images = [];
+
+    if (is_array($room->images)) {
+        $images = $room->images;
+    } elseif (is_string($room->images)) {
+        $decoded = json_decode($room->images, true);
+        $images = is_array($decoded) ? $decoded : [];
+    }
+@endphp
+
 <div class="max-w-6xl mx-auto px-6 py-10 space-y-10">
+    {{-- BACK BUTTON --}}
+    <div class="mb-4">
+        <a href="{{ route('hotels.show', $room->hotel) }}"
+        class="inline-flex items-center gap-2
+                text-sm font-medium text-gray-600
+                hover:text-[#134662] transition">
+
+            <svg class="w-5 h-5"
+                fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M15 18l-6-6 6-6"/>
+            </svg>
+
+            Kembali ke Hotel
+        </a>
+    </div>
 
     {{-- HEADER CARD --}}
     <div class="bg-white rounded-3xl shadow overflow-hidden">
@@ -54,11 +82,13 @@
 
                         {{-- CAPACITY --}}
                         <div class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-gray-400"
-                                 fill="none" stroke="currentColor" stroke-width="1.7"
-                                 viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 text-gray-400"
+                                fill="none" stroke="currentColor" stroke-width="1.8"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M16 14a4 4 0 10-8 0m8 0a4 4 0 01-8 0m8 0v6H8v-6"/>
+                                    d="M17 20h5v-2a4 4 0 00-4-4h-1
+                                        M9 20H4v-2a4 4 0 014-4h1
+                                        m4-4a4 4 0 100-8 4 4 0 000 8z"/>
                             </svg>
                             Kapasitas {{ $room->capacity }} orang
                         </div>
@@ -133,6 +163,81 @@
         </div>
 
     </div>
+@if(count($images) > 0)
+<div class="bg-white rounded-3xl shadow p-8">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">
+        Galeri Kamar
+    </h2>
+
+    <div class="grid grid-cols-4 gap-4">
+        @foreach($images as $i => $image)
+            @if($i < 3)
+                <button onclick="openRoomGallery()"
+                        class="rounded-xl overflow-hidden aspect-square">
+                    <img src="{{ asset('storage/'.$image) }}"
+                         class="w-full h-full object-cover">
+                </button>
+            @endif
+        @endforeach
+
+        @if(count($images) > 3)
+        <button onclick="openRoomGallery()"
+                class="relative rounded-xl overflow-hidden aspect-square">
+            <img src="{{ asset('storage/'.$images[0]) }}"
+                 class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/60 flex items-center justify-center">
+                <span class="text-white text-sm font-semibold">
+                    Lihat Semua
+                </span>
+            </div>
+        </button>
+        @endif
+    </div>
+</div>
+@endif
+
 
 </div>
+@if(count($images) > 0)
+<div id="roomGalleryModal"
+     class="fixed inset-0 bg-black/80 z-[9999] hidden">
+
+    <div class="fixed top-4 left-4">
+        <button onclick="closeRoomGallery()"
+                class="bg-black/60 p-2 rounded-full text-white">
+            <svg class="w-6 h-6"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M15 18l-6-6 6-6"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 pt-24
+                grid grid-cols-2 md:grid-cols-4 gap-4">
+        @foreach($images as $image)
+            <img src="{{ asset('storage/'.$image) }}"
+                 class="w-full h-[200px] object-cover rounded-xl">
+        @endforeach
+    </div>
+</div>
+@endif
+
+
 @endsection
+@push('scripts')
+<script>
+function openRoomGallery() {
+    document.getElementById('roomGalleryModal')
+        .classList.remove('hidden')
+    document.body.classList.add('overflow-hidden')
+}
+
+function closeRoomGallery() {
+    document.getElementById('roomGalleryModal')
+        .classList.add('hidden')
+    document.body.classList.remove('overflow-hidden')
+}
+</script>
+@endpush

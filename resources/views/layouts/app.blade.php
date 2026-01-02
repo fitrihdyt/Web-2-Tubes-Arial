@@ -39,7 +39,6 @@
                     @if(auth()->user()->role === 'hotel_admin')
                         <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
                         <a href="{{ route('hotels.index') }}" class="nav-link">Hotels</a>
-                        <a href="{{ route('rooms.index') }}" class="nav-link">Rooms</a>
                     @endif
 
                     @if(auth()->user()->role === 'super_admin')

@@ -3,7 +3,7 @@
 @section('content')
 <div class="bg-[#eef6f8] min-h-screen pt-23">
 
-    {{-- HERO --}}
+    {{-- HERO SECTION --}}
     <section class="max-w-7xl mx-auto px-6">
         <div class="relative h-[420px] rounded-[2.5rem] overflow-hidden shadow-2xl">
 
@@ -22,7 +22,7 @@
                     Pengalaman booking hotel yang nyaman, cepat, dan terpercaya.
                 </p>
 
-                {{-- SEARCH --}}
+                {{-- SEARCH FORM --}}
                 <form method="GET"
                       action="{{ route('dashboard') }}"
                       class="mt-10 bg-white/95 backdrop-blur rounded-2xl shadow-xl p-6
@@ -61,7 +61,7 @@
                         </option>
                     </select>
 
-                    {{-- BUTTON SEARCH ICON --}}
+                    {{-- SEARCH BUTTON --}}
                     <button
                         type="submit"
                         class="flex items-center justify-center bg-[#134662]
@@ -86,7 +86,7 @@
     </section>
 
     {{-- HOTEL LIST --}}
-    <section class="max-w-7xl mx-auto px-6 py-20">
+    <section class="max-w-7xl mx-auto px-6 py-10">
 
         <h2 class="text-2xl font-bold text-[#134662] mb-6">
             Rekomendasi Hotel
@@ -151,7 +151,7 @@
                                 </div>
                             </div>
 
-                            {{-- CONTENT --}}
+                            {{-- deskripsi --}}
                             <div class="p-6">
                                 <p class="text-xs uppercase tracking-widest text-gray-400">
                                     {{ $hotel->city }}
@@ -190,71 +190,68 @@
                         </a>
                     @endforeach
 
-            <a href="{{ route('hotels.index') }}"
-                id="exploreCard"
-                class="snap-start min-w-[280px] h-[360px]
-                        flex flex-col items-center justify-center
-                        rounded-3xl border-2 border-dashed border-[#134662]/30
-                        text-center
-                        transition-colors duration-300">
+                {{-- EXPLORE MORE CARD --}}
+                <a href="{{ route('hotels.index') }}"
+                    id="exploreCard"
+                    class="snap-start min-w-[280px] h-[360px]
+                            flex flex-col items-center justify-center
+                            rounded-3xl border-2 border-dashed border-[#134662]/30
+                            text-center
+                            transition-colors duration-300">
 
 
-                    <!-- ICON -->
-                    <div id="exploreIcon"
-                        class="w-16 h-16 flex items-center justify-center
-                                rounded-full bg-[#eef6f8]
-                                group-hover:bg-[#134662]
-                                group-hover:text-white transition">
+                        <!-- ICON -->
+                        <div id="exploreIcon"
+                            class="w-16 h-16 flex items-center justify-center
+                                    rounded-full bg-[#eef6f8]
+                                    group-hover:bg-[#134662]
+                                    group-hover:text-white transition">
 
-                        <svg id="exploreArrow"
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="w-6 h-6 text-[#134662] transition-colors duration-300"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            stroke-width="2">
-                            <path stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  d="M9 5l7 7-7 7"/>
-                        </svg>
+                            <svg id="exploreArrow"
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="w-6 h-6 text-[#134662] transition-colors duration-300"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2">
+                                <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+
+                        <p id="exploreTitle"
+                        class="text-lg font-semibold text-[#134662] transition-colors duration-300">
+                            Explore More
+                        </p>
+
+                        <p id="exploreDesc"
+                        class="text-sm mt-1 text-[#134662]/70 transition-colors duration-300">
+                            Lihat semua hotel
+                        </p>
+                    </a>
+
                     </div>
 
-                    <p id="exploreTitle"
-                    class="text-lg font-semibold text-[#134662] transition-colors duration-300">
-                        Explore More
-                    </p>
+                    {{-- SCROLL INDICATOR --}}
+                    <div class="mt-6 px-6">
+                        <div id="scroll-track"
+                            class="w-full h-1.5 rounded-full bg-[#134662]/20 overflow-hidden cursor-pointer">
+                            <div
+                                id="scroll-indicator"
+                                class="h-full w-16 bg-[#134662] rounded-full transition-all duration-200"
+                                style="width: 60%;">
 
-                    <p id="exploreDesc"
-                    class="text-sm mt-1 text-[#134662]/70 transition-colors duration-300">
-                        Lihat semua hotel
-                    </p>
-                </a>
-
-                </div>
-
-                {{-- SCROLL INDICATOR --}}
-                <div class="mt-6 px-6">
-                    <div class="w-full h-1.5 rounded-full bg-[#134662]/20 overflow-hidden">
-                        <div
-                            id="scroll-indicator"
-                            class="h-full w-16 bg-[#134662] rounded-full transition-all duration-200"
-                            style="width: 33.3333%;">
-
+                            </div>
                         </div>
                     </div>
                 </div>
-
-
-
-
-            </div>
-        @endif
+            @endif
     </section>      
 
 
-    <!-- MAP SECTION (PINDAH KE BAWAH) -->
     {{-- MAP + LIST --}}
-    <section class="max-w-7xl mx-auto px-6 py-20">
+    <section class="max-w-7xl mx-auto px-6 py-10">
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden relative">
 
             <div class="px-8 py-6 border-b">
@@ -300,15 +297,17 @@
 
         </div>
     </section>
-    <footer class="bg-[#0f3a4e] text-white mt-32">
-        <div class="max-w-7xl mx-auto px-6 py-12">
+
+    {{-- FOOTER --}}
+    <footer class="bg-[#0f3a4e] text-white mt-14">
+        <div class="max-w-7xl mx-auto px-6 py-6">
 
             <!-- TOP -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
 
                 <!-- LEFT -->
                 <div>
-                    <h3 class="text-3xl font-semibold mb-5">BookMe.</h3>
+                    <h3 class="text-2xl font-semibold mb-4">BookMe.</h3>
 
                     <p class="text-sm text-white/75 leading-relaxed max-w-md">
                         BookMe adalah platform booking hotel yang membantu kamu
@@ -364,7 +363,7 @@
                                         d="M19 11c0 5-7 10-7 10S5 16 5 11a7 7 0 1114 0z"/>
                                 </svg>
                             </span>
-                            Jakarta, Indonesia
+                            Batusangkar, Indonesia
                         </li>
 
                     </ul>
@@ -520,12 +519,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 hotels.forEach(hotel => {
 
-                    // MARKER
                     L.marker([hotel.latitude, hotel.longitude])
                         .addTo(hotelMarkers)
                         .bindPopup(`<strong>${hotel.name}</strong><br>Rp ${hotel.min_price}`)
 
-                    // CARD LIST
                     nearbyContainer.innerHTML += `
                         <a href="/hotels/${hotel.id}"
                            class="bg-white rounded-2xl shadow hover:shadow-lg transition p-5">
@@ -550,36 +547,59 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 </script>
 
+{{-- HORIZONTAL SCROLL INDICATOR --}}
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('hotel-scroll')
     const indicator = document.getElementById('scroll-indicator')
+    const track = document.getElementById('scroll-track')
 
-    if (!container || !indicator) return
+    let isDragging = false
+    let startX = 0
+    let startScrollLeft = 0
 
-    container.addEventListener('scroll', () => {
-        const maxScroll =
-            container.scrollWidth - container.clientWidth
-
-        const percent =
-            container.scrollLeft / maxScroll
-
-        const trackWidth =
-            indicator.parentElement.clientWidth
-
-        const indicatorWidth =
-            indicator.clientWidth
-
-        const maxTranslate =
-            trackWidth - indicatorWidth
+    function updateIndicator() {
+        const maxScroll = container.scrollWidth - container.clientWidth
+        const percent = container.scrollLeft / maxScroll
+        const maxMove = track.clientWidth - indicator.clientWidth
 
         indicator.style.transform =
-            `translateX(${percent * maxTranslate}px)`
+            `translateX(${percent * maxMove}px)`
+    }
+
+    container.addEventListener('scroll', updateIndicator)
+
+    indicator.addEventListener('mousedown', e => {
+        isDragging = true
+        startX = e.clientX
+        startScrollLeft = container.scrollLeft
+
+        indicator.classList.add('cursor-grabbing')
+        document.body.classList.add('select-none')
+    })
+
+    document.addEventListener('mousemove', e => {
+        if (!isDragging) return
+
+        const dx = e.clientX - startX
+        const scrollRatio =
+            (container.scrollWidth - container.clientWidth) /
+            (track.clientWidth - indicator.clientWidth)
+
+        container.scrollLeft =
+            startScrollLeft + dx * scrollRatio
+    })
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false
+        indicator.classList.remove('cursor-grabbing')
+        document.body.classList.remove('select-none')
     })
 })
 </script>
 
 
+{{-- EXPLORE MORE CARD HOVER EFFECT --}}
 <script>
 const card  = document.getElementById('exploreCard')
 const icon  = document.getElementById('exploreIcon')
