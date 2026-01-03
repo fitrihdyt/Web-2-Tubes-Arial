@@ -3,7 +3,6 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4">
 
-    {{-- HEADER --}}
     <div class="flex items-center justify-between mb-8">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">

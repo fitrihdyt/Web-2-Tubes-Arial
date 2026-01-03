@@ -161,69 +161,68 @@
                 {{ $room->description ?? 'Tidak ada deskripsi untuk kamar ini.' }}
             </p>
         </div>
-
     </div>
-@if(count($images) > 0)
-<div class="bg-white rounded-3xl shadow p-8">
-    <h2 class="text-xl font-semibold text-gray-900 mb-4">
-        Galeri Kamar
-    </h2>
 
-    <div class="grid grid-cols-4 gap-4">
-        @foreach($images as $i => $image)
-            @if($i < 3)
-                <button onclick="openRoomGallery()"
-                        class="rounded-xl overflow-hidden aspect-square">
-                    <img src="{{ asset('storage/'.$image) }}"
-                         class="w-full h-full object-cover">
-                </button>
+    @if(count($images) > 0)
+    <div class="bg-white rounded-3xl shadow p-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">
+            Galeri Kamar
+        </h2>
+
+        <div class="grid grid-cols-4 gap-4">
+            @foreach($images as $i => $image)
+                @if($i < 3)
+                    <button onclick="openRoomGallery()"
+                            class="rounded-xl overflow-hidden aspect-square">
+                        <img src="{{ asset('storage/'.$image) }}"
+                            class="w-full h-full object-cover">
+                    </button>
+                @endif
+            @endforeach
+
+            @if(count($images) > 3)
+            <button onclick="openRoomGallery()"
+                    class="relative rounded-xl overflow-hidden aspect-square">
+                <img src="{{ asset('storage/'.$images[0]) }}"
+                    class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/60 flex items-center justify-center">
+                    <span class="text-white text-sm font-semibold">
+                        Lihat Semua
+                    </span>
+                </div>
+            </button>
             @endif
-        @endforeach
-
-        @if(count($images) > 3)
-        <button onclick="openRoomGallery()"
-                class="relative rounded-xl overflow-hidden aspect-square">
-            <img src="{{ asset('storage/'.$images[0]) }}"
-                 class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-black/60 flex items-center justify-center">
-                <span class="text-white text-sm font-semibold">
-                    Lihat Semua
-                </span>
-            </div>
-        </button>
-        @endif
+        </div>
     </div>
-</div>
-@endif
+    @endif
 
 
-</div>
-@if(count($images) > 0)
-<div id="roomGalleryModal"
-     class="fixed inset-0 bg-black/80 z-[9999] hidden">
-
-    <div class="fixed top-4 left-4">
-        <button onclick="closeRoomGallery()"
-                class="bg-black/60 p-2 rounded-full text-white">
-            <svg class="w-6 h-6"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M15 18l-6-6 6-6"/>
-            </svg>
-        </button>
     </div>
+    @if(count($images) > 0)
+    <div id="roomGalleryModal"
+        class="fixed inset-0 bg-black/80 z-[9999] hidden">
 
-    <div class="max-w-6xl mx-auto px-6 pt-24
-                grid grid-cols-2 md:grid-cols-4 gap-4">
-        @foreach($images as $image)
-            <img src="{{ asset('storage/'.$image) }}"
-                 class="w-full h-[200px] object-cover rounded-xl">
-        @endforeach
+        <div class="fixed top-4 left-4">
+            <button onclick="closeRoomGallery()"
+                    class="bg-black/60 p-2 rounded-full text-white">
+                <svg class="w-6 h-6"
+                    fill="none" stroke="currentColor" stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-6 pt-24
+                    grid grid-cols-2 md:grid-cols-4 gap-4">
+            @foreach($images as $image)
+                <img src="{{ asset('storage/'.$image) }}"
+                    class="w-full h-[200px] object-cover rounded-xl">
+            @endforeach
+        </div>
     </div>
-</div>
-@endif
-
+    @endif
 
 @endsection
 @push('scripts')

@@ -113,7 +113,7 @@
 
         <div class="bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden flex group">
 
-            {{-- CARD LINK (IMAGE + INFO) --}}
+            {{-- CARD --}}
             <a href="{{ route('hotels.show', $hotel) }}"
             class="flex flex-1 no-underline">
 

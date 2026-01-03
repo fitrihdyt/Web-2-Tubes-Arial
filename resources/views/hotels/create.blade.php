@@ -41,7 +41,7 @@
           class="bg-white rounded-2xl shadow p-6 space-y-8">
         @csrf
 
-        {{-- ================= BASIC INFO ================= --}}
+        {{-- INFO --}}
         <div class="space-y-4">
             <h2 class="text-lg font-semibold text-gray-700">
                 Informasi Dasar
@@ -74,7 +74,7 @@
                    required>
         </div>
 
-        {{-- ================= STAR ================= --}}
+        {{--  STAR  --}}
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
                 Bintang Hotel
@@ -91,7 +91,7 @@
             </select>
         </div>
 
-        {{-- ================= MAP ================= --}}
+        {{--  MAP  --}}
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
                 Lokasi Hotel
@@ -119,7 +119,7 @@
             </div>
         </div>
 
-        {{-- ================= FASILITAS ================= --}}
+        {{--  FASILITAS  --}}
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-3">
                 Fasilitas Hotel
@@ -153,7 +153,7 @@
             </div>
         </div>
 
-        {{-- ================= IMAGES ================= --}}
+        {{--  IMAGES  --}}
         <div class="grid md:grid-cols-2 gap-6">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -175,7 +175,7 @@
             </div>
         </div>
 
-        {{-- ================= ACTION ================= --}}
+        {{--  ACTION  --}}
         <div class="flex gap-3 pt-4">
             <button type="submit"
                     class="bg-[#134662] hover:bg-[#0f3a4e]

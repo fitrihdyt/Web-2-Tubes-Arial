@@ -19,7 +19,7 @@ class HotelController extends Controller
             ->withMin('rooms', 'price')
             ->with('facilities');
 
-        // SEARCH (PostgreSQL)
+        // SEARCH 
         if ($request->filled('search')) {
             $search = trim($request->search);
 
@@ -29,7 +29,6 @@ class HotelController extends Controller
             });
         }
 
-        // FILTER STAR
         if ($request->filled('star')) {
             $query->whereIn('star', $request->star);
         }
@@ -129,6 +128,7 @@ class HotelController extends Controller
 
         return view('dashboard', compact('hotels'));
     }
+
     /**
      * Form tambah hotel
      */
@@ -195,7 +195,6 @@ class HotelController extends Controller
      */
     public function show(Hotel $hotel)
     {
-        // OPTIONAL: pastikan admin cuma lihat hotel miliknya
         if (Auth::check() && Auth::user()->hotel_id && Auth::user()->hotel_id != $hotel->id) {
             abort(403);
         }

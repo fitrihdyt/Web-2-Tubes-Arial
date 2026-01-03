@@ -3,7 +3,6 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4">
 
-    {{-- ================= HERO ================= --}}
     <div class="grid md:grid-cols-3 gap-6 mb-10">
 
         {{-- THUMBNAIL --}}
@@ -70,7 +69,7 @@
         </div>
     </div>
 
-    {{-- ================= GALLERY + FASILITAS ================= --}}
+    {{-- GALLERY & FASILITAS --}}
     <div class="grid md:grid-cols-3 gap-6 mb-10">
 
         {{-- GALLERY --}}
@@ -116,7 +115,7 @@
         @endif
     </div>
 
-    {{-- ================= ROOMS + MAP ================= --}}
+    {{-- ROOMS & MAP --}}
     <div class="grid md:grid-cols-3 gap-6 mb-16">
 
         {{-- ROOMS --}}

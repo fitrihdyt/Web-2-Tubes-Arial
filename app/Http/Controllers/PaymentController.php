@@ -71,8 +71,8 @@ class PaymentController extends Controller
         $orderId     = $notif->order_id;
         $transaction = $notif->transaction_status;
         $fraud       = $notif->fraud_status ?? null;
-
-        // ✅ FIX AMBIL BOOKING ID
+         
+        
         $parts = explode('-', $orderId);
         $bookingId = $parts[1] ?? null;
 

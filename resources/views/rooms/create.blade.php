@@ -20,7 +20,7 @@
           class="bg-white rounded-2xl shadow p-6 space-y-8">
         @csrf
 
-        {{-- ================= BASIC INFO ================= --}}
+        {{-- INFO --}}
         <div class="grid md:grid-cols-2 gap-6">
 
             {{-- HOTEL --}}
@@ -99,7 +99,7 @@
             </div>
         </div>
 
-        {{-- ================= THUMBNAIL ================= --}}
+        {{-- THUMBNAIL --}}
         <div>
             <label class="text-sm font-medium text-gray-600 block mb-2">
                 Thumbnail Room
@@ -109,7 +109,7 @@
                    class="w-full border rounded-xl px-4 py-2 text-sm">
         </div>
 
-        {{-- ================= GALLERY ================= --}}
+        {{-- GALLERY --}}
         <div>
             <label class="text-sm font-medium text-gray-600 block mb-2">
                 Galeri Room
@@ -120,7 +120,7 @@
                    class="w-full border rounded-xl px-4 py-2 text-sm">
         </div>
 
-        {{-- ================= ACTION ================= --}}
+        {{-- ACTION --}}
         <div class="flex gap-4 pt-4">
             <button class="bg-[#134662] hover:bg-[#0f3a4e]
                            text-white px-6 py-3 rounded-xl font-semibold">

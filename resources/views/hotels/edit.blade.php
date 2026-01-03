@@ -53,7 +53,7 @@
         @csrf
         @method('PUT')
 
-        {{-- ================= BASIC INFO ================= --}}
+        {{-- INFO --}}
         <div class="grid md:grid-cols-2 gap-6">
 
             <div>
@@ -90,7 +90,7 @@
             </div>
         </div>
 
-        {{-- ================= STAR ================= --}}
+        {{-- STAR --}}
         <div>
             <label class="text-sm font-medium text-gray-600">Bintang Hotel</label>
             <select name="star"
@@ -105,7 +105,7 @@
             </select>
         </div>
 
-        {{-- ================= MAP ================= --}}
+        {{-- MAP --}}
         <div>
             <label class="flex items-center gap-2 text-sm font-medium text-gray-600 mb-2">
                 {{-- LOCATION SVG --}}
@@ -148,7 +148,7 @@
             </div>
         </div>
 
-        {{-- ================= FASILITAS ================= --}}
+        {{-- FASILITAS --}}
         <div>
             <label class="flex items-center gap-2 text-sm font-medium text-gray-600 mb-3">
                 {{-- CHECK SVG --}}
@@ -202,7 +202,7 @@
             </div>
         </div>
 
-        {{-- ================= THUMBNAIL ================= --}}
+        {{-- THUMBNAIL --}}
         <div>
             <label class="text-sm font-medium text-gray-600 block mb-2">
                 Thumbnail Hotel
@@ -218,7 +218,7 @@
                    class="w-full border rounded-xl px-4 py-2 text-sm">
         </div>
 
-        {{-- ================= GALLERY ================= --}}
+        {{-- GALLERY --}}
         <div>
             <label class="text-sm font-medium text-gray-600 block mb-2">
                 Galeri Hotel
@@ -237,7 +237,7 @@
                    class="w-full border rounded-xl px-4 py-2 text-sm">
         </div>
 
-        {{-- ================= ACTION ================= --}}
+        {{-- ACTION --}}
         <div class="flex gap-4 pt-4">
             <button class="bg-[#134662] hover:bg-[#0f3a4e]
                            text-white px-6 py-3 rounded-xl font-semibold">

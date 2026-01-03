@@ -6,52 +6,19 @@ BookMe adalah aplikasi web booking hotel yang memungkinkan pengguna mencari hote
 
 ## 🎯 Tujuan
 
-Membangun sistem booking hotel berbasis web dengan pembagian hak akses pengguna (role-based access).
+Membangun sistem booking hotel berbasis web dengan pembagian hak akses pengguna (role-based access) untuk user, admin hotel, dan super admin.
 
-## ✨ Fitur Utama
+## 🔗 Demo Website
 
-### 👤 User
+Aplikasi dapat diakses melalui link berikut:
 
-* Melihat daftar hotel dan kamar
-* Melakukan booking kamar
-* Melihat histori booking
-* Memberikan rating dan ulasan
-
-### 🏨 Hotel Admin
-
-* Mengelola data hotel
-* Mengelola kamar hotel
-* Melihat booking masuk
-
-### 🛡️ Super Admin
-
-* Mengelola seluruh data hotel
-* Mengelola akun admin hotel
-
-## 🛠️ Teknologi yang Digunakan
-
-* Laravel 12
-* PHP 8.4
-* MySQL
-* Tailwind CSS
-* Leaflet.js (Maps)
-
-## 🚀 Cara Menjalankan Project
-
-```bash
-git clone https://github.com/username/bookme.git
-cd bookme
-composer install
-npm install
-npm run build
-php artisan migrate --seed
-php artisan serve
-```
+👉 [**https://web-2-tubes-arial-production.up.railway.app/**](https://web-2-tubes-arial-production.up.railway.app/)
 
 ## 👥 Anggota Tim
 
-| Nama               | NIM          |
-| ------------------ | ------------ |
-| Nabila Khairunnisa | 607062400028 |
-| Fitri Nurhidayat   | 607062400078 |
-| Baiq Izza Aziza    | 607062400105 |
+| Nama               | NIM          | GitHub Username |
+| ------------------ | ------------ | --------------- |
+| Nabila Khairunnisa | 607062400028 | nblkhainns      |
+| Fitri Nurhidayat   | 607062400078 | fitrihdyt       |
+| Baiq Izza Aziza    | 607062400105 | IzzaAziza       |
+

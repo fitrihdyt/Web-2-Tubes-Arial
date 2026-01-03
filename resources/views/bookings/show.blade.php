@@ -3,7 +3,6 @@
 @section('content')
 <div class="max-w-4xl mx-auto px-4">
 
-    {{-- TITLE --}}
     <h1 class="text-3xl font-bold mb-8 text-slate-800">
         Detail Booking
     </h1>

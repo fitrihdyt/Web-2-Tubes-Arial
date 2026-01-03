@@ -99,7 +99,7 @@
         @else
             <div class="relative -mx-6">
 
-                {{-- SCROLL AREA --}}
+                {{-- SCROLL --}}
                 <div
                     id="hotel-scroll"
                     class="flex gap-8 overflow-x-auto px-6 pb-10
@@ -199,8 +199,6 @@
                             text-center
                             transition-colors duration-300">
 
-
-                        <!-- ICON -->
                         <div id="exploreIcon"
                             class="w-16 h-16 flex items-center justify-center
                                     rounded-full bg-[#eef6f8]
@@ -250,7 +248,7 @@
     </section>      
 
 
-    {{-- MAP + LIST --}}
+    {{-- MAP & LIST --}}
     <section class="max-w-7xl mx-auto px-6 py-10">
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden relative">
 
@@ -281,7 +279,6 @@
 
             <div id="map" class="h-[420px]"></div>
 
-            {{-- LIST HOTEL SEKitar --}}
             <div class="p-8 border-t">
                 <h4 class="font-semibold text-[#134662] mb-6">
                     Hotel di Sekitar Lokasi

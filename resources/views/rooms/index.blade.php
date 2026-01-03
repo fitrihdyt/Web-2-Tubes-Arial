@@ -20,13 +20,11 @@
         @endauth
     </div>
 
-    {{-- EMPTY --}}
     @if($rooms->isEmpty())
         <div class="bg-white rounded-2xl p-16 text-center text-gray-400 shadow">
             Belum ada room yang ditambahkan
         </div>
     @else
-
     {{-- LIST --}}
     <div class="space-y-6">
         @foreach($rooms as $room)

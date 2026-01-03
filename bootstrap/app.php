@@ -29,8 +29,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'payment/midtrans-callback',
         ]);
 
-        // ❌ JANGAN append middleware role ke web
-        // BIARKAN KOSONG
         
     })
     ->withExceptions(function (Exceptions $exceptions): void {
