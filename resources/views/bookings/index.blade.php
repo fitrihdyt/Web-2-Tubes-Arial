@@ -89,6 +89,18 @@
                                         Pay
                                     </button>
                                 </form>
+
+                                {{-- CANCEL BUTTON --}}
+                                <form action="{{ route('bookings.destroy', $booking->id) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('Are you sure you want to cancel this booking?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button
+                                        class="px-4 py-2 rounded-xl bg-red-100 text-red-600 text-xs font-semibold hover:bg-red-200 transition">
+                                        Cancel
+                                    </button>
+                                </form>
                             @endif
                         </div>
 
