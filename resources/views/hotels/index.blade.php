@@ -231,7 +231,7 @@
                             </a>
                         @endif
 
-                        @if(auth()->user()->role === 'super_admin')
+                        @if(in_array(auth()->user()->role, ['super_admin', 'hotel_admin']))
                             <form action="{{ route('hotels.destroy', $hotel) }}"
                                 method="POST"
                                 onsubmit="return confirm('Yakin hapus hotel ini?')">
