@@ -8,9 +8,56 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Validator;
 
 class HotelController extends Controller
 {
+
+    /**
+     * Import hotel data from CSV (Hotel Admin)
+     */
+    public function importCsv(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt',
+        ]);
+
+        $file = fopen($request->file('file')->getRealPath(), 'r');
+
+        $header = fgetcsv($file);
+
+        $requiredHeaders = [
+            'name', 'city', 'address', 'star', 'latitude', 'longitude'
+        ];
+
+        if ($header !== $requiredHeaders) {
+            return back()->withErrors('Format CSV tidak sesuai');
+        }
+
+        $count = 0;
+
+        while (($row = fgetcsv($file)) !== false) {
+            [$name, $city, $address, $star, $latitude, $longitude] = $row;
+
+            Hotel::create([
+                'name' => $name,
+                'city' => $city,
+                'address' => $address,
+                'star' => (int) $star,
+                'latitude' => $latitude ?: null,
+                'longitude' => $longitude ?: null,
+            ]);
+
+            $count++;
+        }
+
+        fclose($file);
+
+        return redirect()
+            ->route('hotels.index')
+            ->with('success', "{$count} hotel berhasil di-import");
+    }
+
     /**
      * Export hotel data to CSV (Hotel Admin)
      */

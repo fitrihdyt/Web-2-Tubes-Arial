@@ -75,15 +75,13 @@
                     stroke-width="2">
                     <path stroke-linecap="round"
                         stroke-linejoin="round"
-                        d="M21 21l-4.35-4.35m1.85-5.65a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        d="M21 21l-4.35-4.35m1.85-5.65a7 7 0 11-14 0 7 0 0114 0z"/>
                 </svg>
             </button>
 
         </form>
     </div>
 
-
-    </form>
     {{-- HEADER --}}
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-2xl font-bold text-gray-800">
@@ -92,12 +90,33 @@
 
         @auth
             @if(auth()->user()->role === 'hotel_admin')
-                {{-- BUTTON EXPORT CSV --}}
                 <div class="flex items-center gap-3">
+                    {{-- EXPORT --}}
                     <a href="{{ route('hotels.export.csv') }}"
                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl shadow">
                         Export CSV
                     </a>
+
+                    {{-- IMPORT --}}
+                    <form action="{{ route('hotels.import.csv') }}"
+                          method="POST"
+                          enctype="multipart/form-data"
+                          class="flex items-center gap-2">
+                        @csrf
+                        <input type="file"
+                               name="file"
+                               accept=".csv"
+                               required
+                               class="text-sm">
+
+                        <button type="submit"
+                                class="bg-indigo-600 hover:bg-indigo-700
+                                       text-white px-4 py-2.5 rounded-xl shadow">
+                            Import CSV
+                        </button>
+                    </form>
+
+                    {{-- TAMBAH HOTEL --}}
                     <a href="{{ route('hotels.create') }}"
                        class="bg-[#134662] hover:bg-[#0f3a4e] text-white px-5 py-2.5 rounded-xl shadow">
                         + Tambah Hotel
