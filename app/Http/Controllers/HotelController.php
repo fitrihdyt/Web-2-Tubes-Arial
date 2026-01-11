@@ -7,9 +7,61 @@ use App\Models\Facility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class HotelController extends Controller
 {
+    /**
+     * Export hotel data to CSV (Hotel Admin)
+     */
+    public function exportCsv(): StreamedResponse
+    {
+        $user = auth()->user();
+        $query = Hotel::query();
+
+        if ($user->hotel_id) {
+            $query->where('id', $user->hotel_id);
+        }
+
+        $hotels = $query->latest()->get();
+
+        $filename = 'hotels_export_' . now()->format('Ymd_His') . '.csv';
+
+        return response()->streamDownload(function () use ($hotels) {
+            $handle = fopen('php://output', 'w');
+
+            // Header CSV
+            fputcsv($handle, [
+                'ID',
+                'Nama Hotel',
+                'Kota',
+                'Alamat',
+                'Bintang',
+                'Latitude',
+                'Longitude',
+                'Created At',
+            ]);
+
+            // Rows
+            foreach ($hotels as $hotel) {
+                fputcsv($handle, [
+                    $hotel->id,
+                    $hotel->name,
+                    $hotel->city,
+                    $hotel->address,
+                    $hotel->star,
+                    $hotel->latitude,
+                    $hotel->longitude,
+                    optional($hotel->created_at)->format('Y-m-d H:i:s'),
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
+
     /**
      * List hotel
      */

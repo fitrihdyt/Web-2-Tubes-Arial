@@ -49,6 +49,8 @@ Route::middleware(['auth', 'IsHotelAdmin'])->group(function () {
     Route::post('/hotels', [HotelController::class, 'store'])->name('hotels.store');
     Route::get('/hotels/{hotel}/edit', [HotelController::class, 'edit'])->name('hotels.edit');
     Route::put('/hotels/{hotel}', [HotelController::class, 'update'])->name('hotels.update');
+
+    Route::get('/hotels/export/csv', [HotelController::class, 'exportCsv'])->name('hotels.export.csv');
 });
 
 Route::get('/hotels/{hotel}', [HotelController::class, 'show'])

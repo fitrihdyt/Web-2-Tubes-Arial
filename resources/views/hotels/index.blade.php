@@ -92,10 +92,17 @@
 
         @auth
             @if(auth()->user()->role === 'hotel_admin')
-                <a href="{{ route('hotels.create') }}"
-                   class="bg-[#134662] hover:bg-[#0f3a4e] text-white px-5 py-2.5 rounded-xl shadow">
-                    + Tambah Hotel
-                </a>
+                {{-- BUTTON EXPORT CSV --}}
+                <div class="flex items-center gap-3">
+                    <a href="{{ route('hotels.export.csv') }}"
+                       class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl shadow">
+                        Export CSV
+                    </a>
+                    <a href="{{ route('hotels.create') }}"
+                       class="bg-[#134662] hover:bg-[#0f3a4e] text-white px-5 py-2.5 rounded-xl shadow">
+                        + Tambah Hotel
+                    </a>
+                </div>
             @endif
         @endauth
     </div>
