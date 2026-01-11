@@ -37,8 +37,6 @@ Route::get('/hotels', [HotelController::class, 'index'])
     ->name('hotels.index');
 
 Route::middleware(['auth', IsSuperAdmin::class])->group(function () {
-    Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])
-        ->name('hotels.destroy');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
@@ -49,6 +47,7 @@ Route::middleware(['auth', 'IsHotelAdmin'])->group(function () {
     Route::post('/hotels', [HotelController::class, 'store'])->name('hotels.store');
     Route::get('/hotels/{hotel}/edit', [HotelController::class, 'edit'])->name('hotels.edit');
     Route::put('/hotels/{hotel}', [HotelController::class, 'update'])->name('hotels.update');
+    Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])->name('hotels.destroy');
 
     Route::get('/hotels/export/csv', [HotelController::class, 'exportCsv'])->name('hotels.export.csv');
     Route::post('/hotels/import/csv', [HotelController::class, 'importCsv'])->name('hotels.import.csv');
